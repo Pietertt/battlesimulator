@@ -53,8 +53,10 @@ namespace Tmpl8 {
             Sprite* tank_sprite;
             Sprite* smoke_sprite;
 
+            Tank* next;
+            Tank* previous;
+
         private:
             Grid* grid;
-
     };
 } 

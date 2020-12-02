@@ -2,18 +2,7 @@
 
 namespace Tmpl8
 {
-Tank::Tank(
-    float pos_x,
-    float pos_y,
-    allignments allignment,
-    Sprite* tank_sprite,
-    Sprite* smoke_sprite,
-    Grid* grid,
-    float tar_x,
-    float tar_y,
-    float collision_radius,
-    int health,
-    float max_speed)
+Tank::Tank(float pos_x, float pos_y, allignments allignment, Sprite* tank_sprite, Sprite* smoke_sprite, Grid* grid, float tar_x, float tar_y, float collision_radius, int health, float max_speed)
     : position(pos_x, pos_y),
       allignment(allignment),
       target(tar_x, tar_y),
@@ -28,8 +17,8 @@ Tank::Tank(
       current_frame(0),
       tank_sprite(tank_sprite),
       smoke_sprite(smoke_sprite),
-      grid(grid)
-{
+      grid(grid){
+    this->grid->add(this);
 }
 
 Tank::~Tank()

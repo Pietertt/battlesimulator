@@ -44,7 +44,7 @@ class Game
 
   private:
     Surface* screen;
-    Grid grid;
+    Grid grid = Grid();
 
     vector<Tank> tanks;
     vector<Rocket> rockets;
