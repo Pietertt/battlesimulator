@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/g++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -isystem /usr/local/include/SDL2
+CXX_INCLUDES = -isystem /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2
 
 CXX_FLAGS = -Wall -Wextra -std=c++14
 

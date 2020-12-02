@@ -130,233 +130,233 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named Tmpl8_2018-01
+# Target rules for targets named battlesimulator
 
 # Build rule for target.
-Tmpl8_2018-01: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Tmpl8_2018-01
-.PHONY : Tmpl8_2018-01
+battlesimulator: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 battlesimulator
+.PHONY : battlesimulator
 
 # fast build rule for target.
-Tmpl8_2018-01/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Tmpl8_2018-01.dir/build.make CMakeFiles/Tmpl8_2018-01.dir/build
-.PHONY : Tmpl8_2018-01/fast
+battlesimulator/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/build
+.PHONY : battlesimulator/fast
 
-explosion.o: explosion.cpp.o
+src/explosion.o: src/explosion.cpp.o
 
-.PHONY : explosion.o
-
-# target to build an object file
-explosion.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Tmpl8_2018-01.dir/build.make CMakeFiles/Tmpl8_2018-01.dir/explosion.cpp.o
-.PHONY : explosion.cpp.o
-
-explosion.i: explosion.cpp.i
-
-.PHONY : explosion.i
-
-# target to preprocess a source file
-explosion.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Tmpl8_2018-01.dir/build.make CMakeFiles/Tmpl8_2018-01.dir/explosion.cpp.i
-.PHONY : explosion.cpp.i
-
-explosion.s: explosion.cpp.s
-
-.PHONY : explosion.s
-
-# target to generate assembly for a file
-explosion.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Tmpl8_2018-01.dir/build.make CMakeFiles/Tmpl8_2018-01.dir/explosion.cpp.s
-.PHONY : explosion.cpp.s
-
-game.o: game.cpp.o
-
-.PHONY : game.o
+.PHONY : src/explosion.o
 
 # target to build an object file
-game.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Tmpl8_2018-01.dir/build.make CMakeFiles/Tmpl8_2018-01.dir/game.cpp.o
-.PHONY : game.cpp.o
+src/explosion.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/explosion.cpp.o
+.PHONY : src/explosion.cpp.o
 
-game.i: game.cpp.i
+src/explosion.i: src/explosion.cpp.i
 
-.PHONY : game.i
+.PHONY : src/explosion.i
 
 # target to preprocess a source file
-game.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Tmpl8_2018-01.dir/build.make CMakeFiles/Tmpl8_2018-01.dir/game.cpp.i
-.PHONY : game.cpp.i
+src/explosion.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/explosion.cpp.i
+.PHONY : src/explosion.cpp.i
 
-game.s: game.cpp.s
+src/explosion.s: src/explosion.cpp.s
 
-.PHONY : game.s
+.PHONY : src/explosion.s
 
 # target to generate assembly for a file
-game.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Tmpl8_2018-01.dir/build.make CMakeFiles/Tmpl8_2018-01.dir/game.cpp.s
-.PHONY : game.cpp.s
+src/explosion.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/explosion.cpp.s
+.PHONY : src/explosion.cpp.s
 
-particle_beam.o: particle_beam.cpp.o
+src/game.o: src/game.cpp.o
 
-.PHONY : particle_beam.o
+.PHONY : src/game.o
 
 # target to build an object file
-particle_beam.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Tmpl8_2018-01.dir/build.make CMakeFiles/Tmpl8_2018-01.dir/particle_beam.cpp.o
-.PHONY : particle_beam.cpp.o
+src/game.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/game.cpp.o
+.PHONY : src/game.cpp.o
 
-particle_beam.i: particle_beam.cpp.i
+src/game.i: src/game.cpp.i
 
-.PHONY : particle_beam.i
+.PHONY : src/game.i
 
 # target to preprocess a source file
-particle_beam.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Tmpl8_2018-01.dir/build.make CMakeFiles/Tmpl8_2018-01.dir/particle_beam.cpp.i
-.PHONY : particle_beam.cpp.i
+src/game.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/game.cpp.i
+.PHONY : src/game.cpp.i
 
-particle_beam.s: particle_beam.cpp.s
+src/game.s: src/game.cpp.s
 
-.PHONY : particle_beam.s
+.PHONY : src/game.s
 
 # target to generate assembly for a file
-particle_beam.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Tmpl8_2018-01.dir/build.make CMakeFiles/Tmpl8_2018-01.dir/particle_beam.cpp.s
-.PHONY : particle_beam.cpp.s
+src/game.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/game.cpp.s
+.PHONY : src/game.cpp.s
 
-rocket.o: rocket.cpp.o
+src/particle_beam.o: src/particle_beam.cpp.o
 
-.PHONY : rocket.o
+.PHONY : src/particle_beam.o
 
 # target to build an object file
-rocket.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Tmpl8_2018-01.dir/build.make CMakeFiles/Tmpl8_2018-01.dir/rocket.cpp.o
-.PHONY : rocket.cpp.o
+src/particle_beam.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/particle_beam.cpp.o
+.PHONY : src/particle_beam.cpp.o
 
-rocket.i: rocket.cpp.i
+src/particle_beam.i: src/particle_beam.cpp.i
 
-.PHONY : rocket.i
+.PHONY : src/particle_beam.i
 
 # target to preprocess a source file
-rocket.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Tmpl8_2018-01.dir/build.make CMakeFiles/Tmpl8_2018-01.dir/rocket.cpp.i
-.PHONY : rocket.cpp.i
+src/particle_beam.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/particle_beam.cpp.i
+.PHONY : src/particle_beam.cpp.i
 
-rocket.s: rocket.cpp.s
+src/particle_beam.s: src/particle_beam.cpp.s
 
-.PHONY : rocket.s
+.PHONY : src/particle_beam.s
 
 # target to generate assembly for a file
-rocket.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Tmpl8_2018-01.dir/build.make CMakeFiles/Tmpl8_2018-01.dir/rocket.cpp.s
-.PHONY : rocket.cpp.s
+src/particle_beam.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/particle_beam.cpp.s
+.PHONY : src/particle_beam.cpp.s
 
-smoke.o: smoke.cpp.o
+src/rocket.o: src/rocket.cpp.o
 
-.PHONY : smoke.o
+.PHONY : src/rocket.o
 
 # target to build an object file
-smoke.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Tmpl8_2018-01.dir/build.make CMakeFiles/Tmpl8_2018-01.dir/smoke.cpp.o
-.PHONY : smoke.cpp.o
+src/rocket.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/rocket.cpp.o
+.PHONY : src/rocket.cpp.o
 
-smoke.i: smoke.cpp.i
+src/rocket.i: src/rocket.cpp.i
 
-.PHONY : smoke.i
+.PHONY : src/rocket.i
 
 # target to preprocess a source file
-smoke.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Tmpl8_2018-01.dir/build.make CMakeFiles/Tmpl8_2018-01.dir/smoke.cpp.i
-.PHONY : smoke.cpp.i
+src/rocket.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/rocket.cpp.i
+.PHONY : src/rocket.cpp.i
 
-smoke.s: smoke.cpp.s
+src/rocket.s: src/rocket.cpp.s
 
-.PHONY : smoke.s
+.PHONY : src/rocket.s
 
 # target to generate assembly for a file
-smoke.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Tmpl8_2018-01.dir/build.make CMakeFiles/Tmpl8_2018-01.dir/smoke.cpp.s
-.PHONY : smoke.cpp.s
+src/rocket.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/rocket.cpp.s
+.PHONY : src/rocket.cpp.s
 
-surface.o: surface.cpp.o
+src/smoke.o: src/smoke.cpp.o
 
-.PHONY : surface.o
+.PHONY : src/smoke.o
 
 # target to build an object file
-surface.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Tmpl8_2018-01.dir/build.make CMakeFiles/Tmpl8_2018-01.dir/surface.cpp.o
-.PHONY : surface.cpp.o
+src/smoke.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/smoke.cpp.o
+.PHONY : src/smoke.cpp.o
 
-surface.i: surface.cpp.i
+src/smoke.i: src/smoke.cpp.i
 
-.PHONY : surface.i
+.PHONY : src/smoke.i
 
 # target to preprocess a source file
-surface.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Tmpl8_2018-01.dir/build.make CMakeFiles/Tmpl8_2018-01.dir/surface.cpp.i
-.PHONY : surface.cpp.i
+src/smoke.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/smoke.cpp.i
+.PHONY : src/smoke.cpp.i
 
-surface.s: surface.cpp.s
+src/smoke.s: src/smoke.cpp.s
 
-.PHONY : surface.s
+.PHONY : src/smoke.s
 
 # target to generate assembly for a file
-surface.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Tmpl8_2018-01.dir/build.make CMakeFiles/Tmpl8_2018-01.dir/surface.cpp.s
-.PHONY : surface.cpp.s
+src/smoke.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/smoke.cpp.s
+.PHONY : src/smoke.cpp.s
 
-tank.o: tank.cpp.o
+src/surface.o: src/surface.cpp.o
 
-.PHONY : tank.o
+.PHONY : src/surface.o
 
 # target to build an object file
-tank.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Tmpl8_2018-01.dir/build.make CMakeFiles/Tmpl8_2018-01.dir/tank.cpp.o
-.PHONY : tank.cpp.o
+src/surface.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/surface.cpp.o
+.PHONY : src/surface.cpp.o
 
-tank.i: tank.cpp.i
+src/surface.i: src/surface.cpp.i
 
-.PHONY : tank.i
+.PHONY : src/surface.i
 
 # target to preprocess a source file
-tank.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Tmpl8_2018-01.dir/build.make CMakeFiles/Tmpl8_2018-01.dir/tank.cpp.i
-.PHONY : tank.cpp.i
+src/surface.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/surface.cpp.i
+.PHONY : src/surface.cpp.i
 
-tank.s: tank.cpp.s
+src/surface.s: src/surface.cpp.s
 
-.PHONY : tank.s
+.PHONY : src/surface.s
 
 # target to generate assembly for a file
-tank.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Tmpl8_2018-01.dir/build.make CMakeFiles/Tmpl8_2018-01.dir/tank.cpp.s
-.PHONY : tank.cpp.s
+src/surface.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/surface.cpp.s
+.PHONY : src/surface.cpp.s
 
-template.o: template.cpp.o
+src/tank.o: src/tank.cpp.o
 
-.PHONY : template.o
+.PHONY : src/tank.o
 
 # target to build an object file
-template.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Tmpl8_2018-01.dir/build.make CMakeFiles/Tmpl8_2018-01.dir/template.cpp.o
-.PHONY : template.cpp.o
+src/tank.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/tank.cpp.o
+.PHONY : src/tank.cpp.o
 
-template.i: template.cpp.i
+src/tank.i: src/tank.cpp.i
 
-.PHONY : template.i
+.PHONY : src/tank.i
 
 # target to preprocess a source file
-template.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Tmpl8_2018-01.dir/build.make CMakeFiles/Tmpl8_2018-01.dir/template.cpp.i
-.PHONY : template.cpp.i
+src/tank.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/tank.cpp.i
+.PHONY : src/tank.cpp.i
 
-template.s: template.cpp.s
+src/tank.s: src/tank.cpp.s
 
-.PHONY : template.s
+.PHONY : src/tank.s
 
 # target to generate assembly for a file
-template.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Tmpl8_2018-01.dir/build.make CMakeFiles/Tmpl8_2018-01.dir/template.cpp.s
-.PHONY : template.cpp.s
+src/tank.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/tank.cpp.s
+.PHONY : src/tank.cpp.s
+
+src/template.o: src/template.cpp.o
+
+.PHONY : src/template.o
+
+# target to build an object file
+src/template.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/template.cpp.o
+.PHONY : src/template.cpp.o
+
+src/template.i: src/template.cpp.i
+
+.PHONY : src/template.i
+
+# target to preprocess a source file
+src/template.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/template.cpp.i
+.PHONY : src/template.cpp.i
+
+src/template.s: src/template.cpp.s
+
+.PHONY : src/template.s
+
+# target to generate assembly for a file
+src/template.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/template.cpp.s
+.PHONY : src/template.cpp.s
 
 # Help Target
 help:
@@ -366,31 +366,31 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... Tmpl8_2018-01"
-	@echo "... explosion.o"
-	@echo "... explosion.i"
-	@echo "... explosion.s"
-	@echo "... game.o"
-	@echo "... game.i"
-	@echo "... game.s"
-	@echo "... particle_beam.o"
-	@echo "... particle_beam.i"
-	@echo "... particle_beam.s"
-	@echo "... rocket.o"
-	@echo "... rocket.i"
-	@echo "... rocket.s"
-	@echo "... smoke.o"
-	@echo "... smoke.i"
-	@echo "... smoke.s"
-	@echo "... surface.o"
-	@echo "... surface.i"
-	@echo "... surface.s"
-	@echo "... tank.o"
-	@echo "... tank.i"
-	@echo "... tank.s"
-	@echo "... template.o"
-	@echo "... template.i"
-	@echo "... template.s"
+	@echo "... battlesimulator"
+	@echo "... src/explosion.o"
+	@echo "... src/explosion.i"
+	@echo "... src/explosion.s"
+	@echo "... src/game.o"
+	@echo "... src/game.i"
+	@echo "... src/game.s"
+	@echo "... src/particle_beam.o"
+	@echo "... src/particle_beam.i"
+	@echo "... src/particle_beam.s"
+	@echo "... src/rocket.o"
+	@echo "... src/rocket.i"
+	@echo "... src/rocket.s"
+	@echo "... src/smoke.o"
+	@echo "... src/smoke.i"
+	@echo "... src/smoke.s"
+	@echo "... src/surface.o"
+	@echo "... src/surface.i"
+	@echo "... src/surface.s"
+	@echo "... src/tank.o"
+	@echo "... src/tank.i"
+	@echo "... src/tank.s"
+	@echo "... src/template.o"
+	@echo "... src/template.i"
+	@echo "... src/template.s"
 .PHONY : help
 
 
