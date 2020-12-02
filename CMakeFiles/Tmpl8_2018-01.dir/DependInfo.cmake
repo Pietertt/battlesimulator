@@ -4,21 +4,21 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/Users/pieterboersma/Desktop/battlesimulator/explosion.cpp" "/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles/Tmpl8_2018-01.dir/explosion.cpp.o"
-  "/Users/pieterboersma/Desktop/battlesimulator/game.cpp" "/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles/Tmpl8_2018-01.dir/game.cpp.o"
-  "/Users/pieterboersma/Desktop/battlesimulator/particle_beam.cpp" "/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles/Tmpl8_2018-01.dir/particle_beam.cpp.o"
-  "/Users/pieterboersma/Desktop/battlesimulator/rocket.cpp" "/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles/Tmpl8_2018-01.dir/rocket.cpp.o"
-  "/Users/pieterboersma/Desktop/battlesimulator/smoke.cpp" "/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles/Tmpl8_2018-01.dir/smoke.cpp.o"
-  "/Users/pieterboersma/Desktop/battlesimulator/surface.cpp" "/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles/Tmpl8_2018-01.dir/surface.cpp.o"
-  "/Users/pieterboersma/Desktop/battlesimulator/tank.cpp" "/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles/Tmpl8_2018-01.dir/tank.cpp.o"
-  "/Users/pieterboersma/Desktop/battlesimulator/template.cpp" "/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles/Tmpl8_2018-01.dir/template.cpp.o"
+  "/Users/pieterboersma/Desktop/battlesimulator/src/explosion.cpp" "/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles/Tmpl8_2018-01.dir/src/explosion.cpp.o"
+  "/Users/pieterboersma/Desktop/battlesimulator/src/game.cpp" "/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles/Tmpl8_2018-01.dir/src/game.cpp.o"
+  "/Users/pieterboersma/Desktop/battlesimulator/src/particle_beam.cpp" "/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles/Tmpl8_2018-01.dir/src/particle_beam.cpp.o"
+  "/Users/pieterboersma/Desktop/battlesimulator/src/rocket.cpp" "/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles/Tmpl8_2018-01.dir/src/rocket.cpp.o"
+  "/Users/pieterboersma/Desktop/battlesimulator/src/smoke.cpp" "/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles/Tmpl8_2018-01.dir/src/smoke.cpp.o"
+  "/Users/pieterboersma/Desktop/battlesimulator/src/surface.cpp" "/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles/Tmpl8_2018-01.dir/src/surface.cpp.o"
+  "/Users/pieterboersma/Desktop/battlesimulator/src/tank.cpp" "/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles/Tmpl8_2018-01.dir/src/tank.cpp.o"
+  "/Users/pieterboersma/Desktop/battlesimulator/src/template.cpp" "/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles/Tmpl8_2018-01.dir/src/template.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "AppleClang")
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "/System/Library/Frameworks/OpenGL.framework"
-  "/usr/local/include/SDL2"
+  "/usr/local/Cellar/sdl2/2.0.12_1/include/SDL2"
   )
 
 # Targets to which this target links.

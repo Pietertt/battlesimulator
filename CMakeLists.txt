@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.4)
-project ("Tmpl8_2018-01")
+project ("battlesimulator")
 
 # FindFreeImage.cmake and FindSDL2.cmake are not part of cmake by default, use modified third-party scripts:
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
@@ -11,7 +11,7 @@ find_package(SDL2 REQUIRED)
 find_package(FreeImage REQUIRED)
 
 # Compile all "*.cpp" files in the root directory:
-file(GLOB SOURCES "*.cpp")
+file(GLOB SOURCES "src/*.cpp")
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 # Add warning flags

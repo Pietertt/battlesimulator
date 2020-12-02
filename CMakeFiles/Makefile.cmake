@@ -25,7 +25,6 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/Applications/CMake.app/Contents/share/cmake-3.18/Modules/FindOpenGL.cmake"
   "/Applications/CMake.app/Contents/share/cmake-3.18/Modules/FindPackageHandleStandardArgs.cmake"
   "/Applications/CMake.app/Contents/share/cmake-3.18/Modules/FindPackageMessage.cmake"
-  "/Applications/CMake.app/Contents/share/cmake-3.18/Modules/FindPkgConfig.cmake"
   "/Applications/CMake.app/Contents/share/cmake-3.18/Modules/Internal/CMakeCheckCompilerFlag.cmake"
   "/Applications/CMake.app/Contents/share/cmake-3.18/Modules/Platform/Apple-AppleClang-C.cmake"
   "/Applications/CMake.app/Contents/share/cmake-3.18/Modules/Platform/Apple-AppleClang-CXX.cmake"
@@ -40,7 +39,8 @@ set(CMAKE_MAKEFILE_DEPENDS
   "CMakeFiles/3.18.5/CMakeSystem.cmake"
   "CMakeLists.txt"
   "FindFreeImage.cmake"
-  "FindSDL2.cmake"
+  "/usr/local/lib/cmake/SDL2/sdl2-config-version.cmake"
+  "/usr/local/lib/cmake/SDL2/sdl2-config.cmake"
   "/usr/local/lib/cmake/glew/CopyImportedTargetProperties.cmake"
   "/usr/local/lib/cmake/glew/glew-config.cmake"
   "/usr/local/lib/cmake/glew/glew-targets-release.cmake"
@@ -60,5 +60,5 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/Tmpl8_2018-01.dir/DependInfo.cmake"
+  "CMakeFiles/battlesimulator.dir/DependInfo.cmake"
   )
