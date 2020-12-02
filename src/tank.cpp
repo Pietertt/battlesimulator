@@ -1,6 +1,4 @@
 #include "precomp.h"
-#include "tank.h"
-
 
 namespace Tmpl8
 {
@@ -10,6 +8,7 @@ Tank::Tank(
     allignments allignment,
     Sprite* tank_sprite,
     Sprite* smoke_sprite,
+    Grid* grid,
     float tar_x,
     float tar_y,
     float collision_radius,
@@ -28,7 +27,8 @@ Tank::Tank(
       active(true),
       current_frame(0),
       tank_sprite(tank_sprite),
-      smoke_sprite(smoke_sprite)
+      smoke_sprite(smoke_sprite),
+      grid(grid)
 {
 }
 

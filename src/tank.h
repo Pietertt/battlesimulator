@@ -1,59 +1,60 @@
 #pragma once
 
-namespace Tmpl8
-{
+namespace Tmpl8 {
 
-enum allignments
-{
-    BLUE,
-    RED
-};
+    class Grid;
 
-class Tank
-{
-  public:
-    Tank(float pos_x, float pos_y, allignments allignment, Sprite* tank_sprite, Sprite* smoke_sprite, float tar_x, float tar_y, float collision_radius, int health, float max_speed);
+    enum allignments {
+        BLUE,
+        RED
+    };
 
-    ~Tank();
+    class Tank {
+        public:
+            Tank(float pos_x, float pos_y, allignments allignment, Sprite* tank_sprite, Sprite* smoke_sprite, Grid* grid, float tar_x, float tar_y, float collision_radius, int health, float max_speed);
 
-    void tick();
+            ~Tank();
 
-    vec2 get_position() const { return position; };
-    float get_collision_radius() const { return collision_radius; };
-    bool rocket_reloaded() const { return reloaded; };
+            void tick();
 
-    void reload_rocket();
+            vec2 get_position() const { return position; };
+            float get_collision_radius() const { return collision_radius; };
+            bool rocket_reloaded() const { return reloaded; };
 
-    void deactivate();
-    bool hit(int hit_value);
+            void reload_rocket();
 
-    void draw(Surface* screen);
+            void deactivate();
+            bool hit(int hit_value);
 
-    int compare_health(const Tank& other) const;
+            void draw(Surface* screen);
 
-    void push(vec2 direction, float magnitude);
+            int compare_health(const Tank& other) const;
 
-    vec2 position;
-    vec2 speed;
-    vec2 target;
+            void push(vec2 direction, float magnitude);
 
-    int health;
+            vec2 position;
+            vec2 speed;
+            vec2 target;
 
-    float collision_radius;
-    vec2 force;
+            int health;
 
-    float max_speed;
-    float reload_time;
+            float collision_radius;
+            vec2 force;
 
-    bool reloaded;
-    bool active;
+            float max_speed;
+            float reload_time;
 
-    allignments allignment;
+            bool reloaded;
+            bool active;
 
-    int current_frame;
-    Sprite* tank_sprite;
-    Sprite* smoke_sprite;
+            allignments allignment;
 
-};
+            int current_frame;
+            Sprite* tank_sprite;
+            Sprite* smoke_sprite;
 
-} // namespace Tmpl8
+        private:
+            Grid* grid;
+
+    };
+} 
