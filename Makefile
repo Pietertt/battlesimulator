@@ -196,6 +196,33 @@ src/game.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/game.cpp.s
 .PHONY : src/game.cpp.s
 
+src/grid.o: src/grid.cpp.o
+
+.PHONY : src/grid.o
+
+# target to build an object file
+src/grid.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/grid.cpp.o
+.PHONY : src/grid.cpp.o
+
+src/grid.i: src/grid.cpp.i
+
+.PHONY : src/grid.i
+
+# target to preprocess a source file
+src/grid.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/grid.cpp.i
+.PHONY : src/grid.cpp.i
+
+src/grid.s: src/grid.cpp.s
+
+.PHONY : src/grid.s
+
+# target to generate assembly for a file
+src/grid.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/grid.cpp.s
+.PHONY : src/grid.cpp.s
+
 src/particle_beam.o: src/particle_beam.cpp.o
 
 .PHONY : src/particle_beam.o
@@ -373,6 +400,9 @@ help:
 	@echo "... src/game.o"
 	@echo "... src/game.i"
 	@echo "... src/game.s"
+	@echo "... src/grid.o"
+	@echo "... src/grid.i"
+	@echo "... src/grid.s"
 	@echo "... src/particle_beam.o"
 	@echo "... src/particle_beam.i"
 	@echo "... src/particle_beam.s"
