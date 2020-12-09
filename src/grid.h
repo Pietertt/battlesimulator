@@ -5,11 +5,12 @@ namespace Tmpl8 {
         public:
             Grid();
             void add(Tank* tank);
-            void handleAction();
-            void handleCell(Tank* tank);
+            void handleAction(Rocket* rocket);
+            void handleCell(Tank* tank, Rocket* rocket);
+            void display();
 
         private:
-            static const int NUM_CELLS = 10;
+            static const int NUM_CELLS = 100;
             static const int CELL_SIZE = 20;
 
             Tank* cells[NUM_CELLS][NUM_CELLS];

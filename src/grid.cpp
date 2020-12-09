@@ -14,31 +14,41 @@ namespace Tmpl8 {
         int cellY = (int)(tank->get_position().y / Grid::CELL_SIZE);
 
         tank->previous = NULL;
-        tank->next = this->cells[cellX][cellY];
+        tank->next = cells[cellX][cellY];
+    
+        if(cells[cellX][cellY] != NULL){
+            cells[cellX][cellY]->previous = tank;
+            cells[cellX][cellY] = tank;
 
-        if(tank->next != NULL){
-            tank->next = tank;
         }
     }
 
-    void Grid::handleAction(){
+    void Grid::display(){
+        for(int x = 0; x < Grid::NUM_CELLS; x++){
+            for(int y = 0; y < Grid::NUM_CELLS; y++){  
+                std::cout << y << std::endl;
+            }
+            std::cout << x << std::endl;
+        }
+    }
+
+    void Grid::handleAction(Rocket* rocket){
         for(int x = 0; x < Grid::NUM_CELLS; x++){
             for(int y = 0; y < Grid::NUM_CELLS; y++){
-                this->handleCell(this->cells[x][y]);
+                this->handleCell(this->cells[x][y], rocket);
             }
         }
+        rocket->tick();
     }
 
-    void Grid::handleCell(Tank* tank){
-        while(tank != NULL){
-            Tank* other = tank->next;
-            while(other != NULL){
-                if(tank->get_position().x == other->get_position().x && tank->get_position().y == other->get_position().y){
-                    std::cout << "Hit!" << std::endl;
-                }
-                other = other->next;
+    void Grid::handleCell(Tank* tank, Rocket* rocket){ 
+        while(true){
+            if(tank == NULL){
+                break;
             }
+            std::cout << tank << std::endl;
             tank = tank->next;
-        }
+            
+        }        
     }
 }

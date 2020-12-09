@@ -154,7 +154,9 @@ void Game::update(float deltaTime){
         smoke.tick();
     }
 
-    this->grid.handleAction();
+    for(Rocket& rocket : this->rockets){
+        this->grid.handleAction(&rocket);
+    }
 
     
 
