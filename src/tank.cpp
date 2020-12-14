@@ -19,29 +19,69 @@ Tank::Tank(float pos_x, float pos_y, allignments allignment, Sprite* tank_sprite
       smoke_sprite(smoke_sprite),
       grid(grid){
     this->grid->add(this);
+
+    std::cout << this->next << " " << this->previous << " " << this << std::endl;
 }
 
 Tank::~Tank()
 {
 }
 
-void Tank::tick()
-{
+void Tank::tick(){
+
+    int oldCellX = (int)(this->get_position().x / Grid::CELL_SIZE);
+    int oldCellY = (int)(this->get_position().y / Grid::CELL_SIZE);
+
+
+    force = vec2(0.f, 0.f);
     vec2 direction = (target - position).normalized();
 
-    //Update using accumulated force
     speed = direction + force;
     position += speed * max_speed * 0.5f;
 
-    //Update reload time
-    if (--reload_time <= 0.0f)
-    {
+    if (--reload_time <= 0.0f){
         reloaded = true;
     }
 
-    force = vec2(0.f, 0.f);
 
     if (++current_frame > 8) current_frame = 0;
+
+    int cellX = (int)(this->get_position().x / Grid::CELL_SIZE);
+    int cellY = (int)(this->get_position().y / Grid::CELL_SIZE);
+
+    // std::cout << cellX << " " << cellY << " " << oldCellX << " " << oldCellY << std::endl;
+
+    if(oldCellX == cellX && oldCellY == cellY){
+        return;
+    }
+
+    std::cout << "Next cell" << std::endl;
+
+    //this->grid->remove(this);
+    //this->grid->add(this);
+
+    // // Haal de tank uit de lijst door de vorige en de volgende aan elkaar te koppelen
+    if(this->previous != NULL){
+        this->previous->next = this->next;
+    }
+
+    // if(this->previous != NULL){
+    //     this->next->previous = this->previous;
+    // }
+
+    // if(this->previous != NULL){
+    //     this->previous->next = this->next;
+    // }
+
+    if(this->next != NULL){
+        this->next->previous = this->previous;
+    }
+
+    if(this->grid->cells[oldCellX][oldCellY] == this){
+        this->grid->cells[oldCellX][oldCellY] = this->next;
+    }
+
+    this->grid->add(this);
 }
 
 //Start reloading timer

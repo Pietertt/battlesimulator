@@ -9,6 +9,10 @@ Rocket::Rocket(vec2 position, vec2 direction, float collision_radius, allignment
 {
 }
 
+Rocket::Rocket(){
+    //std::cout << this << std::endl;
+}
+
 Rocket::~Rocket()
 {
 }

@@ -7,6 +7,7 @@ class Rocket
 {
   public:
     Rocket(vec2 position, vec2 direction, float collision_radius, allignments allignment, Sprite* rocket_sprite);
+    Rocket();
     ~Rocket();
 
     void tick();
