@@ -2,7 +2,7 @@
 
 namespace Tmpl8
 {
-Tank::Tank(float pos_x, float pos_y, allignments allignment, Sprite* tank_sprite, Sprite* smoke_sprite, Grid* grid, float tar_x, float tar_y, float collision_radius, int health, float max_speed)
+Tank::Tank(float pos_x, float pos_y, allignments allignment, Sprite* tank_sprite, Sprite* smoke_sprite, float tar_x, float tar_y, float collision_radius, int health, float max_speed)
     : position(pos_x, pos_y),
       allignment(allignment),
       target(tar_x, tar_y),
@@ -16,11 +16,7 @@ Tank::Tank(float pos_x, float pos_y, allignments allignment, Sprite* tank_sprite
       active(true),
       current_frame(0),
       tank_sprite(tank_sprite),
-      smoke_sprite(smoke_sprite),
-      grid(grid){
-    this->grid->add(this);
-
-    std::cout << this->next << " " << this->previous << " " << this << std::endl;
+      smoke_sprite(smoke_sprite){
 }
 
 Tank::~Tank()
@@ -28,10 +24,6 @@ Tank::~Tank()
 }
 
 void Tank::tick(){
-
-    int oldCellX = (int)(this->get_position().x / Grid::CELL_SIZE);
-    int oldCellY = (int)(this->get_position().y / Grid::CELL_SIZE);
-
 
     force = vec2(0.f, 0.f);
     vec2 direction = (target - position).normalized();
@@ -45,43 +37,6 @@ void Tank::tick(){
 
 
     if (++current_frame > 8) current_frame = 0;
-
-    int cellX = (int)(this->get_position().x / Grid::CELL_SIZE);
-    int cellY = (int)(this->get_position().y / Grid::CELL_SIZE);
-
-    // std::cout << cellX << " " << cellY << " " << oldCellX << " " << oldCellY << std::endl;
-
-    if(oldCellX == cellX && oldCellY == cellY){
-        return;
-    }
-
-    std::cout << "Next cell" << std::endl;
-
-    //this->grid->remove(this);
-    //this->grid->add(this);
-
-    // // Haal de tank uit de lijst door de vorige en de volgende aan elkaar te koppelen
-    if(this->previous != NULL){
-        this->previous->next = this->next;
-    }
-
-    // if(this->previous != NULL){
-    //     this->next->previous = this->previous;
-    // }
-
-    // if(this->previous != NULL){
-    //     this->previous->next = this->next;
-    // }
-
-    if(this->next != NULL){
-        this->next->previous = this->previous;
-    }
-
-    if(this->grid->cells[oldCellX][oldCellY] == this){
-        this->grid->cells[oldCellX][oldCellY] = this->next;
-    }
-
-    this->grid->add(this);
 }
 
 //Start reloading timer

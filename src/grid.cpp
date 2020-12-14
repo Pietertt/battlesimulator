@@ -6,13 +6,15 @@ namespace Tmpl8 {
         for(int x = 0; x < Grid::NUM_CELLS; x++){
             for(int y = 0; y < Grid::NUM_CELLS; y++){
                 cells[x][y] = NULL;
+                cells[x + 1][y + 1] = NULL;
+                cells[x - 1][y - 1] = NULL;
             }
         }
     }
 
     void Grid::add(Tank* tank){
 
-        std::cout << "Added -> " << &tank << std::endl;
+        //std::cout << "Added -> " << &tank << std::endl;
 
         // De cell waarin de tank zich op het moment zich bevind
         int cellX = (int)(tank->get_position().x / Grid::CELL_SIZE);
@@ -30,8 +32,6 @@ namespace Tmpl8 {
         if(tank->next != NULL){
             tank->next->previous = tank;
         }
-
-        //std::cout << "TANK ->" << &tank << " NEXT -> " << &tank->next << " PREV -> " << &tank->previous << std::endl;
 
         // Zet de tank in de huidige cell
 
@@ -67,25 +67,32 @@ namespace Tmpl8 {
         std::cout << std::endl;
     }
 
-    void Grid::handleAction(){
+    void Grid::handleAction(Rocket* rocket){
         for(int x = 0; x < Grid::NUM_CELLS; x++){
             for(int y = 0; y < Grid::NUM_CELLS; y++){
-                this->handleCell(this->cells[x][y]);
+                this->handleCell(this->cells[x][y], rocket);
                 //Grid::display();
             }
         }
 
-        std::cout << "Next rocket" << std::endl;
+        rocket->tick();
+
+        //std::cout << "Next rocket" << std::endl;
     }
 
-    void Grid::handleCell(Tank* tank){ 
+    void Grid::handleCell(Tank* tank, Rocket* rocket){ 
 
         // // Skip alle cellen die op NULL staan
         while(tank != NULL){
-            std::cout << &tank << std::endl;
+           if (tank->active && (tank->allignment != rocket->allignment) && rocket->intersects(tank->position, tank->collision_radius)){
+                //explosions.push_back(Explosion(&explosion, tank.position));
 
-            if(tank == tank->next){
-                std::cout << "Tank " << tank << " nfext " << tank->next << std::endl;
+                if (tank->hit(60))
+                {
+                    //smokes.push_back(Smoke(smoke, tank.position - vec2(0, 48)));
+                }
+
+                rocket->active = false;
                 break;
             }
 
@@ -94,6 +101,6 @@ namespace Tmpl8 {
            
         }
 
-        std::cout << "End of cell" << std::endl;
+        //std::cout << "End of cell" << std::endl;
     }
 }

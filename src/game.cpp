@@ -1,7 +1,7 @@
 #include "precomp.h" // include (only) this in every .cpp file
 
-#define NUM_TANKS_BLUE 4
-#define NUM_TANKS_RED 4
+#define NUM_TANKS_BLUE 50
+#define NUM_TANKS_RED 50
 
 #define TANK_MAX_HEALTH 1000
 #define ROCKET_HIT_VALUE 60
@@ -68,12 +68,16 @@ void Game::init(){
     //Spawn blue tanks
     for (int i = 0; i < NUM_TANKS_BLUE; i++)
     {
-        tanks.push_back(Tank(start_blue_x + ((i % max_rows) * spacing), start_blue_y + ((i / max_rows) * spacing), BLUE, &tank_blue, &smoke, &grid, 1200, 600, tank_radius, TANK_MAX_HEALTH, TANK_MAX_SPEED));
+        tanks.push_back(Tank(start_blue_x + ((i % max_rows) * spacing), start_blue_y + ((i / max_rows) * spacing), BLUE, &tank_blue, &smoke, 1200, 600, tank_radius, TANK_MAX_HEALTH, TANK_MAX_SPEED));
     }
     //Spawn red tanks
     for (int i = 0; i < NUM_TANKS_RED; i++)
     {
-        tanks.push_back(Tank(start_red_x + ((i % max_rows) * spacing), start_red_y + ((i / max_rows) * spacing), RED, &tank_red, &smoke, &grid, 80, 80, tank_radius, TANK_MAX_HEALTH, TANK_MAX_SPEED));
+        tanks.push_back(Tank(start_red_x + ((i % max_rows) * spacing), start_red_y + ((i / max_rows) * spacing), RED, &tank_red, &smoke, 80, 80, tank_radius, TANK_MAX_HEALTH, TANK_MAX_SPEED));
+    }
+
+    for(Tank& tank : tanks){
+        grid.add(&tank);
     }
 
     particle_beams.push_back(Particle_beam(vec2(SCRWIDTH / 2, SCRHEIGHT / 2), vec2(100, 50), &particle_beam_sprite, PARTICLE_BEAM_HIT_VALUE));
@@ -118,7 +122,7 @@ Tank& Game::find_closest_enemy(Tank& current_tank){
 void Game::update(float deltaTime){
     //Update tanks
     for (Tank& tank : tanks){
-        std::cout << "Tank -> " << &tank << std::endl;
+       
         if (tank.active){
             //Check tank collision and nudge tanks away from each other
             for (Tank& oTank : tanks){
@@ -153,8 +157,7 @@ void Game::update(float deltaTime){
 
     for(Rocket& rocket : this->rockets){
         //std::cout << "Rocket ->" << &rocket << std::endl;
-        std::cout << &rocket << std::endl;
-        this->grid.handleAction();
+        this->grid.handleAction(&rocket);
     }
 
     //Remove exploded rockets with remove erase idiom
@@ -205,9 +208,9 @@ void Game::draw(){
             background.get_buffer()[(int)tPos.x + (int)tPos.y * SCRWIDTH] = sub_blend(background.get_buffer()[(int)tPos.x + (int)tPos.y * SCRWIDTH], 0x808080);
     }
 
-    // for (Rocket& rocket : rockets){
-    //     rocket.draw(screen);
-    // }
+    for (Rocket& rocket : rockets){
+        rocket.draw(screen);
+    }
 
     for (Smoke& smoke : smokes){
         smoke.draw(screen);
