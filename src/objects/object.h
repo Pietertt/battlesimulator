@@ -15,8 +15,7 @@ namespace objects {
             virtual void tick() = 0;
             virtual Tmpl8::vec2 get_position() = 0;
 
-            Object* next = NULL;
-            Object* previous = NULL;
+            int range = 0;
 
         private:
 

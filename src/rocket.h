@@ -17,8 +17,7 @@ namespace Tmpl8 {
         void draw(Surface* screen) override;
         void accept(Visitor* visitor, Tank* tank) override;   
         void tick() override;  
-        vec2 get_position() override;   
-        
+        vec2 get_position() override;
 
         vec2 position;
         vec2 speed;

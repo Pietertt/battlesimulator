@@ -17,6 +17,7 @@ Tank::Tank(float pos_x, float pos_y, allignments allignment, Sprite* tank_sprite
       current_frame(0),
       tank_sprite(tank_sprite),
       smoke_sprite(smoke_sprite){
+          this->range = 0;
 }
 
 Tank::~Tank() {

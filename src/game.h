@@ -44,15 +44,22 @@ class Game
     { /* implement if you want to handle keys */
     }
 
-        vector<Tank*> tanks;
+    vector<Tank*> tanks;
     vector<Object*> rockets;
     vector<Object*> beams;
 
+    vector<Explosion> explosions;
+    vector<Smoke> smokes;
+
     Surface* rocket_red_img = new Surface("/Users/pieterboersma/Desktop/battlesimulator/assets/Rocket_Proj2.png");
     Surface* rocket_blue_img = new Surface("/Users/pieterboersma/Desktop/battlesimulator/assets/Rocket_Blue_Proj2.png");
+    Surface* smoke_img = new Surface("/Users/pieterboersma/Desktop/battlesimulator/assets/Smoke.png");
+    Surface* explosion_img = new Surface("/Users/pieterboersma/Desktop/battlesimulator/assets/Explosion.png");
     
     Sprite rocket_red = Sprite(this->rocket_red_img, 12);
     Sprite rocket_blue = Sprite(this->rocket_blue_img, 12);
+    Sprite explosion = Sprite(this->explosion_img, 9);
+    Sprite smoke = Sprite(this->smoke_img, 4);
 
   private:
     Surface* screen;
@@ -60,10 +67,6 @@ class Game
 
     Grid grid = Grid(this);
 
-
-    
-    vector<Explosion> explosions;
-    vector<Smoke> smokes;
 
     Font* frame_count_font;
     long long frame_count = 0;

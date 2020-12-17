@@ -1,23 +1,24 @@
 #include "precomp.h"
 
 namespace Tmpl8 {
-    static Surface* background_img = new Surface("/Users/pieterboersma/Desktop/battlesimulator/assets/Background_Grass.png");
-static Surface* tank_red_img = new Surface("/Users/pieterboersma/Desktop/battlesimulator/assets/Tank_Proj2.png");
-static Surface* tank_blue_img = new Surface("/Users/pieterboersma/Desktop/battlesimulator/assets/Tank_Blue_Proj2.png");
-static Surface* rocket_red_img = new Surface("/Users/pieterboersma/Desktop/battlesimulator/assets/Rocket_Proj2.png");
-static Surface* rocket_blue_img = new Surface("/Users/pieterboersma/Desktop/battlesimulator/assets/Rocket_Blue_Proj2.png");
-static Surface* particle_beam_img = new Surface("/Users/pieterboersma/Desktop/battlesimulator/assets/Particle_Beam.png");
-static Surface* smoke_img = new Surface("/Users/pieterboersma/Desktop/battlesimulator/assets/Smoke.png");
-static Surface* explosion_img = new Surface("/Users/pieterboersma/Desktop/battlesimulator/assets/Explosion.png");
 
-static Sprite background(background_img, 1);
-static Sprite tank_red(tank_red_img, 12);
-static Sprite tank_blue(tank_blue_img, 12);
-static Sprite rocket_red(rocket_red_img, 12);
-static Sprite rocket_blue(rocket_blue_img, 12);
-static Sprite smoke(smoke_img, 4);
-static Sprite explosion(explosion_img, 9);
-static Sprite particle_beam_sprite(particle_beam_img, 3);
+    static Surface* background_img = new Surface("/Users/pieterboersma/Desktop/battlesimulator/assets/Background_Grass.png");
+    static Surface* tank_red_img = new Surface("/Users/pieterboersma/Desktop/battlesimulator/assets/Tank_Proj2.png");
+    static Surface* tank_blue_img = new Surface("/Users/pieterboersma/Desktop/battlesimulator/assets/Tank_Blue_Proj2.png");
+    static Surface* rocket_red_img = new Surface("/Users/pieterboersma/Desktop/battlesimulator/assets/Rocket_Proj2.png");
+    static Surface* rocket_blue_img = new Surface("/Users/pieterboersma/Desktop/battlesimulator/assets/Rocket_Blue_Proj2.png");
+    static Surface* particle_beam_img = new Surface("/Users/pieterboersma/Desktop/battlesimulator/assets/Particle_Beam.png");
+    static Surface* smoke_img = new Surface("/Users/pieterboersma/Desktop/battlesimulator/assets/Smoke.png");
+    static Surface* explosion_img = new Surface("/Users/pieterboersma/Desktop/battlesimulator/assets/Explosion.png");
+
+    static Sprite background(background_img, 1);
+    static Sprite tank_red(tank_red_img, 12);
+    static Sprite tank_blue(tank_blue_img, 12);
+    static Sprite rocket_red(rocket_red_img, 12);
+    static Sprite rocket_blue(rocket_blue_img, 12);
+    static Sprite smoke(smoke_img, 4);
+    static Sprite explosion(explosion_img, 9);
+    static Sprite particle_beam_sprite(particle_beam_img, 3);
 
 
     ActionVisitor::ActionVisitor(){
@@ -26,9 +27,9 @@ static Sprite particle_beam_sprite(particle_beam_img, 3);
 
     void ActionVisitor::visit_rocket(Rocket* rocket, Tank* tank){
         if (tank->active && (tank->allignment != rocket->allignment) && rocket->intersects(tank->position, tank->collision_radius)){            
-
+            this->game->explosions.push_back(Explosion(&explosion, tank->position));
             if (tank->hit(60)) {
-               
+                this->game->smokes.push_back(Smoke(smoke, tank->position - vec2(0, 48)));
             }
 
             rocket->active = false;
@@ -42,7 +43,7 @@ static Sprite particle_beam_sprite(particle_beam_img, 3);
     void ActionVisitor::visit_beam(Beam* beam, Tank* tank){
         if (tank->active && beam->rectangle.intersects_circle(tank->get_position(), tank->get_collision_radius())) {
             if (tank->hit(50)) {
-
+                this->game->smokes.push_back(Smoke(smoke, tank->position - vec2(0, 48)));
             }
         }
     }

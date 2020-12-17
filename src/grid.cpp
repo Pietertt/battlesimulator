@@ -82,9 +82,22 @@ namespace Tmpl8 {
 
         // // Skip alle cellen die op NULL staan
         while(tank != NULL){
-            if(tank->get_position().x == object->get_position().x && tank->get_position().y == object->get_position().y){
+            int tankX = (int)(tank->get_position().x / Grid::CELL_SIZE);
+            int tankY = (int)(tank->get_position().y / Grid::CELL_SIZE);
+            int objectX = (int)(object->get_position().x / Grid::CELL_SIZE);
+            int objectY = (int)(object->get_position().y / Grid::CELL_SIZE);
 
+            if(tankX > objectX - object->range){
+                if(tankX < objectX + object->range){
+                    if(tankY > objectY - object->range){
+                        if(tankY < objectY + object->range){
+                             object->accept(this->action_visitor, tank);   
+                        }
+                    }
+                }
             }
+
+            
             // if (tank->active && (tank->allignment != rocket->allignment) && rocket->intersects(tank->position, tank->collision_radius)){            
 
             //     if (tank->hit(60))
@@ -95,8 +108,6 @@ namespace Tmpl8 {
             //     rocket->active = false;
             //     break;
             // }
-
-                object->accept(this->action_visitor, tank);
             
 
             // Doorloop de lijst
