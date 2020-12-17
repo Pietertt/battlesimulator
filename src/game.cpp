@@ -52,7 +52,6 @@ ActionVisitor visitor = ActionVisitor();
 // Initialize the application
 // -----------------------------------------------------------
 void Game::init(){
-
     this->grid.test(&visitor);
     frame_count_font = new Font("/Users/pieterboersma/Desktop/battlesimulator/assets/digital_small.png", "ABCDEFGHIJKLMNOPQRSTUVWXYZ:?!=-0123456789.");
 
@@ -84,9 +83,13 @@ void Game::init(){
         grid.add(&tank);
     }
 
-    particle_beams.push_back(Particle_beam(vec2(SCRWIDTH / 2, SCRHEIGHT / 2), vec2(100, 50), &particle_beam_sprite, PARTICLE_BEAM_HIT_VALUE));
-    particle_beams.push_back(Particle_beam(vec2(80, 80), vec2(100, 50), &particle_beam_sprite, PARTICLE_BEAM_HIT_VALUE));
-    particle_beams.push_back(Particle_beam(vec2(1200, 600), vec2(100, 50), &particle_beam_sprite, PARTICLE_BEAM_HIT_VALUE));
+    Beam* beam1 = new Beam(vec2(SCRWIDTH / 2, SCRHEIGHT / 2), vec2(100, 50), &particle_beam_sprite, PARTICLE_BEAM_HIT_VALUE);
+    Beam* beam2 = new Beam(vec2(80, 80), vec2(100, 50), &particle_beam_sprite, PARTICLE_BEAM_HIT_VALUE);
+    Beam* beam3 = new Beam(vec2(1200, 600), vec2(100, 50), &particle_beam_sprite, PARTICLE_BEAM_HIT_VALUE);
+
+    beams.push_back(beam1);
+    beams.push_back(beam2);
+    beams.push_back(beam3);
 }
 
 // -----------------------------------------------------------
@@ -152,7 +155,7 @@ void Game::update(float deltaTime){
                 Tank& target = find_closest_enemy(tank);
                 // std::cout << tank << std::endl;
                 //std::cout << &target << std::endl;
-                Rocket* rocket = new Rocket(tank.position, (target.get_position() - tank.position).normalized() * 3, rocket_radius, tank.allignment, ((tank.allignment == RED) ? &rocket_red : &rocket_blue));
+                Object* rocket = new Rocket(tank.position, (target.get_position() - tank.position).normalized() * 3, rocket_radius, tank.allignment, ((tank.allignment == RED) ? &rocket_red : &rocket_blue));
                 rockets.push_back(rocket);
 
                 tank.reload_rocket();
@@ -160,7 +163,7 @@ void Game::update(float deltaTime){
         }
     }
 
-    for(Rocket* rocket : this->rockets){
+    for(Object* rocket : this->rockets){
         this->grid.handleAction(rocket);
     }
 
@@ -174,17 +177,8 @@ void Game::update(float deltaTime){
     }
 
     //Update particle beams
-    for (Particle_beam& particle_beam : particle_beams){
-        particle_beam.tick(tanks);
-
-        //Damage all tanks within the damage window of the beam (the window is an axis-aligned bounding box)
-        for (Tank& tank : tanks){
-            if (tank.active && particle_beam.rectangle.intersects_circle(tank.get_position(), tank.get_collision_radius())){
-                if (tank.hit(particle_beam.damage)){
-                    smokes.push_back(Smoke(smoke, tank.position - vec2(0, 48)));
-                }
-            }
-        }
+    for (Object* beam : this->beams){
+        this->grid.handleAction(beam);
     }
 
     //Update explosion sprites and remove when done with remove erase idiom
@@ -212,7 +206,7 @@ void Game::draw(){
             background.get_buffer()[(int)tPos.x + (int)tPos.y * SCRWIDTH] = sub_blend(background.get_buffer()[(int)tPos.x + (int)tPos.y * SCRWIDTH], 0x808080);
     }
 
-    for (Rocket* rocket : rockets){
+    for (Object* rocket : rockets){
         rocket->draw(screen);
     }
 
@@ -220,8 +214,8 @@ void Game::draw(){
         smoke.draw(screen);
     }
 
-    for (Particle_beam& particle_beam : particle_beams){
-        particle_beam.draw(screen);
+    for (Object* beam : this->beams){
+        beam->draw(screen);
     }
 
     for (Explosion& explosion : explosions){

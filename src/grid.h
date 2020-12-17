@@ -1,5 +1,9 @@
 #pragma once;
 
+namespace objects {
+    class Object;
+}
+
 namespace Tmpl8 {
 
     class Game;
@@ -12,8 +16,8 @@ namespace Tmpl8 {
             Grid(Game* game);
             void add(Tank* tank);
             void insertBefore(Tank* tank, Tank* first);
-            void handleAction(Rocket* rocket);
-            void handleCell(Tank* tank, Rocket* rocket);
+            void handleAction(Object* rocket);
+            void handleCell(Tank* tank, Object* rocket);
             void display();
             void remove(Tank* tank);
 

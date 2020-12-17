@@ -73,22 +73,22 @@ namespace Tmpl8 {
         std::cout << std::endl;
     }
 
-    void Grid::handleAction(Rocket* rocket){
+    void Grid::handleAction(Object* object){
         //std::cout << rocket->speed.x << std::endl;
         for(int x = 0; x < Grid::NUM_CELLS; x++){
             for(int y = 0; y < Grid::NUM_CELLS; y++){
                 //std::cout << &this->action_visitor << std::endl;
-                this->handleCell(this->cells[x][y], rocket);
+                this->handleCell(this->cells[x][y], object);
                 //Grid::display();
             }
         }
 
-        rocket->tick();
+        object->tick();
 
         //std::cout << "Next rocket" << std::endl;
     }
 
-    void Grid::handleCell(Tank* tank, Rocket* rocket){ 
+    void Grid::handleCell(Tank* tank, Object* object){ 
 
         // // Skip alle cellen die op NULL staan
         while(tank != NULL){
@@ -102,7 +102,7 @@ namespace Tmpl8 {
             //     rocket->active = false;
             //     break;
             // }
-            rocket->accept(this->action_visitor);
+            object->accept(this->action_visitor, tank);
 
             // Doorloop de lijst
             tank = tank->next; // SEGFAULT

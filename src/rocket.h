@@ -11,13 +11,12 @@ namespace Tmpl8 {
         Rocket(vec2 position, vec2 direction, float collision_radius, allignments allignment, Sprite* rocket_sprite);
         Rocket();
         ~Rocket();
-
-        void tick();
-        void draw(Surface* screen);
-
+        
         bool intersects(vec2 position_other, float radius_other) const;
 
-        void accept(Visitor* visitor) override;        
+        void draw(Surface* screen) override;
+        void accept(Visitor* visitor, Tank* tank) override;   
+        void tick() override;     
         
 
         vec2 position;

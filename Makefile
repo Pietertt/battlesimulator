@@ -169,6 +169,33 @@ src/action_visitor.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/action_visitor.cpp.s
 .PHONY : src/action_visitor.cpp.s
 
+src/beam.o: src/beam.cpp.o
+
+.PHONY : src/beam.o
+
+# target to build an object file
+src/beam.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/beam.cpp.o
+.PHONY : src/beam.cpp.o
+
+src/beam.i: src/beam.cpp.i
+
+.PHONY : src/beam.i
+
+# target to preprocess a source file
+src/beam.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/beam.cpp.i
+.PHONY : src/beam.cpp.i
+
+src/beam.s: src/beam.cpp.s
+
+.PHONY : src/beam.s
+
+# target to generate assembly for a file
+src/beam.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/beam.cpp.s
+.PHONY : src/beam.cpp.s
+
 src/explosion.o: src/explosion.cpp.o
 
 .PHONY : src/explosion.o
@@ -249,33 +276,6 @@ src/grid.s: src/grid.cpp.s
 src/grid.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/grid.cpp.s
 .PHONY : src/grid.cpp.s
-
-src/particle_beam.o: src/particle_beam.cpp.o
-
-.PHONY : src/particle_beam.o
-
-# target to build an object file
-src/particle_beam.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/particle_beam.cpp.o
-.PHONY : src/particle_beam.cpp.o
-
-src/particle_beam.i: src/particle_beam.cpp.i
-
-.PHONY : src/particle_beam.i
-
-# target to preprocess a source file
-src/particle_beam.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/particle_beam.cpp.i
-.PHONY : src/particle_beam.cpp.i
-
-src/particle_beam.s: src/particle_beam.cpp.s
-
-.PHONY : src/particle_beam.s
-
-# target to generate assembly for a file
-src/particle_beam.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/particle_beam.cpp.s
-.PHONY : src/particle_beam.cpp.s
 
 src/rocket.o: src/rocket.cpp.o
 
@@ -424,6 +424,9 @@ help:
 	@echo "... src/action_visitor.o"
 	@echo "... src/action_visitor.i"
 	@echo "... src/action_visitor.s"
+	@echo "... src/beam.o"
+	@echo "... src/beam.i"
+	@echo "... src/beam.s"
 	@echo "... src/explosion.o"
 	@echo "... src/explosion.i"
 	@echo "... src/explosion.s"
@@ -433,9 +436,6 @@ help:
 	@echo "... src/grid.o"
 	@echo "... src/grid.i"
 	@echo "... src/grid.s"
-	@echo "... src/particle_beam.o"
-	@echo "... src/particle_beam.i"
-	@echo "... src/particle_beam.s"
 	@echo "... src/rocket.o"
 	@echo "... src/rocket.i"
 	@echo "... src/rocket.s"

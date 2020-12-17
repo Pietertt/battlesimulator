@@ -88,7 +88,7 @@ using namespace objects;
 #include "rocket.h"
 #include "smoke.h"
 #include "explosion.h"
-#include "particle_beam.h"
+#include "beam.h"
 #include "grid.h"
 
 #include "game.h"

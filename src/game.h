@@ -42,6 +42,8 @@ class Game
     { /* implement if you want to handle keys */
     }
 
+    vector<Smoke> smokes;
+
   private:
     Surface* screen;
     
@@ -49,10 +51,10 @@ class Game
     Grid grid = Grid(this);
 
     vector<Tank> tanks;
-    vector<Rocket*> rockets;
-    vector<Smoke> smokes;
+    vector<Object*> rockets;
+    vector<Object*> beams;
+    
     vector<Explosion> explosions;
-    vector<Particle_beam> particle_beams;
 
     Font* frame_count_font;
     long long frame_count = 0;
