@@ -19,11 +19,11 @@ Tank::Tank(float pos_x, float pos_y, allignments allignment, Sprite* tank_sprite
       smoke_sprite(smoke_sprite){
 }
 
-Tank::~Tank()
-{
+Tank::~Tank() {
+
 }
 
-void Tank::tick(){
+void Tank::tick() {
 
     force = vec2(0.f, 0.f);
     vec2 direction = (target - position).normalized();
@@ -37,6 +37,14 @@ void Tank::tick(){
 
 
     if (++current_frame > 8) current_frame = 0;
+}
+
+void Tank::accept(Visitor* visitor, Tank* tank) {
+    visitor->visit_tank(this, tank);
+}
+
+vec2 Tank::get_position(){
+    return this->position;
 }
 
 //Start reloading timer

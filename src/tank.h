@@ -1,22 +1,29 @@
 #pragma once
 
+namespace objects {
+    class Object;
+}
+
 namespace Tmpl8 {
 
     class Grid;
+    class Visitor;
 
     enum allignments {
         BLUE,
         RED
     };
 
-    class Tank {
+    class Tank : public Object {
         public:
             Tank(float pos_x, float pos_y, allignments allignment, Sprite* tank_sprite, Sprite* smoke_sprite, float tar_x, float tar_y, float collision_radius, int health, float max_speed);
             ~Tank();
 
-            void tick();
+            void tick() override;
+            void draw(Surface* screen) override;
+            void accept(Visitor* visitor, Tank* tank) override;   
 
-            vec2 get_position() const { return position; };
+            vec2 get_position() override;
             float get_collision_radius() const { return collision_radius; };
             bool rocket_reloaded() const { return reloaded; };
 
@@ -24,8 +31,6 @@ namespace Tmpl8 {
 
             void deactivate();
             bool hit(int hit_value);
-
-            void draw(Surface* screen);
 
             int compare_health(const Tank& other) const;
 
@@ -54,5 +59,6 @@ namespace Tmpl8 {
 
             Tank* next = NULL;
             Tank* previous = NULL;
+            Tank* closest_enemy = NULL;
     };
 } 

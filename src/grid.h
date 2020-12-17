@@ -28,7 +28,7 @@ namespace Tmpl8 {
             ActionVisitor* action_visitor = NULL;
 
             static const int NUM_CELLS = 22;
-            static const int CELL_SIZE = 50;
+            static const int CELL_SIZE = 100;
             Tank* cells[NUM_CELLS][NUM_CELLS];
 
 

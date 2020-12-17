@@ -7,6 +7,8 @@ class Tank;
 class Rocket;
 class Smoke;
 class Particle_beam;
+class Surface;
+class Sprite;
 
 class Game
 {
@@ -42,7 +44,15 @@ class Game
     { /* implement if you want to handle keys */
     }
 
-    vector<Smoke> smokes;
+        vector<Tank*> tanks;
+    vector<Object*> rockets;
+    vector<Object*> beams;
+
+    Surface* rocket_red_img = new Surface("/Users/pieterboersma/Desktop/battlesimulator/assets/Rocket_Proj2.png");
+    Surface* rocket_blue_img = new Surface("/Users/pieterboersma/Desktop/battlesimulator/assets/Rocket_Blue_Proj2.png");
+    
+    Sprite rocket_red = Sprite(this->rocket_red_img, 12);
+    Sprite rocket_blue = Sprite(this->rocket_blue_img, 12);
 
   private:
     Surface* screen;
@@ -50,11 +60,10 @@ class Game
 
     Grid grid = Grid(this);
 
-    vector<Tank> tanks;
-    vector<Object*> rockets;
-    vector<Object*> beams;
+
     
     vector<Explosion> explosions;
+    vector<Smoke> smokes;
 
     Font* frame_count_font;
     long long frame_count = 0;
