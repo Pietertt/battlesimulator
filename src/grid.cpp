@@ -1,7 +1,9 @@
 #include "precomp.h"
 
 namespace Tmpl8 {
-    Grid::Grid(){
+    Grid::Grid(Game* game){
+        std::cout << &this->action_visitor << std::endl;
+        this->game = game;
         // Zet alle cellen op NULL
         for(int x = 0; x < Grid::NUM_CELLS; x++){
             for(int y = 0; y < Grid::NUM_CELLS; y++){
@@ -10,6 +12,10 @@ namespace Tmpl8 {
                 cells[x - 1][y - 1] = NULL;
             }
         }
+    }
+
+    void Grid::test(ActionVisitor* visitor){
+        this->action_visitor = visitor;
     }
 
     void Grid::add(Tank* tank){
@@ -68,8 +74,10 @@ namespace Tmpl8 {
     }
 
     void Grid::handleAction(Rocket* rocket){
+        //std::cout << rocket->speed.x << std::endl;
         for(int x = 0; x < Grid::NUM_CELLS; x++){
             for(int y = 0; y < Grid::NUM_CELLS; y++){
+                //std::cout << &this->action_visitor << std::endl;
                 this->handleCell(this->cells[x][y], rocket);
                 //Grid::display();
             }
@@ -84,17 +92,17 @@ namespace Tmpl8 {
 
         // // Skip alle cellen die op NULL staan
         while(tank != NULL){
-           if (tank->active && (tank->allignment != rocket->allignment) && rocket->intersects(tank->position, tank->collision_radius)){
-                //explosions.push_back(Explosion(&explosion, tank.position));
+            // if (tank->active && (tank->allignment != rocket->allignment) && rocket->intersects(tank->position, tank->collision_radius)){            
 
-                if (tank->hit(60))
-                {
-                    //smokes.push_back(Smoke(smoke, tank.position - vec2(0, 48)));
-                }
+            //     if (tank->hit(60))
+            //     {
+            //         //smokes.push_back(Smoke(smoke, tank.position - vec2(0, 48)));
+            //     }
 
-                rocket->active = false;
-                break;
-            }
+            //     rocket->active = false;
+            //     break;
+            // }
+            rocket->accept(this->action_visitor);
 
             // Doorloop de lijst
             tank = tank->next; // SEGFAULT

@@ -142,6 +142,33 @@ battlesimulator/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/build
 .PHONY : battlesimulator/fast
 
+src/action_visitor.o: src/action_visitor.cpp.o
+
+.PHONY : src/action_visitor.o
+
+# target to build an object file
+src/action_visitor.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/action_visitor.cpp.o
+.PHONY : src/action_visitor.cpp.o
+
+src/action_visitor.i: src/action_visitor.cpp.i
+
+.PHONY : src/action_visitor.i
+
+# target to preprocess a source file
+src/action_visitor.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/action_visitor.cpp.i
+.PHONY : src/action_visitor.cpp.i
+
+src/action_visitor.s: src/action_visitor.cpp.s
+
+.PHONY : src/action_visitor.s
+
+# target to generate assembly for a file
+src/action_visitor.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/action_visitor.cpp.s
+.PHONY : src/action_visitor.cpp.s
+
 src/explosion.o: src/explosion.cpp.o
 
 .PHONY : src/explosion.o
@@ -394,6 +421,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... battlesimulator"
+	@echo "... src/action_visitor.o"
+	@echo "... src/action_visitor.i"
+	@echo "... src/action_visitor.s"
 	@echo "... src/explosion.o"
 	@echo "... src/explosion.i"
 	@echo "... src/explosion.s"

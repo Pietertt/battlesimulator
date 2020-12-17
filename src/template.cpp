@@ -123,6 +123,7 @@ static bool firstframe = true;
 
 Surface* surface = 0;
 Game* game = 0;
+
 SDL_Window* window = 0;
 
 #ifdef ADVANCEDGL

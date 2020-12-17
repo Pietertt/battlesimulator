@@ -46,10 +46,14 @@ const static vec2 rocket_size(25, 24);
 const static float tank_radius = 8.5f;
 const static float rocket_radius = 10.f;
 
+ActionVisitor visitor = ActionVisitor();
+
 // -----------------------------------------------------------
 // Initialize the application
 // -----------------------------------------------------------
 void Game::init(){
+
+    this->grid.test(&visitor);
     frame_count_font = new Font("/Users/pieterboersma/Desktop/battlesimulator/assets/digital_small.png", "ABCDEFGHIJKLMNOPQRSTUVWXYZ:?!=-0123456789.");
 
     tanks.reserve(NUM_TANKS_BLUE + NUM_TANKS_RED);
@@ -148,16 +152,16 @@ void Game::update(float deltaTime){
                 Tank& target = find_closest_enemy(tank);
                 // std::cout << tank << std::endl;
                 //std::cout << &target << std::endl;
-                rockets.push_back(Rocket(tank.position, (target.get_position() - tank.position).normalized() * 3, rocket_radius, tank.allignment, ((tank.allignment == RED) ? &rocket_red : &rocket_blue)));
+                Rocket* rocket = new Rocket(tank.position, (target.get_position() - tank.position).normalized() * 3, rocket_radius, tank.allignment, ((tank.allignment == RED) ? &rocket_red : &rocket_blue));
+                rockets.push_back(rocket);
 
                 tank.reload_rocket();
             }
         }
     }
 
-    for(Rocket& rocket : this->rockets){
-        //std::cout << "Rocket ->" << &rocket << std::endl;
-        this->grid.handleAction(&rocket);
+    for(Rocket* rocket : this->rockets){
+        this->grid.handleAction(rocket);
     }
 
     //Remove exploded rockets with remove erase idiom
@@ -208,8 +212,8 @@ void Game::draw(){
             background.get_buffer()[(int)tPos.x + (int)tPos.y * SCRWIDTH] = sub_blend(background.get_buffer()[(int)tPos.x + (int)tPos.y * SCRWIDTH], 0x808080);
     }
 
-    for (Rocket& rocket : rockets){
-        rocket.draw(screen);
+    for (Rocket* rocket : rockets){
+        rocket->draw(screen);
     }
 
     for (Smoke& smoke : smokes){

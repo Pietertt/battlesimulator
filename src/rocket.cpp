@@ -1,5 +1,4 @@
 #include "precomp.h"
-#include "rocket.h"
 
 
 namespace Tmpl8
@@ -7,18 +6,22 @@ namespace Tmpl8
 Rocket::Rocket(vec2 position, vec2 direction, float collision_radius, allignments allignment, Sprite* rocket_sprite)
     : position(position), speed(direction), collision_radius(collision_radius), allignment(allignment), current_frame(0), rocket_sprite(rocket_sprite), active(true)
 {
+    std::cout << this << std::endl;
 }
 
 Rocket::Rocket(){
     //std::cout << this << std::endl;
 }
 
-Rocket::~Rocket()
-{
+Rocket::~Rocket() {
+
 }
 
-void Rocket::tick()
-{
+void Rocket::accept(Visitor* visitor) {
+    visitor->visit_rocket(this);
+}
+
+void Rocket::tick() {
     position += speed;
     if (++current_frame > 8) current_frame = 0;
 }

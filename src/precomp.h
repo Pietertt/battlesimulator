@@ -74,7 +74,13 @@ using namespace std;
 #include "surface.h"
 #include "template.h"
 
+#include "objects/object.h"
+
+#include "visitor.h"
+#include "action_visitor.h"
+
 using namespace Tmpl8;
+using namespace objects;
 
 #include "thread_pool.h"
 

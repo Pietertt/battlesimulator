@@ -1,31 +1,36 @@
 #pragma once
 
-namespace Tmpl8
-{
+namespace objects {
+    class Object;
+}
 
-class Rocket
-{
-  public:
-    Rocket(vec2 position, vec2 direction, float collision_radius, allignments allignment, Sprite* rocket_sprite);
-    Rocket();
-    ~Rocket();
+namespace Tmpl8 {
 
-    void tick();
-    void draw(Surface* screen);
+    class Rocket : public Object {
+    public:
+        Rocket(vec2 position, vec2 direction, float collision_radius, allignments allignment, Sprite* rocket_sprite);
+        Rocket();
+        ~Rocket();
 
-    bool intersects(vec2 position_other, float radius_other) const;
+        void tick();
+        void draw(Surface* screen);
 
-    vec2 position;
-    vec2 speed;
+        bool intersects(vec2 position_other, float radius_other) const;
 
-    float collision_radius;
+        void accept(Visitor* visitor) override;        
+        
 
-    bool active;
+        vec2 position;
+        vec2 speed;
 
-    allignments allignment;
+        float collision_radius;
 
-    int current_frame;
-    Sprite* rocket_sprite;
-};
+        bool active;
+
+        allignments allignment;
+
+        int current_frame;
+        Sprite* rocket_sprite;
+    };
 
 } // namespace Tmpl8

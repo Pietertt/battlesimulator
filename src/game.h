@@ -44,10 +44,12 @@ class Game
 
   private:
     Surface* screen;
-    Grid grid = Grid();
+    
+
+    Grid grid = Grid(this);
 
     vector<Tank> tanks;
-    vector<Rocket> rockets;
+    vector<Rocket*> rockets;
     vector<Smoke> smokes;
     vector<Explosion> explosions;
     vector<Particle_beam> particle_beams;
