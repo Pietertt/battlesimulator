@@ -76,6 +76,7 @@ static Sprite particle_beam_sprite(particle_beam_img, 3);
                 Rocket* rocket = new Rocket(tank->position, (other->get_position() - tank->position).normalized() * 3, 10.0f, tank->allignment, ((tank->allignment == RED) ? &rocket_red : &rocket_blue));
                 game->rockets.push_back(rocket);
                 tank->reload_rocket();
+                tank->closest_enemy = NULL;
             }
                 // rockets.push_back(Rocket(tank.position, (target.get_position() - tank.position).normalized() * 3, rocket_radius, tank.allignment, ((tank.allignment == RED) ? &rocket_red : &rocket_blue)));
 

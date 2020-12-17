@@ -20,8 +20,6 @@ namespace Tmpl8 {
 
     void Grid::add(Tank* tank){
 
-        //std::cout << "Added -> " << &tank << std::endl;
-
         // De cell waarin de tank zich op het moment zich bevind
         int cellX = (int)(tank->get_position().x / Grid::CELL_SIZE);
         int cellY = (int)(tank->get_position().y / Grid::CELL_SIZE);
@@ -32,15 +30,13 @@ namespace Tmpl8 {
         // Zet de tail op de huidige cell
         tank->next = cells[cellX][cellY];
 
+        // Zet de tank in de desbetreffende cell
         cells[cellX][cellY] = tank;
 
         // Voeg de tank aan de HEAD van de huidige cell toe wanneer er al een tank in de cell zit
         if(tank->next != NULL){
             tank->next->previous = tank;
         }
-
-        // Zet de tank in de huidige cell
-
     }
 
     void Grid::remove(Tank* tank){
@@ -74,24 +70,21 @@ namespace Tmpl8 {
     }
 
     void Grid::handleAction(Object* object){
-        //std::cout << rocket->speed.x << std::endl;
-        for(int x = 0; x < Grid::NUM_CELLS; x++){
-            for(int y = 0; y < Grid::NUM_CELLS; y++){
-                //std::cout << &this->action_visitor << std::endl;
-                this->handleCell(this->cells[x][y], object);
-                //Grid::display();
+        for(int x = 0; x < Grid::NUM_CELLS; x++){ // N
+            for(int y = 0; y < Grid::NUM_CELLS; y++){ // N
+                this->handleCell(this->cells[x][y], object); // 1
             }
         }
-
-        object->tick();
-
-        //std::cout << "Next rocket" << std::endl;
+        object->tick(); // 1
     }
 
     void Grid::handleCell(Tank* tank, Object* object){ 
 
         // // Skip alle cellen die op NULL staan
         while(tank != NULL){
+            if(tank->get_position().x == object->get_position().x && tank->get_position().y == object->get_position().y){
+
+            }
             // if (tank->active && (tank->allignment != rocket->allignment) && rocket->intersects(tank->position, tank->collision_radius)){            
 
             //     if (tank->hit(60))
@@ -102,7 +95,9 @@ namespace Tmpl8 {
             //     rocket->active = false;
             //     break;
             // }
-            object->accept(this->action_visitor, tank);
+
+                object->accept(this->action_visitor, tank);
+            
 
             // Doorloop de lijst
             tank = tank->next; // SEGFAULT
