@@ -12,7 +12,6 @@ class Beam : public Object {
         Beam(vec2 min, vec2 max, Sprite* particle_beam_sprite, int damage);
 
         void draw(Surface* screen) override;
-        void accept(Visitor* visitor, Tank* tank) override;   
         void tick() override; 
         vec2 get_position() override;  
 

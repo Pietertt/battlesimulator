@@ -17,7 +17,7 @@ Tank::Tank(float pos_x, float pos_y, allignments allignment, Sprite* tank_sprite
       current_frame(0),
       tank_sprite(tank_sprite),
       smoke_sprite(smoke_sprite){
-          this->range = 0;
+          this->range = 20;
 }
 
 Tank::~Tank() {
@@ -38,10 +38,6 @@ void Tank::tick() {
 
 
     if (++current_frame > 8) current_frame = 0;
-}
-
-void Tank::accept(Visitor* visitor, Tank* tank) {
-    visitor->visit_tank(this, tank);
 }
 
 vec2 Tank::get_position(){

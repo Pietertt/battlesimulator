@@ -1,7 +1,7 @@
 #include "precomp.h" // include (only) this in every .cpp file
 
-#define NUM_TANKS_BLUE 500
-#define NUM_TANKS_RED 500
+#define NUM_TANKS_BLUE 50
+#define NUM_TANKS_RED 50
 
 #define TANK_MAX_HEALTH 1000
 #define ROCKET_HIT_VALUE 60
@@ -14,10 +14,10 @@
 #define HEALTH_BAR_WIDTH 1
 #define HEALTH_BAR_SPACING 0
 
-#define MAX_FRAMES 2000
+#define MAX_FRAMES 200
 
 //Global performance timer
-#define REF_PERFORMANCE 73466 //UPDATE THIS WITH YOUR REFERENCE PERFORMANCE (see console after 2k frames)
+#define REF_PERFORMANCE 155159 //UPDATE THIS WITH YOUR REFERENCE PERFORMANCE (see console after 2k frames)
 static timer perf_timer;
 static float duration;
 
@@ -46,14 +46,11 @@ const static vec2 rocket_size(25, 24);
 const static float tank_radius = 8.5f;
 const static float rocket_radius = 10.f;
 
-ActionVisitor visitor = ActionVisitor();
 
 // -----------------------------------------------------------
 // Initialize the application
 // -----------------------------------------------------------
 void Game::init(){
-    this->grid.test(&visitor);
-    visitor.add(this);
     frame_count_font = new Font("/Users/pieterboersma/Desktop/battlesimulator/assets/digital_small.png", "ABCDEFGHIJKLMNOPQRSTUVWXYZ:?!=-0123456789.");
 
     tanks.reserve(NUM_TANKS_BLUE + NUM_TANKS_RED);
@@ -62,7 +59,7 @@ void Game::init(){
     uint max_rows = 12;
 
     float start_blue_x = tank_size.x + 10.0f;
-    float start_blue_y = tank_size.y + 300.0f;
+    float start_blue_y = tank_size.y + 80.0f;
 
     float start_red_x = 980.0f;
     float start_red_y = 100.0f;
@@ -99,28 +96,28 @@ void Game::init(){
 // Close down application
 // -----------------------------------------------------------
 void Game::shutdown(){
-    std::cout << "Shutdown!" << std::endl;
+
 }
 
 // -----------------------------------------------------------
 // Iterates through all tanks and returns the closest enemy tank for the given tank
 // -----------------------------------------------------------
-// Tank& Game::find_closest_enemy(Tank& current_tank){
-//     float closest_distance = numeric_limits<float>::infinity();
-//     int closest_index = 0;
+Tank* Game::find_closest_enemy(Tank* current_tank){
+    float closest_distance = numeric_limits<float>::infinity();
+    int closest_index = 0;
 
-//     for (int i = 0; i < tanks.size(); i++){
-//         if (tanks.at(i).allignment != current_tank.allignment && tanks.at(i).active){
-//             float sqrDist = fabsf((tanks.at(i).get_position() - current_tank.get_position()).sqr_length());
-//             if (sqrDist < closest_distance){
-//                 closest_distance = sqrDist;
-//                 closest_index = i;
-//             }
-//         }
-//     }
+    for (int i = 0; i < tanks.size(); i++){
+        if (tanks.at(i)->allignment != current_tank->allignment && tanks.at(i)->active){
+            float sqrDist = fabsf((tanks.at(i)->get_position() - current_tank->get_position()).sqr_length());
+            if (sqrDist < closest_distance){
+                closest_distance = sqrDist;
+                closest_index = i;
+            }
+        }
+    }
 
-//     return tanks.at(closest_index);
-// }
+    return tanks.at(closest_index);
+}
 
 // -----------------------------------------------------------
 // Update the game state:
@@ -137,13 +134,12 @@ void Game::update(float deltaTime){
             this->grid.handleAction(tank);
         }
     }
-    
 
-    for(Object* rocket : this->rockets){
+    for(Rocket* rocket : this->rockets){
         this->grid.handleAction(rocket);
     }
 
-    for (Object* beam : this->beams){
+    for (Beam* beam : this->beams){
         this->grid.handleAction(beam);
     }
 
@@ -203,8 +199,8 @@ void Game::draw(){
     //     const int NUM_TANKS = ((t < 1) ? NUM_TANKS_BLUE : NUM_TANKS_RED);
 
     //     const int begin = ((t < 1) ? 0 : NUM_TANKS_BLUE);
-    //     std::vector<const Tank*> sorted_tanks;
-    //     //insertion_sort_tanks_health(tanks, sorted_tanks, begin, begin + NUM_TANKS);
+    //     std::vector<Tank*> sorted_tanks;
+    //     insertion_sort_tanks_health(tanks, sorted_tanks, begin, begin + NUM_TANKS);
 
     //     for (int i = 0; i < NUM_TANKS; i++){
     //         int health_bar_start_x = i * (HEALTH_BAR_WIDTH + HEALTH_BAR_SPACING) + HEALTH_BARS_OFFSET_X;
@@ -213,7 +209,8 @@ void Game::draw(){
     //         int health_bar_end_y = (t < 1) ? HEALTH_BAR_HEIGHT : SCRHEIGHT - 1;
 
     //         screen->bar(health_bar_start_x, health_bar_start_y, health_bar_end_x, health_bar_end_y, REDMASK);
-    //         screen->bar(health_bar_start_x, health_bar_start_y + (int)((double)HEALTH_BAR_HEIGHT * (1 - ((double)sorted_tanks.at(i)->health / (double)TANK_MAX_HEALTH))), health_bar_end_x, health_bar_end_y, GREENMASK);
+    //         std::cout << sorted_tanks.size() << std::endl;
+    //         //screen->bar(health_bar_start_x, health_bar_start_y + (int)((double)HEALTH_BAR_HEIGHT * (1 - ((double)sorted_tanks.at(i)->health / (double)TANK_MAX_HEALTH))), health_bar_end_x, health_bar_end_y, GREENMASK);
     //     }
     // }
 }

@@ -76,9 +76,6 @@ using namespace std;
 
 #include "objects/object.h"
 
-#include "visitor.h"
-#include "action_visitor.h"
-
 using namespace Tmpl8;
 using namespace objects;
 

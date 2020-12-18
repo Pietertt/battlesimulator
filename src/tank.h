@@ -21,7 +21,6 @@ namespace Tmpl8 {
 
             void tick() override;
             void draw(Surface* screen) override;
-            void accept(Visitor* visitor, Tank* tank) override;   
 
             vec2 get_position() override;
             float get_collision_radius() const { return collision_radius; };

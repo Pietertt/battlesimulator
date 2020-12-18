@@ -22,7 +22,7 @@ class Game
     void insertion_sort_tanks_health(const std::vector<Tank>& original, std::vector<const Tank*>& sorted_tanks, int begin, int end);
     void measure_performance();
 
-    Tank& find_closest_enemy(Tank& current_tank);
+    Tank* find_closest_enemy(Tank* current_tank);
 
     void mouse_up(int button)
     { /* implement if you want to detect mouse button presses */
@@ -45,8 +45,8 @@ class Game
     }
 
     vector<Tank*> tanks;
-    vector<Object*> rockets;
-    vector<Object*> beams;
+    vector<Rocket*> rockets;
+    vector<Beam*> beams;
 
     vector<Explosion> explosions;
     vector<Smoke> smokes;
