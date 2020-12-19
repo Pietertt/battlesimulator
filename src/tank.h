@@ -22,7 +22,7 @@ namespace Tmpl8 {
             void tick() override;
             void draw(Surface* screen) override;
 
-            vec2 get_position() override;
+            vec2 get_position();
             float get_collision_radius() const { return collision_radius; };
             bool rocket_reloaded() const { return reloaded; };
 

@@ -17,10 +17,6 @@ Rocket::~Rocket() {
 
 }
 
-vec2 Rocket::get_position(){
-    return this->position;
-}
-
 void Rocket::tick() {
     position += speed;
     if (++current_frame > 8) current_frame = 0;

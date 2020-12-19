@@ -6,3 +6,5 @@ battlesimulator
 
 *.o
 *.DS_Store
+
+Makefile

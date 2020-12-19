@@ -87,6 +87,10 @@ void Game::init(){
     Beam* beam2 = new Beam(vec2(80, 80), vec2(100, 50), &particle_beam_sprite, PARTICLE_BEAM_HIT_VALUE);
     Beam* beam3 = new Beam(vec2(1200, 600), vec2(100, 50), &particle_beam_sprite, PARTICLE_BEAM_HIT_VALUE);
 
+    beam1->set_damage(500);
+    beam2->set_damage(500);
+    beam3->set_damage(500);
+
     beams.push_back(beam1);
     beams.push_back(beam2);
     beams.push_back(beam3);
@@ -151,6 +155,7 @@ void Game::update(float deltaTime){
             if (tank->rocket_reloaded()) {
                 Tank* target = this->find_closest_enemy(tank);
                 Rocket* rocket = new Rocket(tank->position, (target->get_position() - tank->position).normalized() * 3, 10.0f, tank->allignment, ((tank->allignment == RED) ? &rocket_red : &rocket_blue));
+                rocket->set_damage(60);
                 this->rockets.push_back(rocket);
                 tank->reload_rocket();
             }     
@@ -166,7 +171,7 @@ void Game::update(float deltaTime){
     }
 
     //Remove exploded rockets with remove erase idiom
-    //rockets.erase(std::remove_if(rockets.begin(), rockets.end(), [](const Object& rocket) { return !rocket.active; }), rockets.end());
+    rockets.erase(std::remove_if(rockets.begin(), rockets.end(), [](const Rocket* rocket) { return !rocket->active; }), rockets.end());
 
 
     //Update smoke plumes

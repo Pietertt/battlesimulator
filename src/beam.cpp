@@ -31,8 +31,4 @@ void Beam::draw(Surface* screen) {
     particle_beam_sprite->draw(screen, (int)(position.x - offsetX), (int)(position.y - offsetY));
 }
 
-vec2 Beam::get_position(){
-    return this->max_position;
-}
-
 } // namespace Tmpl8
