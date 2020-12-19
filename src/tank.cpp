@@ -2,8 +2,9 @@
 
 namespace Tmpl8
 {
-Tank::Tank(float pos_x, float pos_y, allignments allignment, Sprite* tank_sprite, Sprite* smoke_sprite, float tar_x, float tar_y, float collision_radius, int health, float max_speed)
-    : position(pos_x, pos_y),
+Tank::Tank(Grid* grid, float pos_x, float pos_y, allignments allignment, Sprite* tank_sprite, Sprite* smoke_sprite, float tar_x, float tar_y, float collision_radius, int health, float max_speed)
+    : grid(grid),
+      position(pos_x, pos_y),
       allignment(allignment),
       target(tar_x, tar_y),
       health(health),
@@ -26,11 +27,12 @@ Tank::~Tank() {
 
 void Tank::tick() {
 
-    force = vec2(0.f, 0.f);
-    vec2 direction = (target - position).normalized();
+    this->force = vec2(0.f, 0.f);
+    vec2 direction = (this->target - this->position).normalized();
 
-    speed = direction + force;
-    position += speed * max_speed * 0.5f;
+    this->speed = direction + this->force;
+
+    this->grid->move(this);
 
     if (--reload_time <= 0.0f){
         reloaded = true;

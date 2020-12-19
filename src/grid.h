@@ -13,10 +13,10 @@ namespace Tmpl8 {
         public:
             Grid(Game* game);
             void add(Tank* tank);
+            void move(Tank* tank);
+
             void handleAction(Rocket* rocket);
-            void handleAction(Tank* tank);
             void handleAction(Beam* beam);
-            void handleCell(Tank* tank, Tank* other);
             void handleCell(Tank* tank, Rocket* rocket);
             void handleCell(Tank* tank, Beam* beam);
 

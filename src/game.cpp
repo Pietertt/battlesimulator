@@ -14,7 +14,7 @@
 #define HEALTH_BAR_WIDTH 1
 #define HEALTH_BAR_SPACING 0
 
-#define MAX_FRAMES 200
+#define MAX_FRAMES 2000
 
 //Global performance timer
 #define REF_PERFORMANCE 155159 //UPDATE THIS WITH YOUR REFERENCE PERFORMANCE (see console after 2k frames)
@@ -69,13 +69,13 @@ void Game::init(){
     //Spawn blue tanks
     for (int i = 0; i < NUM_TANKS_BLUE; i++)
     {
-        Tank* tank = new Tank(start_blue_x + ((i % max_rows) * spacing), start_blue_y + ((i / max_rows) * spacing), BLUE, &tank_blue, &smoke, 1200, 600, tank_radius, TANK_MAX_HEALTH, TANK_MAX_SPEED);
+        Tank* tank = new Tank(&this->grid, start_blue_x + ((i % max_rows) * spacing), start_blue_y + ((i / max_rows) * spacing), BLUE, &tank_blue, &smoke, 1200, 600, tank_radius, TANK_MAX_HEALTH, TANK_MAX_SPEED);
         tanks.push_back(tank);
     }
     //Spawn red tanks
     for (int i = 0; i < NUM_TANKS_RED; i++)
     {
-        Tank* tank = new Tank(start_red_x + ((i % max_rows) * spacing), start_red_y + ((i / max_rows) * spacing), RED, &tank_red, &smoke, 80, 80, tank_radius, TANK_MAX_HEALTH, TANK_MAX_SPEED);
+        Tank* tank = new Tank(&this->grid, start_red_x + ((i % max_rows) * spacing), start_red_y + ((i / max_rows) * spacing), RED, &tank_red, &smoke, 80, 80, tank_radius, TANK_MAX_HEALTH, TANK_MAX_SPEED);
         tanks.push_back(tank);
     }
 
@@ -131,7 +131,29 @@ void Game::update(float deltaTime){
 
     for(Tank* tank : this->tanks){
         if(tank->active){
-            this->grid.handleAction(tank);
+            for(Tank* other : this->tanks){
+                if(tank == other) continue;
+
+                vec2 dir = tank->get_position() - other->get_position();
+                float dirSquaredLen = dir.sqr_length();
+
+                float colSquaredLen = (tank->get_collision_radius() + other->get_collision_radius());
+                colSquaredLen *= colSquaredLen;
+
+                if (dirSquaredLen < colSquaredLen) {
+                    tank->push(dir.normalized(), 1.f);
+                }
+            }
+
+            this->grid.move(tank);
+            tank->tick();
+
+            if (tank->rocket_reloaded()) {
+                Tank* target = this->find_closest_enemy(tank);
+                Rocket* rocket = new Rocket(tank->position, (target->get_position() - tank->position).normalized() * 3, 10.0f, tank->allignment, ((tank->allignment == RED) ? &rocket_red : &rocket_blue));
+                this->rockets.push_back(rocket);
+                tank->reload_rocket();
+            }     
         }
     }
 

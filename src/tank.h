@@ -16,7 +16,7 @@ namespace Tmpl8 {
 
     class Tank : public Object {
         public:
-            Tank(float pos_x, float pos_y, allignments allignment, Sprite* tank_sprite, Sprite* smoke_sprite, float tar_x, float tar_y, float collision_radius, int health, float max_speed);
+            Tank(Grid* grid, float pos_x, float pos_y, allignments allignment, Sprite* tank_sprite, Sprite* smoke_sprite, float tar_x, float tar_y, float collision_radius, int health, float max_speed);
             ~Tank();
 
             void tick() override;
@@ -43,6 +43,8 @@ namespace Tmpl8 {
 
             float collision_radius;
             vec2 force;
+
+            Grid* grid;
 
             float max_speed;
             float reload_time;

@@ -50,6 +50,34 @@ namespace Tmpl8 {
         }
     }
 
+    void Grid::move(Tank* tank){
+        int oldCellX = (int)(tank->get_position().x / Grid::CELL_SIZE);
+        int oldCellY = (int)(tank->get_position().y / Grid::CELL_SIZE);
+
+        tank->position += tank->speed * tank->max_speed * 0.5f;
+
+        int cellX = (int)(tank->get_position().x / Grid::CELL_SIZE);
+        int cellY = (int)(tank->get_position().y / Grid::CELL_SIZE);
+
+        std::cout << cellX << " " << cellY << " " << oldCellX << " " << oldCellY << std::endl;
+
+        if(oldCellX == cellX && oldCellY == cellY) return;
+
+        if(tank->previous != NULL){
+            tank->previous->next = tank->next;
+        }
+
+        if(tank->next != NULL){
+            tank->next->previous = tank->previous;
+        }
+
+        if(this->cells[oldCellX][oldCellY] == tank){
+            this->cells[oldCellX][oldCellY] = tank->next;
+        }
+
+        this->add(tank);
+    }
+
     void Grid::handleAction(Rocket* rocket){
         for(int x = 0; x < Grid::NUM_CELLS; x++){ 
             for(int y = 0; y < Grid::NUM_CELLS; y++){ 
@@ -69,17 +97,6 @@ namespace Tmpl8 {
         rocket->tick(); 
     }
 
-    void Grid::handleAction(Tank* tank){
-        for(int x = 0; x < Grid::NUM_CELLS; x++){ // N
-            for(int y = 0; y < Grid::NUM_CELLS; y++){ // N
-                if(this->cells[x][y] != NULL){
-                    this->handleCell(tank, this->cells[x][y]);
-                }
-            }
-        }
-        tank->tick(); 
-    }
-
     void Grid::handleAction(Beam* beam){
         for(int x = 0; x < Grid::NUM_CELLS; x++){ // N
             for(int y = 0; y < Grid::NUM_CELLS; y++){ // N
@@ -97,41 +114,6 @@ namespace Tmpl8 {
             }
         }
         beam->tick(); 
-    }
-
-    void Grid::handleCell(Tank* tank, Tank* other){
-        while(tank != NULL){
-            vec2 dir = tank->get_position() - other->get_position();
-            float dirSquaredLen = dir.sqr_length();
-
-            float colSquaredLen = (tank->get_collision_radius() + other->get_collision_radius());
-            colSquaredLen *= colSquaredLen;
-
-            if (dirSquaredLen < colSquaredLen) {
-                tank->push(dir.normalized(), 1.f);
-            }
-
-            if (tank->rocket_reloaded()) {
-                float closest_distance = numeric_limits<float>::infinity();
-                int closest_index = 0;
-        
-                if (other->allignment != tank->allignment && other->active) {
-                    float sqrDist = fabsf((other->get_position() - tank->get_position()).sqr_length());
-                    if (sqrDist < closest_distance) {
-                        closest_distance = sqrDist;
-                        tank->closest_enemy = other;
-                    }
-                }
-
-                if(tank->closest_enemy != NULL){
-                    Rocket* rocket = new Rocket(tank->position, (other->get_position() - tank->position).normalized() * 3, 10.0f, tank->allignment, ((tank->allignment == RED) ? &rocket_red : &rocket_blue));
-                    game->rockets.push_back(rocket);
-                    tank->reload_rocket();
-                    tank->closest_enemy = NULL;
-                }
-            }
-            tank = tank->next;
-        }
     }
 
     void Grid::handleCell(Tank* tank, Beam* beam){
