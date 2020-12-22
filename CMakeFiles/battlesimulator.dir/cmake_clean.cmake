@@ -1,6 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/battlesimulator.dir/src/explosion.cpp.o"
   "CMakeFiles/battlesimulator.dir/src/game.cpp.o"
+  "CMakeFiles/battlesimulator.dir/src/grid.cpp.o"
   "CMakeFiles/battlesimulator.dir/src/particle_beam.cpp.o"
   "CMakeFiles/battlesimulator.dir/src/rocket.cpp.o"
   "CMakeFiles/battlesimulator.dir/src/smoke.cpp.o"

@@ -102,9 +102,22 @@ CMakeFiles/battlesimulator.dir/src/game.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/battlesimulator.dir/src/game.cpp.s"
 	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/pieterboersma/Desktop/battlesimulator/src/game.cpp -o CMakeFiles/battlesimulator.dir/src/game.cpp.s
 
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: CMakeFiles/battlesimulator.dir/flags.make
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: src/grid.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/battlesimulator.dir/src/grid.cpp.o"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/battlesimulator.dir/src/grid.cpp.o -c /Users/pieterboersma/Desktop/battlesimulator/src/grid.cpp
+
+CMakeFiles/battlesimulator.dir/src/grid.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/battlesimulator.dir/src/grid.cpp.i"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/pieterboersma/Desktop/battlesimulator/src/grid.cpp > CMakeFiles/battlesimulator.dir/src/grid.cpp.i
+
+CMakeFiles/battlesimulator.dir/src/grid.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/battlesimulator.dir/src/grid.cpp.s"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/pieterboersma/Desktop/battlesimulator/src/grid.cpp -o CMakeFiles/battlesimulator.dir/src/grid.cpp.s
+
 CMakeFiles/battlesimulator.dir/src/particle_beam.cpp.o: CMakeFiles/battlesimulator.dir/flags.make
 CMakeFiles/battlesimulator.dir/src/particle_beam.cpp.o: src/particle_beam.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/battlesimulator.dir/src/particle_beam.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/battlesimulator.dir/src/particle_beam.cpp.o"
 	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/battlesimulator.dir/src/particle_beam.cpp.o -c /Users/pieterboersma/Desktop/battlesimulator/src/particle_beam.cpp
 
 CMakeFiles/battlesimulator.dir/src/particle_beam.cpp.i: cmake_force
@@ -117,7 +130,7 @@ CMakeFiles/battlesimulator.dir/src/particle_beam.cpp.s: cmake_force
 
 CMakeFiles/battlesimulator.dir/src/rocket.cpp.o: CMakeFiles/battlesimulator.dir/flags.make
 CMakeFiles/battlesimulator.dir/src/rocket.cpp.o: src/rocket.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/battlesimulator.dir/src/rocket.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/battlesimulator.dir/src/rocket.cpp.o"
 	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/battlesimulator.dir/src/rocket.cpp.o -c /Users/pieterboersma/Desktop/battlesimulator/src/rocket.cpp
 
 CMakeFiles/battlesimulator.dir/src/rocket.cpp.i: cmake_force
@@ -130,7 +143,7 @@ CMakeFiles/battlesimulator.dir/src/rocket.cpp.s: cmake_force
 
 CMakeFiles/battlesimulator.dir/src/smoke.cpp.o: CMakeFiles/battlesimulator.dir/flags.make
 CMakeFiles/battlesimulator.dir/src/smoke.cpp.o: src/smoke.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/battlesimulator.dir/src/smoke.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/battlesimulator.dir/src/smoke.cpp.o"
 	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/battlesimulator.dir/src/smoke.cpp.o -c /Users/pieterboersma/Desktop/battlesimulator/src/smoke.cpp
 
 CMakeFiles/battlesimulator.dir/src/smoke.cpp.i: cmake_force
@@ -143,7 +156,7 @@ CMakeFiles/battlesimulator.dir/src/smoke.cpp.s: cmake_force
 
 CMakeFiles/battlesimulator.dir/src/surface.cpp.o: CMakeFiles/battlesimulator.dir/flags.make
 CMakeFiles/battlesimulator.dir/src/surface.cpp.o: src/surface.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/battlesimulator.dir/src/surface.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/battlesimulator.dir/src/surface.cpp.o"
 	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/battlesimulator.dir/src/surface.cpp.o -c /Users/pieterboersma/Desktop/battlesimulator/src/surface.cpp
 
 CMakeFiles/battlesimulator.dir/src/surface.cpp.i: cmake_force
@@ -156,7 +169,7 @@ CMakeFiles/battlesimulator.dir/src/surface.cpp.s: cmake_force
 
 CMakeFiles/battlesimulator.dir/src/tank.cpp.o: CMakeFiles/battlesimulator.dir/flags.make
 CMakeFiles/battlesimulator.dir/src/tank.cpp.o: src/tank.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/battlesimulator.dir/src/tank.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/battlesimulator.dir/src/tank.cpp.o"
 	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/battlesimulator.dir/src/tank.cpp.o -c /Users/pieterboersma/Desktop/battlesimulator/src/tank.cpp
 
 CMakeFiles/battlesimulator.dir/src/tank.cpp.i: cmake_force
@@ -169,7 +182,7 @@ CMakeFiles/battlesimulator.dir/src/tank.cpp.s: cmake_force
 
 CMakeFiles/battlesimulator.dir/src/template.cpp.o: CMakeFiles/battlesimulator.dir/flags.make
 CMakeFiles/battlesimulator.dir/src/template.cpp.o: src/template.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/battlesimulator.dir/src/template.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/battlesimulator.dir/src/template.cpp.o"
 	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/battlesimulator.dir/src/template.cpp.o -c /Users/pieterboersma/Desktop/battlesimulator/src/template.cpp
 
 CMakeFiles/battlesimulator.dir/src/template.cpp.i: cmake_force
@@ -184,6 +197,7 @@ CMakeFiles/battlesimulator.dir/src/template.cpp.s: cmake_force
 battlesimulator_OBJECTS = \
 "CMakeFiles/battlesimulator.dir/src/explosion.cpp.o" \
 "CMakeFiles/battlesimulator.dir/src/game.cpp.o" \
+"CMakeFiles/battlesimulator.dir/src/grid.cpp.o" \
 "CMakeFiles/battlesimulator.dir/src/particle_beam.cpp.o" \
 "CMakeFiles/battlesimulator.dir/src/rocket.cpp.o" \
 "CMakeFiles/battlesimulator.dir/src/smoke.cpp.o" \
@@ -196,6 +210,7 @@ battlesimulator_EXTERNAL_OBJECTS =
 
 battlesimulator: CMakeFiles/battlesimulator.dir/src/explosion.cpp.o
 battlesimulator: CMakeFiles/battlesimulator.dir/src/game.cpp.o
+battlesimulator: CMakeFiles/battlesimulator.dir/src/grid.cpp.o
 battlesimulator: CMakeFiles/battlesimulator.dir/src/particle_beam.cpp.o
 battlesimulator: CMakeFiles/battlesimulator.dir/src/rocket.cpp.o
 battlesimulator: CMakeFiles/battlesimulator.dir/src/smoke.cpp.o
@@ -208,7 +223,7 @@ battlesimulator: /usr/local/lib/libGLEW.2.2.0.dylib
 battlesimulator: /usr/local/Cellar/sdl2/2.0.12_1/lib/libSDL2.dylib
 battlesimulator: /usr/local/lib/libfreeimage.dylib
 battlesimulator: CMakeFiles/battlesimulator.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable battlesimulator"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/pieterboersma/Desktop/battlesimulator/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Linking CXX executable battlesimulator"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/battlesimulator.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

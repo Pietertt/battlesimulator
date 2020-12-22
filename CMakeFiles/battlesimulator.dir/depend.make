@@ -4,6 +4,7 @@
 CMakeFiles/battlesimulator.dir/src/explosion.cpp.o: src/explosion.cpp
 CMakeFiles/battlesimulator.dir/src/explosion.cpp.o: src/explosion.h
 CMakeFiles/battlesimulator.dir/src/explosion.cpp.o: src/game.h
+CMakeFiles/battlesimulator.dir/src/explosion.cpp.o: src/grid.h
 CMakeFiles/battlesimulator.dir/src/explosion.cpp.o: src/particle_beam.h
 CMakeFiles/battlesimulator.dir/src/explosion.cpp.o: src/precomp.h
 CMakeFiles/battlesimulator.dir/src/explosion.cpp.o: src/rocket.h
@@ -62,6 +63,7 @@ CMakeFiles/battlesimulator.dir/src/explosion.cpp.o: /usr/local/Cellar/sdl2/2.0.1
 CMakeFiles/battlesimulator.dir/src/game.cpp.o: src/explosion.h
 CMakeFiles/battlesimulator.dir/src/game.cpp.o: src/game.cpp
 CMakeFiles/battlesimulator.dir/src/game.cpp.o: src/game.h
+CMakeFiles/battlesimulator.dir/src/game.cpp.o: src/grid.h
 CMakeFiles/battlesimulator.dir/src/game.cpp.o: src/particle_beam.h
 CMakeFiles/battlesimulator.dir/src/game.cpp.o: src/precomp.h
 CMakeFiles/battlesimulator.dir/src/game.cpp.o: src/rocket.h
@@ -117,8 +119,68 @@ CMakeFiles/battlesimulator.dir/src/game.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/i
 CMakeFiles/battlesimulator.dir/src/game.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/begin_code.h
 CMakeFiles/battlesimulator.dir/src/game.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/close_code.h
 
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: src/explosion.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: src/game.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: src/grid.cpp
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: src/grid.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: src/particle_beam.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: src/precomp.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: src/rocket.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: src/smoke.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: src/surface.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: src/tank.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: src/template.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: src/thread_pool.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_assert.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_atomic.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_audio.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_blendmode.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_clipboard.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_config.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_cpuinfo.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_endian.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_error.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_events.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_filesystem.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_gamecontroller.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_gesture.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_haptic.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_hints.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_joystick.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_keyboard.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_keycode.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_loadso.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_log.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_main.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_messagebox.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_metal.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_mouse.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_mutex.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_pixels.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_platform.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_power.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_quit.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_rect.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_render.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_rwops.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_scancode.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_sensor.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_shape.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_stdinc.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_surface.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_system.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_thread.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_timer.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_touch.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_version.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/SDL_video.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/begin_code.h
+CMakeFiles/battlesimulator.dir/src/grid.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/include/SDL2/close_code.h
+
 CMakeFiles/battlesimulator.dir/src/particle_beam.cpp.o: src/explosion.h
 CMakeFiles/battlesimulator.dir/src/particle_beam.cpp.o: src/game.h
+CMakeFiles/battlesimulator.dir/src/particle_beam.cpp.o: src/grid.h
 CMakeFiles/battlesimulator.dir/src/particle_beam.cpp.o: src/particle_beam.cpp
 CMakeFiles/battlesimulator.dir/src/particle_beam.cpp.o: src/particle_beam.h
 CMakeFiles/battlesimulator.dir/src/particle_beam.cpp.o: src/precomp.h
@@ -177,6 +239,7 @@ CMakeFiles/battlesimulator.dir/src/particle_beam.cpp.o: /usr/local/Cellar/sdl2/2
 
 CMakeFiles/battlesimulator.dir/src/rocket.cpp.o: src/explosion.h
 CMakeFiles/battlesimulator.dir/src/rocket.cpp.o: src/game.h
+CMakeFiles/battlesimulator.dir/src/rocket.cpp.o: src/grid.h
 CMakeFiles/battlesimulator.dir/src/rocket.cpp.o: src/particle_beam.h
 CMakeFiles/battlesimulator.dir/src/rocket.cpp.o: src/precomp.h
 CMakeFiles/battlesimulator.dir/src/rocket.cpp.o: src/rocket.cpp
@@ -235,6 +298,7 @@ CMakeFiles/battlesimulator.dir/src/rocket.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1
 
 CMakeFiles/battlesimulator.dir/src/smoke.cpp.o: src/explosion.h
 CMakeFiles/battlesimulator.dir/src/smoke.cpp.o: src/game.h
+CMakeFiles/battlesimulator.dir/src/smoke.cpp.o: src/grid.h
 CMakeFiles/battlesimulator.dir/src/smoke.cpp.o: src/particle_beam.h
 CMakeFiles/battlesimulator.dir/src/smoke.cpp.o: src/precomp.h
 CMakeFiles/battlesimulator.dir/src/smoke.cpp.o: src/rocket.h
@@ -293,6 +357,7 @@ CMakeFiles/battlesimulator.dir/src/smoke.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/
 
 CMakeFiles/battlesimulator.dir/src/surface.cpp.o: src/explosion.h
 CMakeFiles/battlesimulator.dir/src/surface.cpp.o: src/game.h
+CMakeFiles/battlesimulator.dir/src/surface.cpp.o: src/grid.h
 CMakeFiles/battlesimulator.dir/src/surface.cpp.o: src/particle_beam.h
 CMakeFiles/battlesimulator.dir/src/surface.cpp.o: src/precomp.h
 CMakeFiles/battlesimulator.dir/src/surface.cpp.o: src/rocket.h
@@ -351,6 +416,7 @@ CMakeFiles/battlesimulator.dir/src/surface.cpp.o: /usr/local/Cellar/sdl2/2.0.12_
 
 CMakeFiles/battlesimulator.dir/src/tank.cpp.o: src/explosion.h
 CMakeFiles/battlesimulator.dir/src/tank.cpp.o: src/game.h
+CMakeFiles/battlesimulator.dir/src/tank.cpp.o: src/grid.h
 CMakeFiles/battlesimulator.dir/src/tank.cpp.o: src/particle_beam.h
 CMakeFiles/battlesimulator.dir/src/tank.cpp.o: src/precomp.h
 CMakeFiles/battlesimulator.dir/src/tank.cpp.o: src/rocket.h
@@ -409,6 +475,7 @@ CMakeFiles/battlesimulator.dir/src/tank.cpp.o: /usr/local/Cellar/sdl2/2.0.12_1/i
 
 CMakeFiles/battlesimulator.dir/src/template.cpp.o: src/explosion.h
 CMakeFiles/battlesimulator.dir/src/template.cpp.o: src/game.h
+CMakeFiles/battlesimulator.dir/src/template.cpp.o: src/grid.h
 CMakeFiles/battlesimulator.dir/src/template.cpp.o: src/particle_beam.h
 CMakeFiles/battlesimulator.dir/src/template.cpp.o: src/precomp.h
 CMakeFiles/battlesimulator.dir/src/template.cpp.o: src/rocket.h

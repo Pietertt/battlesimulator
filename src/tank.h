@@ -9,10 +9,12 @@ enum allignments
     RED
 };
 
+class Grid;
+
 class Tank
 {
   public:
-    Tank(float pos_x, float pos_y, allignments allignment, Sprite* tank_sprite, Sprite* smoke_sprite, float tar_x, float tar_y, float collision_radius, int health, float max_speed);
+    Tank(float pos_x, float pos_y, allignments allignment, Sprite* tank_sprite, Sprite* smoke_sprite, Grid* grid, float tar_x, float tar_y, float collision_radius, int health, float max_speed);
 
     ~Tank();
 
@@ -29,7 +31,7 @@ class Tank
 
     void draw(Surface* screen);
 
-    int compare_health(const Tank& other) const;
+    int compare_health(Tank* other);
 
     void push(vec2 direction, float magnitude);
 
@@ -53,6 +55,10 @@ class Tank
     int current_frame;
     Sprite* tank_sprite;
     Sprite* smoke_sprite;
+    
+    Grid* grid = NULL;
+    Tank* previous = NULL;
+    Tank* next = NULL;
 
 };
 

@@ -10,6 +10,7 @@ Tank::Tank(
     allignments allignment,
     Sprite* tank_sprite,
     Sprite* smoke_sprite,
+    Grid* grid,
     float tar_x,
     float tar_y,
     float collision_radius,
@@ -28,7 +29,8 @@ Tank::Tank(
       active(true),
       current_frame(0),
       tank_sprite(tank_sprite),
-      smoke_sprite(smoke_sprite)
+      smoke_sprite(smoke_sprite),
+      grid(grid)
 {
 }
 
@@ -36,21 +38,18 @@ Tank::~Tank()
 {
 }
 
-void Tank::tick()
-{
-    vec2 direction = (target - position).normalized();
+void Tank::tick() {
 
-    //Update using accumulated force
-    speed = direction + force;
-    position += speed * max_speed * 0.5f;
+    this->force = vec2(0.f, 0.f);
+    vec2 direction = (this->target - this->position).normalized();
 
-    //Update reload time
-    if (--reload_time <= 0.0f)
-    {
+    this->speed = direction + this->force;
+
+    this->grid->move(this);
+
+    if (--reload_time <= 0.0f){
         reloaded = true;
     }
-
-    force = vec2(0.f, 0.f);
 
     if (++current_frame > 8) current_frame = 0;
 }
@@ -88,9 +87,9 @@ void Tank::draw(Surface* screen)
     tank_sprite->draw(screen, (int)position.x - 14, (int)position.y - 18);
 }
 
-int Tank::compare_health(const Tank& other) const
+int Tank::compare_health(Tank* other)
 {
-    return ((health == other.health) ? 0 : ((health > other.health) ? 1 : -1));
+    return ((health == other->health) ? 0 : ((health > other->health) ? 1 : -1));
 }
 
 //Add some force in a given direction

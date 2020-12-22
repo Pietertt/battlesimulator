@@ -6,25 +6,15 @@
 
 #IncludeRegexTransform: 
 
-/Users/pieterboersma/Desktop/battlesimulator/src/explosion.cpp
-precomp.h
-/Users/pieterboersma/Desktop/battlesimulator/src/precomp.h
-explosion.h
 /Users/pieterboersma/Desktop/battlesimulator/src/explosion.h
-
-/Users/pieterboersma/Desktop/battlesimulator/src/explosion.h
-
-/Users/pieterboersma/Desktop/battlesimulator/src/game.cpp
-precomp.h
-/Users/pieterboersma/Desktop/battlesimulator/src/precomp.h
 
 /Users/pieterboersma/Desktop/battlesimulator/src/game.h
 
-/Users/pieterboersma/Desktop/battlesimulator/src/particle_beam.cpp
+/Users/pieterboersma/Desktop/battlesimulator/src/grid.cpp
 precomp.h
 /Users/pieterboersma/Desktop/battlesimulator/src/precomp.h
-particle_beam.h
-/Users/pieterboersma/Desktop/battlesimulator/src/particle_beam.h
+
+/Users/pieterboersma/Desktop/battlesimulator/src/grid.h
 
 /Users/pieterboersma/Desktop/battlesimulator/src/particle_beam.h
 
@@ -95,42 +85,18 @@ explosion.h
 /Users/pieterboersma/Desktop/battlesimulator/src/explosion.h
 particle_beam.h
 /Users/pieterboersma/Desktop/battlesimulator/src/particle_beam.h
+grid.h
+/Users/pieterboersma/Desktop/battlesimulator/src/grid.h
 game.h
 /Users/pieterboersma/Desktop/battlesimulator/src/game.h
 
-/Users/pieterboersma/Desktop/battlesimulator/src/rocket.cpp
-precomp.h
-/Users/pieterboersma/Desktop/battlesimulator/src/precomp.h
-rocket.h
 /Users/pieterboersma/Desktop/battlesimulator/src/rocket.h
 
-/Users/pieterboersma/Desktop/battlesimulator/src/rocket.h
-
-/Users/pieterboersma/Desktop/battlesimulator/src/smoke.cpp
-precomp.h
-/Users/pieterboersma/Desktop/battlesimulator/src/precomp.h
-smoke.h
 /Users/pieterboersma/Desktop/battlesimulator/src/smoke.h
-
-/Users/pieterboersma/Desktop/battlesimulator/src/smoke.h
-
-/Users/pieterboersma/Desktop/battlesimulator/src/surface.cpp
-precomp.h
-/Users/pieterboersma/Desktop/battlesimulator/src/precomp.h
 
 /Users/pieterboersma/Desktop/battlesimulator/src/surface.h
 
-/Users/pieterboersma/Desktop/battlesimulator/src/tank.cpp
-precomp.h
-/Users/pieterboersma/Desktop/battlesimulator/src/precomp.h
-tank.h
 /Users/pieterboersma/Desktop/battlesimulator/src/tank.h
-
-/Users/pieterboersma/Desktop/battlesimulator/src/tank.h
-
-/Users/pieterboersma/Desktop/battlesimulator/src/template.cpp
-precomp.h
-/Users/pieterboersma/Desktop/battlesimulator/src/precomp.h
 
 /Users/pieterboersma/Desktop/battlesimulator/src/template.h
 
