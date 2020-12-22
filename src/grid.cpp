@@ -79,24 +79,33 @@ namespace Tmpl8 {
         for(int x = 0; x < Grid::NUM_CELLS; x++){ 
             for(int y = 0; y < Grid::NUM_CELLS; y++){ 
                 if(this->cells[x][y] != NULL){
-                    Tank* tank = this->cells[x][y];
-
-                    this->handleCell(beam, tank);
-
+                    this->handleCell(beam, x, y);
                 }
             }
         }
         beam->tick(); 
     }
 
-    void Grid::handleCell(Particle_beam* beam, Tank* tank){
+    void Grid::handleCell(Particle_beam* beam, int x, int y){
+        Tank* tank = this->cells[x][y];
         while(tank != NULL){
+            this->handleUnit(beam, tank);
+            if(x > 0 && y > 0) this->handleUnit(beam, this->cells[x - 1][y - 1]);
+            if(x > 0) this->handleUnit(beam, this->cells[x - 1][y]);
+            if(y > 0) this->handleUnit(beam, this->cells[x][y - 1]);
+            if(x > 0 && y < this->NUM_CELLS - 1) this->handleUnit(beam, this->cells[x - 1][y + 1]);
+
+            tank = tank->next;
+        }
+    }
+
+    void Grid::handleUnit(Particle_beam* beam, Tank* tank){
+        if(tank != NULL){
             if (tank->active && beam->rectangle.intersects_circle(tank->get_position(), tank->get_collision_radius())) {
                 if (tank->hit(50)) {
                     //this->game->smokes.push_back(Smoke(smoke, tank->position - vec2(0, 48)));
                 }
             }
-            tank = tank->next;
         }
     }
 
