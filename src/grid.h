@@ -12,7 +12,8 @@ namespace Tmpl8 {
             void move(Tank* tank);
 
             void handleAction(Rocket* rocket);
-            void handleCell(Rocket* rocket, Tank* tank);
+            void handleCell(Rocket* rocket, int x, int y);
+            bool handleUnit(Rocket* rocket, Tank* tank);
 
             void handleAction(Particle_beam* beam);
             void handleCell(Particle_beam* beam, int x, int y);

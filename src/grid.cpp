@@ -60,19 +60,39 @@ namespace Tmpl8 {
         for(int x = 0; x < Grid::NUM_CELLS; x++){ 
             for(int y = 0; y < Grid::NUM_CELLS; y++){ 
                 if(this->cells[x][y] != NULL){
-                    Tank* tank = this->cells[x][y];
-                    int tankX = (int)(tank->get_position().x / Grid::CELL_SIZE);
-                    int tankY = (int)(tank->get_position().y / Grid::CELL_SIZE);
-                    int objectX = (int)(rocket->position.x / Grid::CELL_SIZE);
-                    int objectY = (int)(rocket->position.y / Grid::CELL_SIZE);
-
-                    if((tankX == objectX) && (tankY == objectY)){
-                        this->handleCell(rocket, tank);
-                    }
+                    this->handleCell(rocket, x, y);
                 }
             }
         }
         rocket->tick(); 
+    }
+
+    void Grid::handleCell(Rocket* rocket, int x, int y){ 
+        Tank* tank = this->cells[x][y];
+        while(tank != NULL){
+            this->handleUnit(rocket, tank);
+            if(x > 0 && y > 0) if(this->handleUnit(rocket, this->cells[x - 1][y - 1])) break;
+            if(x > 0) if(this->handleUnit(rocket, this->cells[x - 1][y])) break;
+            if(y > 0) if(this->handleUnit(rocket, this->cells[x][y - 1])) break;
+            if(x > 0 && y < this->NUM_CELLS - 1) if(this->handleUnit(rocket, this->cells[x - 1][y + 1])) break;
+
+            tank = tank->next;
+        }
+    }
+
+    bool Grid::handleUnit(Rocket* rocket, Tank* tank){
+        if(tank != NULL){
+            if (tank->active && (tank->allignment != rocket->allignment) && rocket->intersects(tank->position, tank->collision_radius)){            
+                //this->game->explosions.push_back(Explosion(&explosion, tank->position));
+                if (tank->hit(60)) {
+                   // this->game->smokes.push_back(Smoke(smoke, tank->position - vec2(0, 48)));
+                }
+
+                rocket->active = false;
+                return true;
+            }  
+        }
+        return false;
     }
 
     void Grid::handleAction(Particle_beam* beam){
@@ -106,22 +126,6 @@ namespace Tmpl8 {
                     //this->game->smokes.push_back(Smoke(smoke, tank->position - vec2(0, 48)));
                 }
             }
-        }
-    }
-
-    void Grid::handleCell(Rocket* rocket, Tank* tank){ 
-
-        while(tank != NULL){
-            if (tank->active && (tank->allignment != rocket->allignment) && rocket->intersects(tank->position, tank->collision_radius)){            
-                //this->game->explosions.push_back(Explosion(&explosion, tank->position));
-                if (tank->hit(60)) {
-                   // this->game->smokes.push_back(Smoke(smoke, tank->position - vec2(0, 48)));
-                }
-
-                rocket->active = false;
-                break;
-            }  
-            tank = tank->next;
         }
     }
 }
