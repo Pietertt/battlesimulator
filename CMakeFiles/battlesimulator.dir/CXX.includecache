@@ -8,11 +8,11 @@
 
 /Users/pieterboersma/Desktop/battlesimulator/src/explosion.h
 
-/Users/pieterboersma/Desktop/battlesimulator/src/game.h
-
-/Users/pieterboersma/Desktop/battlesimulator/src/grid.cpp
+/Users/pieterboersma/Desktop/battlesimulator/src/game.cpp
 precomp.h
 /Users/pieterboersma/Desktop/battlesimulator/src/precomp.h
+
+/Users/pieterboersma/Desktop/battlesimulator/src/game.h
 
 /Users/pieterboersma/Desktop/battlesimulator/src/grid.h
 
