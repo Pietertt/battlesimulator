@@ -327,33 +327,6 @@ void Game::draw()
 }
 
 // -----------------------------------------------------------
-// Sort tanks by health value using insertion sort
-// -----------------------------------------------------------
-void Tmpl8::Game::insertion_sort_tanks_health(std::vector<Tank*>& original, std::vector<Tank*>& sorted_tanks, int begin, int end) {
-    const int NUM_TANKS = end - begin;
-    sorted_tanks.reserve(NUM_TANKS);
-    sorted_tanks.emplace_back(original.at(begin));
-
-    for (int i = begin + 1; i < (begin + NUM_TANKS); i++) {
-        Tank* current_tank = original.at(i);
-
-        for (int s = (int)sorted_tanks.size() - 1; s >= 0; s--) {
-            Tank* current_checking_tank = sorted_tanks.at(s);
-
-            if ((current_checking_tank->compare_health(current_tank) <= 0)) {
-                sorted_tanks.insert(1 + sorted_tanks.begin() + s, current_tank);
-                break;
-            }
-
-            if (s == 0) {
-                sorted_tanks.insert(sorted_tanks.begin(), current_tank);
-                break;
-            }
-        }
-    }
-}
-
-// -----------------------------------------------------------
 // When we reach MAX_FRAMES print the duration and speedup multiplier
 // Updating REF_PERFORMANCE at the top of this file with the value
 // on your machine gives you an idea of the speedup your optimizations give
