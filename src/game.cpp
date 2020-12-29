@@ -54,6 +54,10 @@ void Game::insert_grid(Grid* grid){
     this->grid = grid;
 }
 
+void Game::insert_kdtree(KDTree* kdtree){
+    this->kdtree = kdtree;
+}
+
 // -----------------------------------------------------------
 // Initialize the application
 // -----------------------------------------------------------
@@ -89,6 +93,7 @@ void Game::init()
 
     for(Tank* tank : this->tanks){
         this->grid->add(tank);
+        this->kdtree->add(tank, 0);
     }
     Particle_beam* beam1 = new Particle_beam(vec2(SCRWIDTH / 2, SCRHEIGHT / 2), vec2(100, 50), &particle_beam_sprite, PARTICLE_BEAM_HIT_VALUE);
     Particle_beam* beam2 = new Particle_beam(vec2(80, 80), vec2(100, 50), &particle_beam_sprite, PARTICLE_BEAM_HIT_VALUE);
