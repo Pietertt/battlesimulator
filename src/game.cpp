@@ -1,7 +1,7 @@
 #include "precomp.h" // include (only) this in every .cpp file
 
-#define NUM_TANKS_BLUE 200
-#define NUM_TANKS_RED 200
+#define NUM_TANKS_BLUE 100
+#define NUM_TANKS_RED 100
 
 #define TANK_MAX_HEALTH 1000
 #define ROCKET_HIT_VALUE 60
@@ -210,21 +210,31 @@ std::vector<Tank*> Game::merge_sort_tanks_health(std::vector<Tank*> unsorted){
         return unsorted;
     }
 
-    std::vector<Tank*> a;
-    std::vector<Tank*> b;
+    std::vector<Tank*> left;
+    std::vector<Tank*> right;
 
     for(int i = 0; i < unsorted.size(); i++){
         if(i < (unsorted.size() / 2)){
-            a.push_back(unsorted.at(i));
+            left.push_back(unsorted.at(i));
         } else {
-            b.push_back(unsorted.at(i));
+            right.push_back(unsorted.at(i));
         }
     }
 
-    a = this->merge_sort_tanks_health(a);
-    b = this->merge_sort_tanks_health(b);
+    if(std::thread::hardware_concurrency() > 1){
+        left = this->merge_sort_tanks_health(left);
 
-    return this->merge_tanks_health(a, b);
+        std::thread t([&]{
+            right = this->merge_sort_tanks_health(right);
+        });
+
+        t.join();
+    } else {
+        left = this->merge_sort_tanks_health(left);
+        right = this->merge_sort_tanks_health(right);
+    }
+
+    return this->merge_tanks_health(left, right);
 }
 
 std::vector<Tank*> Game::merge_tanks_health(std::vector<Tank*> a, std::vector<Tank*> b){
