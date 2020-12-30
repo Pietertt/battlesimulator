@@ -1,7 +1,7 @@
 #include "precomp.h" // include (only) this in every .cpp file
 
-#define NUM_TANKS_BLUE 100
-#define NUM_TANKS_RED 100
+#define NUM_TANKS_BLUE 10
+#define NUM_TANKS_RED 10
 
 #define TANK_MAX_HEALTH 1000
 #define ROCKET_HIT_VALUE 60
@@ -101,6 +101,8 @@ void Game::init()
     particle_beams.push_back(beam1);
     particle_beams.push_back(beam2);
     particle_beams.push_back(beam3);
+
+    this->kdtree->findMin(this->kdtree, 0, 0);
 }
 
 // -----------------------------------------------------------

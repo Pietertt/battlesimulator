@@ -8,7 +8,12 @@ namespace Tmpl8 {
         public:
             KDTree();
             KDTree(Tank* item);
+
             void add(Tank* item, int depth);
+            Tank* search(Tank* item, int depth);
+            Tank* findMin(KDTree* node, int dimension, int cd);
+
+            void traverse();
 
             KDTree* left = NULL;
             KDTree* right = NULL;
