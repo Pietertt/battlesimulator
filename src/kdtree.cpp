@@ -75,7 +75,7 @@ namespace Tmpl8 {
             }
         }
 
-        //std::cout << tree->item->get_position().x << " " << tree->item->get_position().y << std::endl;
+        std::cout << tank->get_position().x << " " << tank->get_position().y << " " << " : " << distance << " : " << tree->item->get_position().x << " " << tree->item->get_position().y << std::endl;
 
         if(tank->compare_position(tree->item, depth)){
             tree->nearest_neighbour_search(tree->right, tank, current_best, best_distance, depth + 1);
