@@ -76,8 +76,10 @@ namespace Tmpl8 {
         float distance = tank->get_distance(tank, tree->item);
         if(distance < best_distance){
             if(tank != tree->item){
-                best_distance = distance;
-                current_best = tree->item;
+                if(tree->item->active){
+                     best_distance = distance;
+                    current_best = tree->item;
+                }
             }
         }
 
@@ -93,8 +95,10 @@ namespace Tmpl8 {
             distance = tank->get_distance(tank, tree->item);
             if(distance < best_distance){
                 if(tank != tree->item){
-                    best_distance = distance;
-                    current_best = tree->item;
+                    if(tree->item->active){
+                        best_distance = distance;
+                        current_best = tree->item;
+                    }
                 }
             }
         }

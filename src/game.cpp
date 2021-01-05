@@ -55,7 +55,7 @@ void Game::insert_grid(Grid* grid){
 }
 
 void Game::insert_kdtree(KDTree* kdtree){
-    this->kdtree = kdtree;
+    this->trees.push_back(kdtree);
 }
 
 // -----------------------------------------------------------
@@ -92,8 +92,13 @@ void Game::init()
 
     for(Tank* tank : this->tanks){
         this->grid->add(tank);
-        this->kdtree->add(tank, 0);
+        if(tank->allignment == BLUE){
+            this->trees.at(0)->add(tank, 0);
+        } else {
+            this->trees.at(1)->add(tank, 0);
+        }
     }
+
 
     Particle_beam* beam1 = new Particle_beam(vec2(SCRWIDTH / 2, SCRHEIGHT / 2), vec2(100, 50), &particle_beam_sprite, PARTICLE_BEAM_HIT_VALUE);
     Particle_beam* beam2 = new Particle_beam(vec2(80, 80), vec2(100, 50), &particle_beam_sprite, PARTICLE_BEAM_HIT_VALUE);
@@ -175,12 +180,18 @@ void Game::update(float deltaTime)
                 Tank* current_best = NULL;
                 float best_distance = 10000;
 
-                this->kdtree->nearest_neighbour_search(this->kdtree, tank, current_best, best_distance, 0);
+                if(tank->allignment == BLUE){
+                    this->trees.at(1)->nearest_neighbour_search(this->trees.at(1), tank, current_best, best_distance, 0);
+                } else {
+                    this->trees.at(0)->nearest_neighbour_search(this->trees.at(0), tank, current_best, best_distance, 0);
+                }
+                
           
-                Rocket* rocket = new Rocket(tank->position, (current_best->get_position() - tank->position).normalized() * 3, 10.0f, tank->allignment, ((tank->allignment == RED) ? &rocket_red : &rocket_blue));
-                rockets.push_back(rocket);
-
-                tank->reload_rocket();
+                if(current_best != NULL){
+                    Rocket* rocket = new Rocket(tank->position, (current_best->get_position() - tank->position).normalized() * 3, 10.0f, tank->allignment, ((tank->allignment == RED) ? &rocket_red : &rocket_blue));
+                    rockets.push_back(rocket);
+                    tank->reload_rocket();
+                }
             }
         }
     }

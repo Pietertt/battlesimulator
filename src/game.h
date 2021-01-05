@@ -65,8 +65,9 @@ class Game
 
     bool lock_update = false;
 
+    std::vector<KDTree*> trees;
+
     Grid* grid;
-    KDTree* kdtree;
 
 
 };
