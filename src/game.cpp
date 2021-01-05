@@ -1,7 +1,7 @@
 #include "precomp.h" // include (only) this in every .cpp file
 
-#define NUM_TANKS_BLUE 100
-#define NUM_TANKS_RED 100
+#define NUM_TANKS_BLUE 50
+#define NUM_TANKS_RED 50
 
 #define TANK_MAX_HEALTH 1000
 #define ROCKET_HIT_VALUE 60
@@ -54,6 +54,10 @@ void Game::insert_grid(Grid* grid){
     this->grid = grid;
 }
 
+void Game::insert_kdtree(KDTree* kdtree){
+    this->trees.push_back(kdtree);
+}
+
 // -----------------------------------------------------------
 // Initialize the application
 // -----------------------------------------------------------
@@ -75,21 +79,27 @@ void Game::init()
     float spacing = 15.0f;
 
     //Spawn blue tanks
-    for (int i = 0; i < NUM_TANKS_BLUE; i++)
-    {
+    for (int i = 0; i < NUM_TANKS_BLUE; i++) {
         Tank* tank = new Tank(start_blue_x + ((i % max_rows) * spacing), start_blue_y + ((i / max_rows) * spacing), BLUE, &tank_blue, &smoke, this->grid, 1200, 600, tank_radius, TANK_MAX_HEALTH, TANK_MAX_SPEED);
         this->tanks.push_back(tank);
     }
+
     //Spawn red tanks
-    for (int i = 0; i < NUM_TANKS_RED; i++)
-    {
+    for (int i = 0; i < NUM_TANKS_RED; i++) {
         Tank* tank = new Tank(start_red_x + ((i % max_rows) * spacing), start_red_y + ((i / max_rows) * spacing), RED, &tank_red, &smoke, this->grid, 80, 80, tank_radius, TANK_MAX_HEALTH, TANK_MAX_SPEED);
         tanks.push_back(tank);
     }
 
     for(Tank* tank : this->tanks){
         this->grid->add(tank);
+        if(tank->allignment == BLUE){
+            this->trees.at(0)->add(tank, 0);
+        } else {
+            this->trees.at(1)->add(tank, 0);
+        }
     }
+
+
     Particle_beam* beam1 = new Particle_beam(vec2(SCRWIDTH / 2, SCRHEIGHT / 2), vec2(100, 50), &particle_beam_sprite, PARTICLE_BEAM_HIT_VALUE);
     Particle_beam* beam2 = new Particle_beam(vec2(80, 80), vec2(100, 50), &particle_beam_sprite, PARTICLE_BEAM_HIT_VALUE);
     Particle_beam* beam3 = new Particle_beam(vec2(1200, 600), vec2(100, 50), &particle_beam_sprite, PARTICLE_BEAM_HIT_VALUE);
@@ -167,12 +177,21 @@ void Game::update(float deltaTime)
             //Shoot at closest target if reloaded
             if (tank->rocket_reloaded())
             {
-                Tank* target = find_closest_enemy(tank);
+                Tank* current_best = NULL;
+                float best_distance = 10000;
 
-                Rocket* rocket = new Rocket(tank->position, (target->get_position() - tank->position).normalized() * 3, 10.0f, tank->allignment, ((tank->allignment == RED) ? &rocket_red : &rocket_blue));
-                rockets.push_back(rocket);
-
-                tank->reload_rocket();
+                if(tank->allignment == BLUE){
+                    this->trees.at(1)->nearest_neighbour_search(this->trees.at(1), tank, current_best, best_distance, 0);
+                } else {
+                    this->trees.at(0)->nearest_neighbour_search(this->trees.at(0), tank, current_best, best_distance, 0);
+                }
+                
+          
+                if(current_best != NULL){
+                    Rocket* rocket = new Rocket(tank->position, (current_best->get_position() - tank->position).normalized() * 3, 10.0f, tank->allignment, ((tank->allignment == RED) ? &rocket_red : &rocket_blue));
+                    rockets.push_back(rocket);
+                    tank->reload_rocket();
+                }
             }
         }
     }

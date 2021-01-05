@@ -87,9 +87,36 @@ void Tank::draw(Surface* screen)
     tank_sprite->draw(screen, (int)position.x - 14, (int)position.y - 18);
 }
 
-int Tank::compare_health(Tank* other)
-{
+int Tank::compare_health(Tank* other) {
     return ((health == other->health) ? 0 : ((health > other->health) ? 1 : -1));
+}
+
+bool Tank::compare_position(Tank* other, int depth){   
+    if(depth % 2 == 0){
+        if(this->get_position().x >= other->get_position().x){
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        if(this->get_position().y >= other->get_position().y){
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+
+float Tank::get_distance(Tank* tank, Tank* other){
+    float x1 = tank->get_position().x;
+    float y1 = tank->get_position().y;
+    float x2 = other->get_position().x;
+    float y2 = other->get_position().y;
+
+    float dx = x1 - x2;
+    float dy = y1 - y2;
+
+    return sqrt(dx * dx + dy * dy);
 }
 
 //Add some force in a given direction

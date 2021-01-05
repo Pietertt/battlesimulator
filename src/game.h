@@ -9,6 +9,7 @@ class Smoke;
 class Particle_beam;
 
 class Grid;
+class KDTree;
 
 
 class Game
@@ -24,7 +25,9 @@ class Game
     std::vector<Tank*> merge_sort_tanks_health(std::vector<Tank*> unsorted);
     std::vector<Tank*> merge_tanks_health(std::vector<Tank*> a, std::vector<Tank*> b);
     void measure_performance();
+
     void insert_grid(Grid* grid);
+    void insert_kdtree(KDTree* kdtree);
 
     Tank* find_closest_enemy(Tank* current_tank);
 
@@ -61,6 +64,8 @@ class Game
     long long frame_count = 0;
 
     bool lock_update = false;
+
+    std::vector<KDTree*> trees;
 
     Grid* grid;
 

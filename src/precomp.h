@@ -84,6 +84,7 @@ using namespace Tmpl8;
 #include "explosion.h"
 #include "particle_beam.h"
 #include "grid.h"
+#include "kdtree.h"
 
 #include "game.h"
 
