@@ -17,18 +17,22 @@ namespace Tmpl8 {
         }
 
         if(depth % this->k == 0){
-            if(item->get_position().x >= this->item->get_position().x){
+            if(item->get_position().x > this->item->get_position().x){
+                std::cout << "Add to next on right on x" << std::endl;
                 if(this->right != NULL) this->right->add(item, depth + 1);
                 if(this->right == NULL) this->right = new KDTree(item);
             } else {
+                std::cout << "Add to next on left on x" << std::endl;
                 if(this->left != NULL) this->left->add(item, depth + 1);
                 if(this->left == NULL) this->left = new KDTree(item);
             }
         } else {
-            if(item->get_position().y >= this->item->get_position().y){
+            if(item->get_position().y > this->item->get_position().y){
+                std::cout << "Add to next on right on y" << std::endl;
                 if(this->right != NULL) this->right->add(item, depth + 1);
                 if(this->right == NULL) this->right = new KDTree(item);
             } else {
+                std::cout << "Add to next on left on y" << std::endl;
                 if(this->left != NULL) this->left->add(item, depth + 1);
                 if(this->left == NULL) this->left = new KDTree(item);
             }
@@ -63,10 +67,29 @@ namespace Tmpl8 {
     }
 
     void KDTree::nearest_neighbour_search(KDTree* tree, Tank* tank, Tank* &current_best, float &best_distance, int depth){
-
         if(tree == NULL) return;
 
+        if(depth % 2 == 0){
+            if(tank->get_position().x > tree->item->get_position().x){
+                std::cout << "Right" << " " << tree->item->get_position().x << std::endl;
+                tree->nearest_neighbour_search(tree->right, tank, current_best, best_distance, depth + 1);
+            } else {
+                std::cout << "Left" << " " << tree->item->get_position().x << std::endl;
+                tree->nearest_neighbour_search(tree->left, tank, current_best, best_distance, depth + 1);
+            }
+        } else {
+            if(tank->get_position().y > tree->item->get_position().y){
+                std::cout << "Right" << " " << tree->item->get_position().y << std::endl;
+                tree->nearest_neighbour_search(tree->right, tank, current_best, best_distance, depth + 1);
+            } else {
+                std::cout << "Left" << " " << tree->item->get_position().y << std::endl;
+                tree->nearest_neighbour_search(tree->left, tank, current_best, best_distance, depth + 1);
+            }
+        }
+         
         float distance = tank->get_distance(tank, tree->item);
+
+        std::cout << tank->get_position().x << " " << tank->get_position().y << " " << " : " << distance << " : " << tree->item->get_position().x << " " << tree->item->get_position().y << std::endl;
 
         if(distance < best_distance){
             if(tank != tree->item){
@@ -75,13 +98,26 @@ namespace Tmpl8 {
             }
         }
 
-        std::cout << tank->get_position().x << " " << tank->get_position().y << " " << " : " << distance << " : " << tree->item->get_position().x << " " << tree->item->get_position().y << std::endl;
+        // std::cout << tank->get_position().x << " " << tank->get_position().y << " " << " : " << distance << " : " << tree->item->get_position().x << " " << tree->item->get_position().y << std::endl;
 
-        if(tank->compare_position(tree->item, depth)){
-            tree->nearest_neighbour_search(tree->right, tank, current_best, best_distance, depth + 1);
-        } else {
-            tree->nearest_neighbour_search(tree->left, tank, current_best, best_distance, depth + 1);
-        }
+        
+        // if(depth % 2 == 0){
+        //     if(tank->get_position().x > tree->item->get_position().x){
+        //         std::cout << "Right" << std::endl;
+        //         tree->nearest_neighbour_search(tree->right, tank, current_best, best_distance, depth + 1);
+        //     } else {
+        //         std::cout << "Left" << std::endl;
+        //         tree->nearest_neighbour_search(tree->left, tank, current_best, best_distance, depth + 1);
+        //     }
+        // } else {
+        //     if(tank->get_position().y > tree->item->get_position().y){
+        //         std::cout << "Right" << std::endl;
+        //         tree->nearest_neighbour_search(tree->right, tank, current_best, best_distance, depth + 1);
+        //     } else {
+        //         std::cout << "Left" << std::endl;
+        //         tree->nearest_neighbour_search(tree->left, tank, current_best, best_distance, depth + 1);
+        //     }
+        // }
     }
 
     // Tank* KDTree::search(Tank* item, int depth) {

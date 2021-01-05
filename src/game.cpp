@@ -104,6 +104,9 @@ void Game::init()
     for(Tank* tank : this->tanks){
         this->grid->add(tank);
         this->kdtree->add(tank, 0);
+            std::cout << std::endl;
+        std::cout << std::endl;
+        std::cout << std::endl;
     }
 
     // for(Tank* tank : this->tanks){
@@ -229,15 +232,15 @@ void Game::update(float deltaTime)
                 Tank* current_best = NULL;
                 float best_distance = 10000;
 
-                std::cout << tank->get_position().x << " " << tank->get_position().y << std::endl;
-                this->kdtree->nearest_neighbour_search(this->kdtree, tank, current_best, best_distance, 0);
-                std::cout << "Best distance: " << best_distance << std::endl;
-                std::cout << current_best->get_position().x << " " << current_best->get_position().y << std::endl;
+                // std::cout << tank->get_position().x << " " << tank->get_position().y << std::endl;
+                // this->kdtree->nearest_neighbour_search(this->kdtree, tank, current_best, best_distance, 0);
+                // std::cout << "Best distance: " << best_distance << std::endl;
+                // std::cout << current_best->get_position().x << " " << current_best->get_position().y << std::endl;
 
-                //std::cout << "A tank with x, y of " << tank->get_position().x << " " << tank->get_position().y << " with a target of " << current_best->get_position().x << " " << current_best->get_position().y << std::endl;
+                // //std::cout << "A tank with x, y of " << tank->get_position().x << " " << tank->get_position().y << " with a target of " << current_best->get_position().x << " " << current_best->get_position().y << std::endl;
 
-                Rocket* rocket = new Rocket(tank->position, (current_best->get_position() - tank->position).normalized() * 3, 10.0f, tank->allignment, ((tank->allignment == RED) ? &rocket_red : &rocket_blue));
-                rockets.push_back(rocket);
+                // Rocket* rocket = new Rocket(tank->position, (current_best->get_position() - tank->position).normalized() * 3, 10.0f, tank->allignment, ((tank->allignment == RED) ? &rocket_red : &rocket_blue));
+                // rockets.push_back(rocket);
 
                 tank->reload_rocket();
 
