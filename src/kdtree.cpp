@@ -18,40 +18,21 @@ namespace Tmpl8 {
 
         if(depth % this->k == 0){
             if(item->get_position().x > this->item->get_position().x){
-                std::cout << "Add to next on right on x" << std::endl;
                 if(this->right != NULL) this->right->add(item, depth + 1);
                 if(this->right == NULL) this->right = new KDTree(item);
             } else {
-                std::cout << "Add to next on left on x" << std::endl;
                 if(this->left != NULL) this->left->add(item, depth + 1);
                 if(this->left == NULL) this->left = new KDTree(item);
             }
         } else {
             if(item->get_position().y > this->item->get_position().y){
-                std::cout << "Add to next on right on y" << std::endl;
                 if(this->right != NULL) this->right->add(item, depth + 1);
                 if(this->right == NULL) this->right = new KDTree(item);
             } else {
-                std::cout << "Add to next on left on y" << std::endl;
                 if(this->left != NULL) this->left->add(item, depth + 1);
                 if(this->left == NULL) this->left = new KDTree(item);
             }
         }
-    }
-
-    bool KDTree::search(Tank* item, int depth) {
-        if(this->item == NULL) return false;
-
-        if(this->item == item) return true;
-
-        if(depth % this->k == 0){
-            if(item->get_position().x > this->item->get_position().x) return right->search(item, depth + 1);
-            return left->search(item, depth + 1);
-        } else {
-            if(item->get_position().y > this->item->get_position().y) return right->search(item, depth + 1);
-            return left->search(item, depth + 1);
-        }
-
     }
 
     Tank* KDTree::findMin(KDTree* node, int dimension, int cd){
@@ -69,28 +50,30 @@ namespace Tmpl8 {
     void KDTree::nearest_neighbour_search(KDTree* tree, Tank* tank, Tank* &current_best, float &best_distance, int depth){
         if(tree == NULL) return;
 
+        KDTree* next = NULL;
+        KDTree* other = NULL;
+
         if(depth % 2 == 0){
             if(tank->get_position().x > tree->item->get_position().x){
-                std::cout << "Right" << " " << tree->item->get_position().x << std::endl;
-                tree->nearest_neighbour_search(tree->right, tank, current_best, best_distance, depth + 1);
+                next = tree->right;
+                other = tree->left;
             } else {
-                std::cout << "Left" << " " << tree->item->get_position().x << std::endl;
-                tree->nearest_neighbour_search(tree->left, tank, current_best, best_distance, depth + 1);
+                next = tree->left;
+                other = tree->right;
             }
         } else {
             if(tank->get_position().y > tree->item->get_position().y){
-                std::cout << "Right" << " " << tree->item->get_position().y << std::endl;
-                tree->nearest_neighbour_search(tree->right, tank, current_best, best_distance, depth + 1);
+                next = tree->right;
+                other = tree->left;
             } else {
-                std::cout << "Left" << " " << tree->item->get_position().y << std::endl;
-                tree->nearest_neighbour_search(tree->left, tank, current_best, best_distance, depth + 1);
+                next = tree->left;
+                other = tree->right;
             }
         }
-         
+
+        this->nearest_neighbour_search(next, tank, current_best, best_distance, depth + 1);
+
         float distance = tank->get_distance(tank, tree->item);
-
-        std::cout << tank->get_position().x << " " << tank->get_position().y << " " << " : " << distance << " : " << tree->item->get_position().x << " " << tree->item->get_position().y << std::endl;
-
         if(distance < best_distance){
             if(tank != tree->item){
                 best_distance = distance;
@@ -98,42 +81,24 @@ namespace Tmpl8 {
             }
         }
 
-        // std::cout << tank->get_position().x << " " << tank->get_position().y << " " << " : " << distance << " : " << tree->item->get_position().x << " " << tree->item->get_position().y << std::endl;
+        float perpendicular = 0;
+        if(depth % 2 == 0){
+            perpendicular = tank->get_position().x - tree->item->get_position().x;
+        } else {
+            perpendicular = tank->get_position().y - tree->item->get_position().y;
+        }
 
-        
-        // if(depth % 2 == 0){
-        //     if(tank->get_position().x > tree->item->get_position().x){
-        //         std::cout << "Right" << std::endl;
-        //         tree->nearest_neighbour_search(tree->right, tank, current_best, best_distance, depth + 1);
-        //     } else {
-        //         std::cout << "Left" << std::endl;
-        //         tree->nearest_neighbour_search(tree->left, tank, current_best, best_distance, depth + 1);
-        //     }
-        // } else {
-        //     if(tank->get_position().y > tree->item->get_position().y){
-        //         std::cout << "Right" << std::endl;
-        //         tree->nearest_neighbour_search(tree->right, tank, current_best, best_distance, depth + 1);
-        //     } else {
-        //         std::cout << "Left" << std::endl;
-        //         tree->nearest_neighbour_search(tree->left, tank, current_best, best_distance, depth + 1);
-        //     }
-        // }
+        if(distance >= (perpendicular * perpendicular)){
+            this->nearest_neighbour_search(other, tank, current_best, best_distance, depth + 1);
+            distance = tank->get_distance(tank, tree->item);
+            if(distance < best_distance){
+                if(tank != tree->item){
+                    best_distance = distance;
+                    current_best = tree->item;
+                }
+            }
+        }
     }
-
-    // Tank* KDTree::search(Tank* item, int depth) {
-    //     if(this->item == NULL) return NULL;
-    //     Tank* best = NULL;
-
-    //     if(best == NULL){
-    //         best = this->item;
-    //     }
-
-    //     if(depth % 2 == 0){
-    //         (item->get_position().x < this->item->get_position().x) ? this->left->search(item, depth + 1) : this->right->search(item, depth + 1);
-    //     } else {
-    //         (item->get_position().y < this->item->get_position().y) ? this->left->search(item, depth + 1) : this->right->search(item, depth + 1);
-    //     }
-    // }
 
     void KDTree::traverse(KDTree* tree){
         if(tree == NULL) return;

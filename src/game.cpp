@@ -1,7 +1,7 @@
 #include "precomp.h" // include (only) this in every .cpp file
 
-#define NUM_TANKS_BLUE 5
-#define NUM_TANKS_RED 5
+#define NUM_TANKS_BLUE 50
+#define NUM_TANKS_RED 50
 
 #define TANK_MAX_HEALTH 1000
 #define ROCKET_HIT_VALUE 60
@@ -78,40 +78,22 @@ void Game::init()
 
     float spacing = 15.0f;
 
-    Tank* tank1 = new Tank(300, 300, RED, &tank_red, &smoke, this->grid, 80, 80, tank_radius, TANK_MAX_HEALTH, TANK_MAX_SPEED);
-    Tank* tank2 = new Tank(400, 200, RED, &tank_red, &smoke, this->grid, 80, 80, tank_radius, TANK_MAX_HEALTH, TANK_MAX_SPEED);
-    Tank* tank3 = new Tank(500, 100, RED, &tank_red, &smoke, this->grid, 80, 80, tank_radius, TANK_MAX_HEALTH, TANK_MAX_SPEED);
-    Tank* tank4 = new Tank(100, 600, RED, &tank_red, &smoke, this->grid, 80, 80, tank_radius, TANK_MAX_HEALTH, TANK_MAX_SPEED);
-    Tank* tank5 = new Tank(450, 200, RED, &tank_red, &smoke, this->grid, 80, 80, tank_radius, TANK_MAX_HEALTH, TANK_MAX_SPEED);
-    
-    Tank* tank6 = new Tank(900, 100, BLUE, &tank_blue, &smoke, this->grid, 80, 80, tank_radius, TANK_MAX_HEALTH, TANK_MAX_SPEED);
-    Tank* tank7 = new Tank(850, 70, BLUE, &tank_blue, &smoke, this->grid, 80, 80, tank_radius, TANK_MAX_HEALTH, TANK_MAX_SPEED);
-    Tank* tank8 = new Tank(700, 200, BLUE, &tank_blue, &smoke, this->grid, 80, 80, tank_radius, TANK_MAX_HEALTH, TANK_MAX_SPEED);
-    Tank* tank9 = new Tank(900, 300, BLUE, &tank_blue, &smoke, this->grid, 80, 80, tank_radius, TANK_MAX_HEALTH, TANK_MAX_SPEED);
-    Tank* tank10 = new Tank(600, 570, BLUE, &tank_blue, &smoke, this->grid, 80, 80, tank_radius, TANK_MAX_HEALTH, TANK_MAX_SPEED);
-    
-    tanks.push_back(tank1);
-    tanks.push_back(tank2);
-    tanks.push_back(tank3);
-    tanks.push_back(tank4);
-    tanks.push_back(tank5);
-    tanks.push_back(tank6);
-    tanks.push_back(tank7);
-    tanks.push_back(tank8);
-    tanks.push_back(tank9);
-    tanks.push_back(tank10);
+    //Spawn blue tanks
+    for (int i = 0; i < NUM_TANKS_BLUE; i++) {
+        Tank* tank = new Tank(start_blue_x + ((i % max_rows) * spacing), start_blue_y + ((i / max_rows) * spacing), BLUE, &tank_blue, &smoke, this->grid, 1200, 600, tank_radius, TANK_MAX_HEALTH, TANK_MAX_SPEED);
+        this->tanks.push_back(tank);
+    }
+
+    //Spawn red tanks
+    for (int i = 0; i < NUM_TANKS_RED; i++) {
+        Tank* tank = new Tank(start_red_x + ((i % max_rows) * spacing), start_red_y + ((i / max_rows) * spacing), RED, &tank_red, &smoke, this->grid, 80, 80, tank_radius, TANK_MAX_HEALTH, TANK_MAX_SPEED);
+        tanks.push_back(tank);
+    }
 
     for(Tank* tank : this->tanks){
         this->grid->add(tank);
         this->kdtree->add(tank, 0);
-            std::cout << std::endl;
-        std::cout << std::endl;
-        std::cout << std::endl;
     }
-
-    // for(Tank* tank : this->tanks){
-    //     std::cout << this->kdtree->search(tank, 0) << std::endl;
-    // }
 
     Particle_beam* beam1 = new Particle_beam(vec2(SCRWIDTH / 2, SCRHEIGHT / 2), vec2(100, 50), &particle_beam_sprite, PARTICLE_BEAM_HIT_VALUE);
     Particle_beam* beam2 = new Particle_beam(vec2(80, 80), vec2(100, 50), &particle_beam_sprite, PARTICLE_BEAM_HIT_VALUE);
@@ -119,45 +101,6 @@ void Game::init()
     particle_beams.push_back(beam1);
     particle_beams.push_back(beam2);
     particle_beams.push_back(beam3);
-
-    this->kdtree->traverse(this->kdtree);
-
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;
-
-    for(Tank* tank: this->tanks){
-        Tank* current_best = NULL;
-        float best_distance = 10000;
-
-        std::cout << tank->get_position().x << " " << tank->get_position().y << std::endl;
-        this->kdtree->nearest_neighbour_search(this->kdtree, tank, current_best, best_distance, 0);
-        std::cout << "Best distance: " << best_distance << std::endl;
-        std::cout << current_best->get_position().x << " " << current_best->get_position().y << std::endl;
-        std::cout << std::endl;
-        std::cout << std::endl;
-        std::cout << std::endl;
-    }
-
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;
-
-    // Tank* current_best;
-    // float best_distance = 10000;
-
-    // this->kdtree->nearest_neighbour_search(this->kdtree, this->tanks.at(9), current_best, best_distance, 0);
-
-    // std::cout << best_distance << std::endl;
-    // std::cout << current_best->get_position().x << " " << current_best->get_position().y << std::endl;
-
-    // Tank* tank = this->kdtree->findMin(this->kdtree, 0, 0);
-    // if(tank != NULL){
-    //     std::cout << tank->get_position().x << " " << tank->get_position().y << std::endl;
-    // }
 }
 
 // -----------------------------------------------------------
@@ -232,21 +175,12 @@ void Game::update(float deltaTime)
                 Tank* current_best = NULL;
                 float best_distance = 10000;
 
-                // std::cout << tank->get_position().x << " " << tank->get_position().y << std::endl;
-                // this->kdtree->nearest_neighbour_search(this->kdtree, tank, current_best, best_distance, 0);
-                // std::cout << "Best distance: " << best_distance << std::endl;
-                // std::cout << current_best->get_position().x << " " << current_best->get_position().y << std::endl;
-
-                // //std::cout << "A tank with x, y of " << tank->get_position().x << " " << tank->get_position().y << " with a target of " << current_best->get_position().x << " " << current_best->get_position().y << std::endl;
-
-                // Rocket* rocket = new Rocket(tank->position, (current_best->get_position() - tank->position).normalized() * 3, 10.0f, tank->allignment, ((tank->allignment == RED) ? &rocket_red : &rocket_blue));
-                // rockets.push_back(rocket);
+                this->kdtree->nearest_neighbour_search(this->kdtree, tank, current_best, best_distance, 0);
+          
+                Rocket* rocket = new Rocket(tank->position, (current_best->get_position() - tank->position).normalized() * 3, 10.0f, tank->allignment, ((tank->allignment == RED) ? &rocket_red : &rocket_blue));
+                rockets.push_back(rocket);
 
                 tank->reload_rocket();
-
-                std::cout << std::endl;
-                std::cout << std::endl;
-                std::cout << std::endl;
             }
         }
     }
