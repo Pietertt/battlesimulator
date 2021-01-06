@@ -1,13 +1,13 @@
 #include "precomp.h" // include (only) this in every .cpp file
 
-#define NUM_TANKS_BLUE 50
-#define NUM_TANKS_RED 50
+#define NUM_TANKS_BLUE 30
+#define NUM_TANKS_RED 30
 
 #define TANK_MAX_HEALTH 1000
 #define ROCKET_HIT_VALUE 60
 #define PARTICLE_BEAM_HIT_VALUE 50
 
-#define TANK_MAX_SPEED 1.5
+#define TANK_MAX_SPEED 3.0
 
 #define HEALTH_BARS_OFFSET_X 0
 #define HEALTH_BAR_HEIGHT 70
@@ -54,10 +54,6 @@ void Game::insert_grid(Grid* grid){
     this->grid = grid;
 }
 
-void Game::insert_kdtree(KDTree* kdtree){
-    this->trees.push_back(kdtree);
-}
-
 // -----------------------------------------------------------
 // Initialize the application
 // -----------------------------------------------------------
@@ -71,7 +67,7 @@ void Game::init()
     uint max_rows = 12;
 
     float start_blue_x = tank_size.x + 10.0f;
-    float start_blue_y = tank_size.y + 80.0f;
+    float start_blue_y = tank_size.y + 400.0f;
 
     float start_red_x = 980.0f;
     float start_red_y = 100.0f;
@@ -90,12 +86,14 @@ void Game::init()
         tanks.push_back(tank);
     }
 
+    this->blue_tree = new KDTree();
+    this->red_tree = new KDTree();
+
     for(Tank* tank : this->tanks){
-        this->grid->add(tank);
         if(tank->allignment == BLUE){
-            this->trees.at(0)->add(tank, 0);
+            this->blue_tree->add(tank);
         } else {
-            this->trees.at(1)->add(tank, 0);
+            this->red_tree->add(tank);
         }
     }
 
@@ -116,30 +114,6 @@ void Game::shutdown()
 }
 
 // -----------------------------------------------------------
-// Iterates through all tanks and returns the closest enemy tank for the given tank
-// -----------------------------------------------------------
-Tank* Game::find_closest_enemy(Tank* current_tank)
-{
-    float closest_distance = numeric_limits<float>::infinity();
-    int closest_index = 0;
-
-    for (int i = 0; i < tanks.size(); i++)
-    {
-        if (tanks.at(i)->allignment != current_tank->allignment && tanks.at(i)->active)
-        {
-            float sqrDist = fabsf((tanks.at(i)->get_position() - current_tank->get_position()).sqr_length());
-            if (sqrDist < closest_distance)
-            {
-                closest_distance = sqrDist;
-                closest_index = i;
-            }
-        }
-    }
-
-    return tanks.at(closest_index);
-}
-
-// -----------------------------------------------------------
 // Update the game state:
 // Move all objects
 // Update sprite frames
@@ -154,8 +128,7 @@ void Game::update(float deltaTime)
         if (tank->active)
         {
             //Check tank collision and nudge tanks away from each other
-            for (Tank* oTank : tanks)
-            {
+            for (Tank* oTank : tanks) {
                 if (tank == oTank) continue;
                 
                 vec2 dir = tank->get_position() - oTank->get_position();
@@ -181,11 +154,10 @@ void Game::update(float deltaTime)
                 float best_distance = 10000;
 
                 if(tank->allignment == BLUE){
-                    this->trees.at(1)->nearest_neighbour_search(this->trees.at(1), tank, current_best, best_distance, 0);
+                    this->red_tree->nearest_neighbour_search(this->red_tree, tank, current_best, best_distance, 0);
                 } else {
-                    this->trees.at(0)->nearest_neighbour_search(this->trees.at(0), tank, current_best, best_distance, 0);
+                    this->blue_tree->nearest_neighbour_search(this->blue_tree, tank, current_best, best_distance, 0);
                 }
-                
           
                 if(current_best != NULL){
                     Rocket* rocket = new Rocket(tank->position, (current_best->get_position() - tank->position).normalized() * 3, 10.0f, tank->allignment, ((tank->allignment == RED) ? &rocket_red : &rocket_blue));
@@ -197,8 +169,7 @@ void Game::update(float deltaTime)
     }
 
     //Update smoke plumes
-    for (Smoke& smoke : smokes)
-    {
+    for (Smoke& smoke : smokes) {
         smoke.tick();
     }
 
@@ -207,7 +178,7 @@ void Game::update(float deltaTime)
         this->grid->handleAction(rocket);        
     }
 
-    for(Particle_beam* beam : this->particle_beams){
+    for(Particle_beam* beam : this->particle_beams) {
         this->grid->handleAction(beam);
     }
 
@@ -215,15 +186,32 @@ void Game::update(float deltaTime)
     rockets.erase(std::remove_if(rockets.begin(), rockets.end(), [](const Rocket* rocket) { return !rocket->active; }), rockets.end());
 
     //Update explosion sprites and remove when done with remove erase idiom
-    for (Explosion& explosion : explosions)
-    {
+    for (Explosion& explosion : explosions) {
         explosion.tick();
     }
 
     explosions.erase(std::remove_if(explosions.begin(), explosions.end(), [](const Explosion& explosion) { return explosion.done(); }), explosions.end());
+
+    delete this->blue_tree;
+    delete this->red_tree;
+
+    this->blue_tree = new KDTree();
+    this->red_tree = new KDTree();
+
+    for(Tank* tank : this->tanks){
+        if(tank->allignment == BLUE){
+            if(tank->active){
+                this->blue_tree->add(tank);
+            }
+        } else {
+            if(tank->active){
+                this->red_tree->add(tank);
+            }
+        }
+    }
 }
 
-std::vector<Tank*> Game::merge_sort_tanks_health(std::vector<Tank*> unsorted){
+std::vector<Tank*> Game::merge_sort_tanks_health(std::vector<Tank*> unsorted, bool sort, int depth){
 
     if(unsorted.size() == 1){
         return unsorted;
@@ -241,22 +229,22 @@ std::vector<Tank*> Game::merge_sort_tanks_health(std::vector<Tank*> unsorted){
     }
 
     if(std::thread::hardware_concurrency() > 1){
-        left = this->merge_sort_tanks_health(left);
+        left = merge_sort_tanks_health(left, depth, sort);
 
         std::thread t([&]{
-            right = this->merge_sort_tanks_health(right);
+            right = merge_sort_tanks_health(right, depth, sort);
         });
 
         t.join();
     } else {
-        left = this->merge_sort_tanks_health(left);
-        right = this->merge_sort_tanks_health(right);
+        left = merge_sort_tanks_health(left, depth, sort);
+        right = merge_sort_tanks_health(right, depth, sort);
     }
 
-    return this->merge_tanks_health(left, right);
+    return merge_tanks_health(left, right, depth, sort);
 }
 
-std::vector<Tank*> Game::merge_tanks_health(std::vector<Tank*> a, std::vector<Tank*> b){
+std::vector<Tank*> Game::merge_tanks_health(std::vector<Tank*> a, std::vector<Tank*> b, bool sort, int depth){
 
     std::vector<Tank*> sorted;
 
@@ -274,15 +262,25 @@ std::vector<Tank*> Game::merge_tanks_health(std::vector<Tank*> a, std::vector<Ta
         return sorted;
     }
 
-    if(a.at(0)->compare_health(b.at(0)) <= 0){
-        sorted.push_back(a.at(0));
-        a.erase(a.begin());
+    if(sort){
+        if(a.at(0)->compare_position(b.at(0), depth) <= 0){
+            sorted.push_back(a.at(0));
+            a.erase(a.begin());
+        } else {
+            sorted.push_back(b.at(0));
+            b.erase(b.begin());
+        }
     } else {
-        sorted.push_back(b.at(0));
-        b.erase(b.begin());
+        if(a.at(0)->compare_health(b.at(0)) <= 0){
+            sorted.push_back(a.at(0));
+            a.erase(a.begin());
+        } else {
+            sorted.push_back(b.at(0));
+            b.erase(b.begin());
+        }
     }
 
-    std::vector<Tank*> merged = this->merge_tanks_health(a, b);
+    std::vector<Tank*> merged = merge_tanks_health(a, b, depth, sort);
 
     for(Tank* tank : merged){
         sorted.push_back(tank);
@@ -340,7 +338,7 @@ void Game::draw()
         std::vector<Tank*> sorted_tanks;
         std::vector<Tank*> unsorted_tanks(begin, end);
 
-        std::vector<Tank*> sorted = this->merge_sort_tanks_health(unsorted_tanks);
+        std::vector<Tank*> sorted = this->merge_sort_tanks_health(unsorted_tanks, false);
 
         for (int i = 0; i < NUM_TANKS; i++)
         {

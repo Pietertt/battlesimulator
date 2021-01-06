@@ -22,14 +22,11 @@ class Game
     void update(float deltaTime);
     void draw();
     void tick(float deltaTime);
-    std::vector<Tank*> merge_sort_tanks_health(std::vector<Tank*> unsorted);
-    std::vector<Tank*> merge_tanks_health(std::vector<Tank*> a, std::vector<Tank*> b);
+    static std::vector<Tank*> merge_sort_tanks_health(std::vector<Tank*> unsorted, bool sort, int depth = 0);
+    static std::vector<Tank*> merge_tanks_health(std::vector<Tank*> a, std::vector<Tank*> b, bool sort, int depth = 0);
     void measure_performance();
 
     void insert_grid(Grid* grid);
-    void insert_kdtree(KDTree* kdtree);
-
-    Tank* find_closest_enemy(Tank* current_tank);
 
     void mouse_up(int button)
     { /* implement if you want to detect mouse button presses */
@@ -65,7 +62,8 @@ class Game
 
     bool lock_update = false;
 
-    std::vector<KDTree*> trees;
+    KDTree* red_tree;
+    KDTree* blue_tree;
 
     Grid* grid;
 

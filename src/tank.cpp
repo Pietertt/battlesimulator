@@ -91,18 +91,18 @@ int Tank::compare_health(Tank* other) {
     return ((health == other->health) ? 0 : ((health > other->health) ? 1 : -1));
 }
 
-bool Tank::compare_position(Tank* other, int depth){   
+int Tank::compare_position(Tank* other, int depth){   
     if(depth % 2 == 0){
         if(this->get_position().x >= other->get_position().x){
-            return true;
+            return 1;
         } else {
-            return false;
+            return -1;
         }
     } else {
         if(this->get_position().y >= other->get_position().y){
-            return true;
+            return 1;
         } else {
-            return false;
+            return -1;
         }
     }
 }
