@@ -128,4 +128,44 @@ namespace Tmpl8 {
             }
         }
     }
+
+    void Grid::handleAction(Tank* tank){
+        for(int x = 0; x < Grid::NUM_CELLS; x++){ 
+            for(int y = 0; y < Grid::NUM_CELLS; y++){ 
+                if(this->cells[x][y] != NULL){
+                    this->handleCell(tank, x, y);
+                }
+            }
+        }
+        tank->tick(); 
+    }
+
+    void Grid::handleCell(Tank* tank, int x, int y){ 
+        Tank* other = this->cells[x][y];
+        while(other != NULL){
+            this->handleUnit(tank, other);
+            if(x > 0 && y > 0) if(this->handleUnit(tank, this->cells[x - 1][y - 1])) break;
+            if(x > 0) if(this->handleUnit(tank, this->cells[x - 1][y])) break;
+            if(y > 0) if(this->handleUnit(tank, this->cells[x][y - 1])) break;
+            if(x > 0 && y < this->NUM_CELLS - 1) if(this->handleUnit(tank, this->cells[x - 1][y + 1])) break;
+
+            other = other->next;
+        }
+    }
+
+    bool Grid::handleUnit(Tank* tank, Tank* other) {
+        if (tank != NULL && other != NULL) {
+                
+            vec2 dir = tank->get_position() - other->get_position();
+            float dirSquaredLen = dir.sqr_length();
+
+            float colSquaredLen = (tank->get_collision_radius() + other->get_collision_radius());
+            colSquaredLen *= colSquaredLen;
+
+            if (dirSquaredLen < colSquaredLen) {
+                tank->push(dir.normalized(), 1.f);
+            }
+        }
+    }
+
 }

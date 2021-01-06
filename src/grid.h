@@ -19,6 +19,10 @@ namespace Tmpl8 {
             void handleCell(Particle_beam* beam, int x, int y);
             void handleUnit(Particle_beam* beam, Tank* tank);
 
+            void handleAction(Tank* tank);
+            void handleCell(Tank* tank, int x, int y);
+            bool handleUnit(Tank* tank, Tank* other);
+
             static const int NUM_CELLS = 30;
             static const int CELL_SIZE = 50;
 

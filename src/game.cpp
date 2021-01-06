@@ -7,7 +7,7 @@
 #define ROCKET_HIT_VALUE 60
 #define PARTICLE_BEAM_HIT_VALUE 50
 
-#define TANK_MAX_SPEED 3.0
+#define TANK_MAX_SPEED 1.5
 
 #define HEALTH_BARS_OFFSET_X 0
 #define HEALTH_BAR_HEIGHT 70
@@ -125,23 +125,48 @@ void Game::update(float deltaTime)
     //Update tanks
     for (Tank* tank : tanks)
     {
-        if (tank->active)
-        {
-            //Check tank collision and nudge tanks away from each other
-            for (Tank* oTank : tanks) {
-                if (tank == oTank) continue;
+
+        if (tank->active) {
+
+            // Tank* current_best = NULL;
+            // float best_distance = 10000;
+
+            // if(tank->allignment == BLUE){
+            //     this->red_tree->nearest_neighbour_search(this->red_tree, tank, current_best, best_distance, 0);
+            // } else {
+            //     this->blue_tree->nearest_neighbour_search(this->blue_tree, tank, current_best, best_distance, 0);
+            // }
+
+            // if(current_best != NULL){
+            //     vec2 dir = tank->get_position() - current_best->get_position();
+            //     float dirSquaredLen = dir.sqr_length();
+
+            //     float colSquaredLen = (tank->get_collision_radius() + current_best->get_collision_radius());
+            //     colSquaredLen *= colSquaredLen;
+
+            //     if (dirSquaredLen < colSquaredLen)
+            //     {
+            //         tank->push(dir.normalized(), 1.f);
+            //     }
+            // }
+
+
+
+            // //Check tank collision and nudge tanks away from each other
+            // for (Tank* oTank : tanks) {
+            //     if (tank == oTank) continue;
                 
-                vec2 dir = tank->get_position() - oTank->get_position();
-                float dirSquaredLen = dir.sqr_length();
+            //     vec2 dir = tank->get_position() - oTank->get_position();
+            //     float dirSquaredLen = dir.sqr_length();
 
-                float colSquaredLen = (tank->get_collision_radius() + oTank->get_collision_radius());
-                colSquaredLen *= colSquaredLen;
+            //     float colSquaredLen = (tank->get_collision_radius() + oTank->get_collision_radius());
+            //     colSquaredLen *= colSquaredLen;
 
-                if (dirSquaredLen < colSquaredLen)
-                {
-                    tank->push(dir.normalized(), 1.f);
-                }
-            }
+            //     if (dirSquaredLen < colSquaredLen)
+            //     {
+            //         tank->push(dir.normalized(), 1.f);
+            //     }
+            // }
 
             //Move tanks according to speed and nudges (see above) also reload
             tank->tick();
@@ -166,6 +191,11 @@ void Game::update(float deltaTime)
                 }
             }
         }
+    }
+
+    //Update rockets
+    for (Tank* tank : tanks) {
+        this->grid->handleAction(tank);        
     }
 
     //Update smoke plumes
