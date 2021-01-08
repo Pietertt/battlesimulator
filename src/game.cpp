@@ -1,7 +1,7 @@
 #include "precomp.h" // include (only) this in every .cpp file
 
-#define NUM_TANKS_BLUE 50
-#define NUM_TANKS_RED 50
+#define NUM_TANKS_BLUE 200
+#define NUM_TANKS_RED 200
 
 #define TANK_MAX_HEALTH 1000
 #define ROCKET_HIT_VALUE 60
@@ -14,10 +14,10 @@
 #define HEALTH_BAR_WIDTH 1
 #define HEALTH_BAR_SPACING 0
 
-#define MAX_FRAMES 2000
+#define MAX_FRAMES 200
 
 //Global performance timer
-#define REF_PERFORMANCE 73466 //UPDATE THIS WITH YOUR REFERENCE PERFORMANCE (see console after 2k frames)
+#define REF_PERFORMANCE 159176 //UPDATE THIS WITH YOUR REFERENCE PERFORMANCE (see console after 2k frames)
 static timer perf_timer;
 static float duration;
 
@@ -50,14 +50,6 @@ Game::Game(){
 
 }
 
-void Game::insert_grid(Grid* grid){
-    this->grid = grid;
-}
-
-void Game::insert_kdtree(KDTree* kdtree){
-    this->trees.push_back(kdtree);
-}
-
 // -----------------------------------------------------------
 // Initialize the application
 // -----------------------------------------------------------
@@ -70,7 +62,7 @@ void Game::init()
     uint rows = (uint)sqrt(NUM_TANKS_BLUE + NUM_TANKS_RED);
     uint max_rows = 12;
 
-    float start_blue_x = tank_size.x + 10.0f;
+   float start_blue_x = tank_size.x + 10.0f;
     float start_blue_y = tank_size.y + 80.0f;
 
     float start_red_x = 980.0f;
@@ -90,12 +82,16 @@ void Game::init()
         tanks.push_back(tank);
     }
 
+    this->blue_tree = new KDTree();
+    this->red_tree = new KDTree();
+    this->grid = new Grid(this);
+
     for(Tank* tank : this->tanks){
         this->grid->add(tank);
         if(tank->allignment == BLUE){
-            this->trees.at(0)->add(tank, 0);
+            this->blue_tree->add(tank);
         } else {
-            this->trees.at(1)->add(tank, 0);
+            this->red_tree->add(tank);
         }
     }
 
@@ -116,76 +112,30 @@ void Game::shutdown()
 }
 
 // -----------------------------------------------------------
-// Iterates through all tanks and returns the closest enemy tank for the given tank
-// -----------------------------------------------------------
-Tank* Game::find_closest_enemy(Tank* current_tank)
-{
-    float closest_distance = numeric_limits<float>::infinity();
-    int closest_index = 0;
-
-    for (int i = 0; i < tanks.size(); i++)
-    {
-        if (tanks.at(i)->allignment != current_tank->allignment && tanks.at(i)->active)
-        {
-            float sqrDist = fabsf((tanks.at(i)->get_position() - current_tank->get_position()).sqr_length());
-            if (sqrDist < closest_distance)
-            {
-                closest_distance = sqrDist;
-                closest_index = i;
-            }
-        }
-    }
-
-    return tanks.at(closest_index);
-}
-
-// -----------------------------------------------------------
 // Update the game state:
 // Move all objects
 // Update sprite frames
 // Collision detection
 // Targeting etc..
 // -----------------------------------------------------------
-void Game::update(float deltaTime)
-{
-    //Update tanks
-    for (Tank* tank : tanks)
-    {
-        if (tank->active)
-        {
-            //Check tank collision and nudge tanks away from each other
-            for (Tank* oTank : tanks)
-            {
-                if (tank == oTank) continue;
-                
-                vec2 dir = tank->get_position() - oTank->get_position();
-                float dirSquaredLen = dir.sqr_length();
-
-                float colSquaredLen = (tank->get_collision_radius() + oTank->get_collision_radius());
-                colSquaredLen *= colSquaredLen;
-
-                if (dirSquaredLen < colSquaredLen)
-                {
-                    tank->push(dir.normalized(), 1.f);
-                }
-            }
-
-            //Move tanks according to speed and nudges (see above) also reload
+void Game::update(float deltaTime) {
+    for (Tank* tank : tanks){
+        if (tank->active) {
             tank->tick();
+            // this->grid->handleAction(tank);
+
             this->grid->move(tank);
 
-            //Shoot at closest target if reloaded
             if (tank->rocket_reloaded())
             {
                 Tank* current_best = NULL;
                 float best_distance = 10000;
 
                 if(tank->allignment == BLUE){
-                    this->trees.at(1)->nearest_neighbour_search(this->trees.at(1), tank, current_best, best_distance, 0);
+                    this->red_tree->nearest_neighbour_search(this->red_tree, tank, current_best, best_distance, 0);
                 } else {
-                    this->trees.at(0)->nearest_neighbour_search(this->trees.at(0), tank, current_best, best_distance, 0);
+                    this->blue_tree->nearest_neighbour_search(this->blue_tree, tank, current_best, best_distance, 0);
                 }
-                
           
                 if(current_best != NULL){
                     Rocket* rocket = new Rocket(tank->position, (current_best->get_position() - tank->position).normalized() * 3, 10.0f, tank->allignment, ((tank->allignment == RED) ? &rocket_red : &rocket_blue));
@@ -196,34 +146,45 @@ void Game::update(float deltaTime)
         }
     }
 
-    //Update smoke plumes
-    for (Smoke& smoke : smokes)
-    {
-        smoke.tick();
-    }
-
-    //Update rockets
     for (Rocket* rocket : rockets) {
         this->grid->handleAction(rocket);        
     }
 
-    for(Particle_beam* beam : this->particle_beams){
+    for(Particle_beam* beam : this->particle_beams) {
         this->grid->handleAction(beam);
     }
 
-    //Remove exploded rockets with remove erase idiom
-    rockets.erase(std::remove_if(rockets.begin(), rockets.end(), [](const Rocket* rocket) { return !rocket->active; }), rockets.end());
-
-    //Update explosion sprites and remove when done with remove erase idiom
-    for (Explosion& explosion : explosions)
-    {
+    for (Explosion& explosion : explosions) {
         explosion.tick();
     }
 
+    for (Smoke& smoke : smokes) {
+        smoke.tick();
+    }
+
     explosions.erase(std::remove_if(explosions.begin(), explosions.end(), [](const Explosion& explosion) { return explosion.done(); }), explosions.end());
+    rockets.erase(std::remove_if(rockets.begin(), rockets.end(), [](const Rocket* rocket) { return !rocket->active; }), rockets.end());
+
+    delete this->blue_tree;
+    delete this->red_tree;
+
+    this->blue_tree = new KDTree();
+    this->red_tree = new KDTree();
+
+    for(Tank* tank : this->tanks){
+        if(tank->allignment == BLUE){
+            if(tank->active){
+                this->blue_tree->add(tank);
+            }
+        } else {
+            if(tank->active){
+                this->red_tree->add(tank);
+            }
+        }
+    }
 }
 
-std::vector<Tank*> Game::merge_sort_tanks_health(std::vector<Tank*> unsorted){
+std::vector<Tank*> Game::merge_sort_tanks_health(std::vector<Tank*> unsorted, bool sort, int depth){
 
     if(unsorted.size() == 1){
         return unsorted;
@@ -240,23 +201,23 @@ std::vector<Tank*> Game::merge_sort_tanks_health(std::vector<Tank*> unsorted){
         }
     }
 
-    if(std::thread::hardware_concurrency() > 1){
-        left = this->merge_sort_tanks_health(left);
+    if(std::thread::hardware_concurrency() > 100){
+        left = merge_sort_tanks_health(left, depth, sort);
 
         std::thread t([&]{
-            right = this->merge_sort_tanks_health(right);
+            right = merge_sort_tanks_health(right, depth, sort);
         });
 
         t.join();
     } else {
-        left = this->merge_sort_tanks_health(left);
-        right = this->merge_sort_tanks_health(right);
+        left = merge_sort_tanks_health(left, depth, sort);
+        right = merge_sort_tanks_health(right, depth, sort);
     }
 
-    return this->merge_tanks_health(left, right);
+    return merge_tanks_health(left, right, depth, sort);
 }
 
-std::vector<Tank*> Game::merge_tanks_health(std::vector<Tank*> a, std::vector<Tank*> b){
+std::vector<Tank*> Game::merge_tanks_health(std::vector<Tank*> a, std::vector<Tank*> b, bool sort, int depth){
 
     std::vector<Tank*> sorted;
 
@@ -274,15 +235,25 @@ std::vector<Tank*> Game::merge_tanks_health(std::vector<Tank*> a, std::vector<Ta
         return sorted;
     }
 
-    if(a.at(0)->compare_health(b.at(0)) <= 0){
-        sorted.push_back(a.at(0));
-        a.erase(a.begin());
+    if(sort){
+        if(a.at(0)->compare_position(b.at(0), depth) <= 0){
+            sorted.push_back(a.at(0));
+            a.erase(a.begin());
+        } else {
+            sorted.push_back(b.at(0));
+            b.erase(b.begin());
+        }
     } else {
-        sorted.push_back(b.at(0));
-        b.erase(b.begin());
+        if(a.at(0)->compare_health(b.at(0)) <= 0){
+            sorted.push_back(a.at(0));
+            a.erase(a.begin());
+        } else {
+            sorted.push_back(b.at(0));
+            b.erase(b.begin());
+        }
     }
 
-    std::vector<Tank*> merged = this->merge_tanks_health(a, b);
+    std::vector<Tank*> merged = merge_tanks_health(a, b, depth, sort);
 
     for(Tank* tank : merged){
         sorted.push_back(tank);
@@ -330,29 +301,29 @@ void Game::draw()
         explosion.draw(screen);
     }
 
-    // //Draw sorted health bars
-    for (int t = 0; t < 2; t++){
-        const int NUM_TANKS = ((t < 1) ? NUM_TANKS_BLUE : NUM_TANKS_RED);
+    // // //Draw sorted health bars
+    // for (int t = 0; t < 2; t++){
+    //     const int NUM_TANKS = ((t < 1) ? NUM_TANKS_BLUE : NUM_TANKS_RED);
 
-        const std::vector<Tank*>::const_iterator begin = ((t < 1) ? this->tanks.begin() : this->tanks.begin() + NUM_TANKS_BLUE);
-        const std::vector<Tank*>::const_iterator end = ((t < 1 ? this->tanks.begin() + NUM_TANKS_BLUE : this->tanks.end()));
+    //     const std::vector<Tank*>::const_iterator begin = ((t < 1) ? this->tanks.begin() : this->tanks.begin() + NUM_TANKS_BLUE);
+    //     const std::vector<Tank*>::const_iterator end = ((t < 1 ? this->tanks.begin() + NUM_TANKS_BLUE : this->tanks.end()));
 
-        std::vector<Tank*> sorted_tanks;
-        std::vector<Tank*> unsorted_tanks(begin, end);
+    //     std::vector<Tank*> sorted_tanks;
+    //     std::vector<Tank*> unsorted_tanks(begin, end);
 
-        std::vector<Tank*> sorted = this->merge_sort_tanks_health(unsorted_tanks);
+    //     std::vector<Tank*> sorted = this->merge_sort_tanks_health(unsorted_tanks, false);
 
-        for (int i = 0; i < NUM_TANKS; i++)
-        {
-            int health_bar_start_x = i * (HEALTH_BAR_WIDTH + HEALTH_BAR_SPACING) + HEALTH_BARS_OFFSET_X;
-            int health_bar_start_y = (t < 1) ? 0 : (SCRHEIGHT - HEALTH_BAR_HEIGHT) - 1;
-            int health_bar_end_x = health_bar_start_x + HEALTH_BAR_WIDTH;
-            int health_bar_end_y = (t < 1) ? HEALTH_BAR_HEIGHT : SCRHEIGHT - 1;
+    //     for (int i = 0; i < NUM_TANKS; i++)
+    //     {
+    //         int health_bar_start_x = i * (HEALTH_BAR_WIDTH + HEALTH_BAR_SPACING) + HEALTH_BARS_OFFSET_X;
+    //         int health_bar_start_y = (t < 1) ? 0 : (SCRHEIGHT - HEALTH_BAR_HEIGHT) - 1;
+    //         int health_bar_end_x = health_bar_start_x + HEALTH_BAR_WIDTH;
+    //         int health_bar_end_y = (t < 1) ? HEALTH_BAR_HEIGHT : SCRHEIGHT - 1;
 
-            screen->bar(health_bar_start_x, health_bar_start_y, health_bar_end_x, health_bar_end_y, REDMASK);
-            screen->bar(health_bar_start_x, health_bar_start_y + (int)((double)HEALTH_BAR_HEIGHT * (1 - ((double)sorted.at(i)->health / (double)TANK_MAX_HEALTH))), health_bar_end_x, health_bar_end_y, GREENMASK);
-        }
-    }
+    //         screen->bar(health_bar_start_x, health_bar_start_y, health_bar_end_x, health_bar_end_y, REDMASK);
+    //         screen->bar(health_bar_start_x, health_bar_start_y + (int)((double)HEALTH_BAR_HEIGHT * (1 - ((double)sorted.at(i)->health / (double)TANK_MAX_HEALTH))), health_bar_end_x, health_bar_end_y, GREENMASK);
+    //     }
+    // }
 }
 
 // -----------------------------------------------------------
@@ -409,4 +380,11 @@ void Game::tick(float deltaTime)
     frame_count++;
     string frame_count_string = "FRAME: " + std::to_string(frame_count);
     frame_count_font->print(screen, frame_count_string.c_str(), 350, 580);
+}
+void Game::add_smoke(vec2 position) {
+    this->smokes.push_back(Smoke(smoke, position - vec2(0, 48)));
+}
+
+void Game::add_explosion(vec2 position) {
+    this->explosions.push_back(Explosion(&explosion, position));
 }

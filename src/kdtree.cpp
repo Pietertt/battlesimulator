@@ -10,7 +10,7 @@ namespace Tmpl8 {
         this->item = item;
     }
 
-    void KDTree::add(Tank* item, int depth){
+    void KDTree::add(Tank* item, int depth) {
         if (this->item == NULL) {
             this->item = item;
             return;
@@ -35,20 +35,9 @@ namespace Tmpl8 {
         }
     }
 
-    Tank* KDTree::findMin(KDTree* node, int dimension, int cd){
-        if(node == NULL) return NULL;
-
-        if(cd == dimension){
-            if(node->left == NULL) return node->item;
-            return this->left->findMin(this->left, dimension, (cd + 1) % dimension);
-        } else {
-            return this->left->findMin(this->left, dimension, (cd + 1) % dimension);
-            return this->right->findMin(this->right, dimension, (cd + 1) % dimension);
-        }
-    }
-
-    void KDTree::nearest_neighbour_search(KDTree* tree, Tank* tank, Tank* &current_best, float &best_distance, int depth){
+    void KDTree::nearest_neighbour_search(KDTree* tree, Tank* tank, Tank* &current_best, float &best_distance, int depth){        
         if(tree == NULL) return;
+        if(tree->item == NULL) return;
 
         KDTree* next = NULL;
         KDTree* other = NULL;
@@ -73,11 +62,11 @@ namespace Tmpl8 {
 
         this->nearest_neighbour_search(next, tank, current_best, best_distance, depth + 1);
 
-        float distance = tank->get_distance(tank, tree->item);
+        float distance = tank->get_distance(tree->item);
         if(distance < best_distance){
             if(tank != tree->item){
                 if(tree->item->active){
-                     best_distance = distance;
+                    best_distance = distance;
                     current_best = tree->item;
                 }
             }
@@ -92,7 +81,7 @@ namespace Tmpl8 {
 
         if(distance >= (perpendicular * perpendicular)){
             this->nearest_neighbour_search(other, tank, current_best, best_distance, depth + 1);
-            distance = tank->get_distance(tank, tree->item);
+            distance = tank->get_distance(tree->item);
             if(distance < best_distance){
                 if(tank != tree->item){
                     if(tree->item->active){
