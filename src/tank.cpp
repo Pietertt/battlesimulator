@@ -39,18 +39,7 @@ Tank::~Tank()
 }
 
 void Tank::tick() {
-
-    this->force = vec2(0.f, 0.f);
-    vec2 direction = (this->target - this->position).normalized();
-
-    this->speed = direction + this->force;
-
-    //this->grid->move(this);
-
-    if (--reload_time <= 0.0f){
-        reloaded = true;
-    }
-
+    if (--reload_time <= 0.0f) reloaded = true;
     if (++current_frame > 8) current_frame = 0;
 }
 

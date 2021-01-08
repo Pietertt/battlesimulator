@@ -36,6 +36,9 @@ namespace Tmpl8 {
         
         vec2 direction = (tank->target - tank->position).normalized();
 
+        if(isnan(tank->force.x)) tank->force = vec2(0.f, 0.f);
+        if(isnan(tank->force.y)) tank->force = vec2(0.f, 0.f);
+
         tank->speed = direction + tank->force;
         tank->force = vec2(0.f, 0.f);
         tank->position += tank->speed * tank->max_speed * 0.5f;
@@ -167,6 +170,7 @@ namespace Tmpl8 {
             colSquaredLen *= colSquaredLen;
 
             if (dirSquaredLen < colSquaredLen) {
+                std::cout << "Pushing tank" << std::endl;
                 tank->push(dir.normalized(), 1.f);
             }
         }
