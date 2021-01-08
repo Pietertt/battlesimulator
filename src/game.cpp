@@ -1,7 +1,7 @@
 #include "precomp.h" // include (only) this in every .cpp file
 
-#define NUM_TANKS_BLUE 2000
-#define NUM_TANKS_RED 2000
+#define NUM_TANKS_BLUE 200
+#define NUM_TANKS_RED 200
 
 #define TANK_MAX_HEALTH 1000
 #define ROCKET_HIT_VALUE 60
@@ -14,7 +14,7 @@
 #define HEALTH_BAR_WIDTH 1
 #define HEALTH_BAR_SPACING 0
 
-#define MAX_FRAMES 200
+#define MAX_FRAMES 2000
 
 //Global performance timer
 #define REF_PERFORMANCE 159176 //UPDATE THIS WITH YOUR REFERENCE PERFORMANCE (see console after 2k frames)
@@ -48,10 +48,6 @@ const static float rocket_radius = 10.f;
 
 Game::Game(){
 
-}
-
-void Game::insert_grid(Grid* grid){
-    this->grid = grid;
 }
 
 // -----------------------------------------------------------
@@ -88,8 +84,10 @@ void Game::init()
 
     this->blue_tree = new KDTree();
     this->red_tree = new KDTree();
+    this->grid = new Grid(this);
 
     for(Tank* tank : this->tanks){
+        this->grid->add(tank);
         if(tank->allignment == BLUE){
             this->blue_tree->add(tank);
         } else {
@@ -122,13 +120,12 @@ void Game::shutdown()
 // -----------------------------------------------------------
 void Game::update(float deltaTime) {
     for (Tank* tank : tanks){
-
         if (tank->active) {
+            tank->tick();
+            // this->grid->handleAction(tank);
 
-            //Move tanks according to speed and nudges (see above) also reload
             this->grid->move(tank);
 
-            //Shoot at closest target if reloaded
             if (tank->rocket_reloaded())
             {
                 Tank* current_best = NULL;
@@ -148,10 +145,6 @@ void Game::update(float deltaTime) {
             }
         }
     }
-
-    // for(Tank* tank : this->tanks){
-    //     this->grid->handleAction(tank);
-    // }
 
     for (Rocket* rocket : rockets) {
         this->grid->handleAction(rocket);        
@@ -288,10 +281,10 @@ void Game::draw()
             background.get_buffer()[(int)tPos.x + (int)tPos.y * SCRWIDTH] = sub_blend(background.get_buffer()[(int)tPos.x + (int)tPos.y * SCRWIDTH], 0x808080);
     }
 
-    // for (Rocket* rocket : rockets)
-    // {
-    //     rocket->draw(screen);
-    // }
+    for (Rocket* rocket : rockets)
+    {
+        rocket->draw(screen);
+    }
 
     for (Smoke& smoke : smokes)
     {
@@ -387,4 +380,11 @@ void Game::tick(float deltaTime)
     frame_count++;
     string frame_count_string = "FRAME: " + std::to_string(frame_count);
     frame_count_font->print(screen, frame_count_string.c_str(), 350, 580);
+}
+void Game::add_smoke(vec2 position) {
+    this->smokes.push_back(Smoke(smoke, position - vec2(0, 48)));
+}
+
+void Game::add_explosion(vec2 position) {
+    this->explosions.push_back(Explosion(&explosion, position));
 }

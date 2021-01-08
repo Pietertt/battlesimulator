@@ -1,12 +1,19 @@
 #include "precomp.h"
 
+static Surface* smoke_img = new Surface("/Users/pieterboersma/Desktop/battlesimulator/assets/Smoke.png");
+static Sprite smoke(smoke_img, 4);
+
+
+
 namespace Tmpl8 {
-    Grid::Grid(){
+    Grid::Grid(Game* game){
         for(int x = 0; x < Grid::NUM_CELLS; x++){
             for(int y = 0; y < Grid::NUM_CELLS; y++){
                 cells[x][y] = NULL;
             }
         }
+
+        this->game = game;
     }
 
     void Grid::add(Tank* tank){
@@ -59,7 +66,6 @@ namespace Tmpl8 {
         if(this->cells[oldCellX][oldCellY] == tank){
             this->cells[oldCellX][oldCellY] = tank->next;
         }
-
         this->add(tank);
     }
 
@@ -90,9 +96,9 @@ namespace Tmpl8 {
     bool Grid::handleUnit(Rocket* rocket, Tank* tank){
         if(tank != NULL){
             if (tank->active && (tank->allignment != rocket->allignment) && rocket->intersects(tank->position, tank->collision_radius)){            
-                //this->game->explosions.push_back(Explosion(&explosion, tank->position));
+                this->game->add_explosion(tank->position);
                 if (tank->hit(60)) {
-                   // this->game->smokes.push_back(Smoke(smoke, tank->position - vec2(0, 48)));
+                    this->game->add_smoke(tank->position);
                 }
 
                 rocket->active = false;
@@ -130,7 +136,7 @@ namespace Tmpl8 {
         if(tank != NULL){
             if (tank->active && beam->rectangle.intersects_circle(tank->get_position(), tank->get_collision_radius())) {
                 if (tank->hit(50)) {
-                    //this->game->smokes.push_back(Smoke(smoke, tank->position - vec2(0, 48)));
+                    this->game->add_smoke(tank->position);
                 }
             }
         }
@@ -144,7 +150,6 @@ namespace Tmpl8 {
                 }
             }
         }
-        tank->tick(); 
     }
 
     void Grid::handleCell(Tank* tank, int x, int y){ 
@@ -170,7 +175,6 @@ namespace Tmpl8 {
             colSquaredLen *= colSquaredLen;
 
             if (dirSquaredLen < colSquaredLen) {
-                std::cout << "Pushing tank" << std::endl;
                 tank->push(dir.normalized(), 1.f);
             }
         }

@@ -4,10 +4,11 @@ namespace Tmpl8 {
 
     class Tank;
     class Rocket;
+    class Game;
 
     class Grid {
         public:
-            Grid();
+            Grid(Game* game);
             void add(Tank* tank);
             void move(Tank* tank);
 
@@ -27,5 +28,8 @@ namespace Tmpl8 {
             static const int CELL_SIZE = 50;
 
             Tank* cells[NUM_CELLS][NUM_CELLS];
+        
+        private:
+            Game* game;
     };
 } 

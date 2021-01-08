@@ -22,11 +22,14 @@ class Game
     void update(float deltaTime);
     void draw();
     void tick(float deltaTime);
+    
     static std::vector<Tank*> merge_sort_tanks_health(std::vector<Tank*> unsorted, bool sort, int depth = 0);
     static std::vector<Tank*> merge_tanks_health(std::vector<Tank*> a, std::vector<Tank*> b, bool sort, int depth = 0);
+    
     void measure_performance();
 
-    void insert_grid(Grid* grid);
+    void add_smoke(vec2 position);
+    void add_explosion(vec2 position);
 
     void mouse_up(int button)
     { /* implement if you want to detect mouse button presses */
@@ -53,9 +56,9 @@ class Game
 
     vector<Tank*> tanks;
     vector<Rocket*> rockets;
+    vector<Particle_beam*> particle_beams;
     vector<Smoke> smokes;
     vector<Explosion> explosions;
-    vector<Particle_beam*> particle_beams;
 
     Font* frame_count_font;
     long long frame_count = 0;

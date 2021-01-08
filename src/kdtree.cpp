@@ -35,7 +35,7 @@ namespace Tmpl8 {
         }
     }
 
-    void KDTree::nearest_neighbour_search(KDTree* tree, Tank* tank, Tank* &current_best, float &best_distance, int depth){
+    void KDTree::nearest_neighbour_search(KDTree* tree, Tank* tank, Tank* &current_best, float &best_distance, int depth){        
         if(tree == NULL) return;
         if(tree->item == NULL) return;
 

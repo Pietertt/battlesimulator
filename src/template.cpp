@@ -123,7 +123,6 @@ static bool firstframe = true;
 
 Surface* surface = 0;
 Game* game = NULL;
-Grid* grid = NULL;
 SDL_Window* window = 0;
 
 #ifdef ADVANCEDGL
@@ -244,8 +243,6 @@ int main(int argc, char** argv)
 #endif
     int exitapp = 0;
     game = new Game();
-    grid = new Grid();
-    game->insert_grid(grid);
     game->set_target(surface);
     timer t;
     t.reset();
