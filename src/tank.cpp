@@ -41,7 +41,6 @@ Tank::~Tank()
 void Tank::tick() {
     if (--reload_time <= 0.0f) reloaded = true;
     if (++current_frame > 8) current_frame = 0;
-    std::cout << reload_time << " " << reloaded << std::endl;
 }
 
 //Start reloading timer

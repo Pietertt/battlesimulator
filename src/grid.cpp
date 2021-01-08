@@ -72,8 +72,15 @@ namespace Tmpl8 {
     void Grid::handleAction(Rocket* rocket){
         for(int x = 0; x < Grid::NUM_CELLS; x++){ 
             for(int y = 0; y < Grid::NUM_CELLS; y++){ 
-                if(this->cells[x][y] != NULL){
-                    this->handleCell(rocket, x, y);
+                int cellX = (int)(rocket->position.x / Grid::CELL_SIZE);
+                int cellY = (int)(rocket->position.y / Grid::CELL_SIZE);
+
+                if(cellX == x && cellY == y){
+                    if(this->cells[x][y] != NULL){
+                        if(rocket->allignment != this->cells[x][y]->allignment){
+                            this->handleCell(rocket, x, y);
+                        }
+                    }
                 }
             }
         }
@@ -84,17 +91,16 @@ namespace Tmpl8 {
         Tank* tank = this->cells[x][y];
         while(tank != NULL){
             this->handleUnit(rocket, tank);
-            if(x > 0 && y > 0) if(this->handleUnit(rocket, this->cells[x - 1][y - 1])) break;
-            if(x > 0) if(this->handleUnit(rocket, this->cells[x - 1][y])) break;
-            if(y > 0) if(this->handleUnit(rocket, this->cells[x][y - 1])) break;
-            if(x > 0 && y < this->NUM_CELLS - 1) if(this->handleUnit(rocket, this->cells[x - 1][y + 1])) break;
+            // if(x > 0 && y > 0) if(this->handleUnit(rocket, this->cells[x - 1][y - 1])) break;
+            // if(x > 0) if(this->handleUnit(rocket, this->cells[x - 1][y])) break;
+            // if(y > 0) if(this->handleUnit(rocket, this->cells[x][y - 1])) break;
+            // if(x > 0 && y < this->NUM_CELLS - 1) if(this->handleUnit(rocket, this->cells[x - 1][y + 1])) break;
 
             tank = tank->next;
         }
     }
 
     bool Grid::handleUnit(Rocket* rocket, Tank* tank){
-        if(tank != NULL){
             if (tank->active && (tank->allignment != rocket->allignment) && rocket->intersects(tank->position, tank->collision_radius)){            
                 this->game->add_explosion(tank->position);
                 if (tank->hit(60)) {
@@ -104,8 +110,8 @@ namespace Tmpl8 {
                 rocket->active = false;
                 return true;
             }  
-        }
-        return false;
+        
+        return true;
     }
 
     void Grid::handleAction(Particle_beam* beam){
