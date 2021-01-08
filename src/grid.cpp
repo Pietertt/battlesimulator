@@ -33,7 +33,11 @@ namespace Tmpl8 {
     void Grid::move(Tank* tank){
         int oldCellX = (int)(tank->get_position().x / Grid::CELL_SIZE);
         int oldCellY = (int)(tank->get_position().y / Grid::CELL_SIZE);
+        
+        vec2 direction = (tank->target - tank->position).normalized();
 
+        tank->speed = direction + tank->force;
+        tank->force = vec2(0.f, 0.f);
         tank->position += tank->speed * tank->max_speed * 0.5f;
 
         int cellX = (int)(tank->get_position().x / Grid::CELL_SIZE);

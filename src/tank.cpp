@@ -45,7 +45,7 @@ void Tank::tick() {
 
     this->speed = direction + this->force;
 
-    this->grid->move(this);
+    //this->grid->move(this);
 
     if (--reload_time <= 0.0f){
         reloaded = true;
@@ -107,9 +107,9 @@ int Tank::compare_position(Tank* other, int depth){
     }
 }
 
-float Tank::get_distance(Tank* tank, Tank* other){
-    float x1 = tank->get_position().x;
-    float y1 = tank->get_position().y;
+float Tank::get_distance(Tank* other){
+    float x1 = this->get_position().x;
+    float y1 = this->get_position().y;
     float x2 = other->get_position().x;
     float y2 = other->get_position().y;
 

@@ -152,24 +152,23 @@ void Game::update(float deltaTime)
 
 
 
-            // //Check tank collision and nudge tanks away from each other
-            // for (Tank* oTank : tanks) {
-            //     if (tank == oTank) continue;
+            //Check tank collision and nudge tanks away from each other
+            for (Tank* oTank : tanks) {
+                if (tank == oTank) continue;
                 
-            //     vec2 dir = tank->get_position() - oTank->get_position();
-            //     float dirSquaredLen = dir.sqr_length();
+                vec2 dir = tank->get_position() - oTank->get_position();
+                float dirSquaredLen = dir.sqr_length();
 
-            //     float colSquaredLen = (tank->get_collision_radius() + oTank->get_collision_radius());
-            //     colSquaredLen *= colSquaredLen;
+                float colSquaredLen = (tank->get_collision_radius() + oTank->get_collision_radius());
+                colSquaredLen *= colSquaredLen;
 
-            //     if (dirSquaredLen < colSquaredLen)
-            //     {
-            //         tank->push(dir.normalized(), 1.f);
-            //     }
-            // }
+                if (dirSquaredLen < colSquaredLen) {
+                    tank->push(dir.normalized(), 1.f);
+                }
+            }
 
             //Move tanks according to speed and nudges (see above) also reload
-            tank->tick();
+            // tank->tick();
             this->grid->move(tank);
 
             //Shoot at closest target if reloaded

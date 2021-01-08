@@ -33,7 +33,7 @@ class Tank
 
     int compare_health(Tank* other);
     int compare_position(Tank* other, int depth);
-    float get_distance(Tank* tank, Tank* other);
+    float get_distance(Tank* other);
 
     void push(vec2 direction, float magnitude);
 

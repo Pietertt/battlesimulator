@@ -62,7 +62,7 @@ namespace Tmpl8 {
 
         this->nearest_neighbour_search(next, tank, current_best, best_distance, depth + 1);
 
-        float distance = tank->get_distance(tank, tree->item);
+        float distance = tank->get_distance(tree->item);
         if(distance < best_distance){
             if(tank != tree->item){
                 if(tree->item->active){
@@ -81,7 +81,7 @@ namespace Tmpl8 {
 
         if(distance >= (perpendicular * perpendicular)){
             this->nearest_neighbour_search(other, tank, current_best, best_distance, depth + 1);
-            distance = tank->get_distance(tank, tree->item);
+            distance = tank->get_distance(tree->item);
             if(distance < best_distance){
                 if(tank != tree->item){
                     if(tree->item->active){
