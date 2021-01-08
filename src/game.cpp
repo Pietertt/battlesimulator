@@ -1,7 +1,7 @@
 #include "precomp.h" // include (only) this in every .cpp file
 
-#define NUM_TANKS_BLUE 30
-#define NUM_TANKS_RED 30
+#define NUM_TANKS_BLUE 2000
+#define NUM_TANKS_RED 2000
 
 #define TANK_MAX_HEALTH 1000
 #define ROCKET_HIT_VALUE 60
@@ -14,10 +14,10 @@
 #define HEALTH_BAR_WIDTH 1
 #define HEALTH_BAR_SPACING 0
 
-#define MAX_FRAMES 2000
+#define MAX_FRAMES 200
 
 //Global performance timer
-#define REF_PERFORMANCE 73466 //UPDATE THIS WITH YOUR REFERENCE PERFORMANCE (see console after 2k frames)
+#define REF_PERFORMANCE 159176 //UPDATE THIS WITH YOUR REFERENCE PERFORMANCE (see console after 2k frames)
 static timer perf_timer;
 static float duration;
 
@@ -66,8 +66,8 @@ void Game::init()
     uint rows = (uint)sqrt(NUM_TANKS_BLUE + NUM_TANKS_RED);
     uint max_rows = 12;
 
-    float start_blue_x = tank_size.x + 10.0f;
-    float start_blue_y = tank_size.y + 400.0f;
+   float start_blue_x = tank_size.x + 10.0f;
+    float start_blue_y = tank_size.y + 80.0f;
 
     float start_red_x = 980.0f;
     float start_red_y = 100.0f;
@@ -120,59 +120,12 @@ void Game::shutdown()
 // Collision detection
 // Targeting etc..
 // -----------------------------------------------------------
-void Game::update(float deltaTime)
-{
-       for(Tank* tank : this->tanks){
-                this->grid->handleAction(tank);
-            }
-            
-    //Update tanks
-    for (Tank* tank : tanks)
-    {
+void Game::update(float deltaTime) {
+    for (Tank* tank : tanks){
 
         if (tank->active) {
 
-            // Tank* current_best = NULL;
-            // float best_distance = 10000;
-
-            // if(tank->allignment == BLUE){
-            //     this->red_tree->nearest_neighbour_search(this->red_tree, tank, current_best, best_distance, 0);
-            // } else {
-            //     this->blue_tree->nearest_neighbour_search(this->blue_tree, tank, current_best, best_distance, 0);
-            // }
-
-            // if(current_best != NULL){
-            //     vec2 dir = tank->get_position() - current_best->get_position();
-            //     float dirSquaredLen = dir.sqr_length();
-
-            //     float colSquaredLen = (tank->get_collision_radius() + current_best->get_collision_radius());
-            //     colSquaredLen *= colSquaredLen;
-
-            //     if (dirSquaredLen < colSquaredLen)
-            //     {
-            //         tank->push(dir.normalized(), 1.f);
-            //     }
-            // }
-
-
-
-            //Check tank collision and nudge tanks away from each other
-            // for (Tank* oTank : tanks) {
-            //     if (tank == oTank) continue;
-                
-            //     vec2 dir = tank->get_position() - oTank->get_position();
-            //     float dirSquaredLen = dir.sqr_length();
-
-            //     float colSquaredLen = (tank->get_collision_radius() + oTank->get_collision_radius());
-            //     colSquaredLen *= colSquaredLen;
-
-            //     if (dirSquaredLen < colSquaredLen) {
-            //         tank->push(dir.normalized(), 1.f);
-            //     }
-            // }
-
             //Move tanks according to speed and nudges (see above) also reload
-            // tank->tick();
             this->grid->move(tank);
 
             //Shoot at closest target if reloaded
@@ -196,17 +149,10 @@ void Game::update(float deltaTime)
         }
     }
 
-    //Update rockets
-    for (Tank* tank : tanks) {
-        this->grid->handleAction(tank);        
-    }
+    // for(Tank* tank : this->tanks){
+    //     this->grid->handleAction(tank);
+    // }
 
-    //Update smoke plumes
-    for (Smoke& smoke : smokes) {
-        smoke.tick();
-    }
-
-    //Update rockets
     for (Rocket* rocket : rockets) {
         this->grid->handleAction(rocket);        
     }
@@ -215,15 +161,16 @@ void Game::update(float deltaTime)
         this->grid->handleAction(beam);
     }
 
-    //Remove exploded rockets with remove erase idiom
-    rockets.erase(std::remove_if(rockets.begin(), rockets.end(), [](const Rocket* rocket) { return !rocket->active; }), rockets.end());
-
-    //Update explosion sprites and remove when done with remove erase idiom
     for (Explosion& explosion : explosions) {
         explosion.tick();
     }
 
+    for (Smoke& smoke : smokes) {
+        smoke.tick();
+    }
+
     explosions.erase(std::remove_if(explosions.begin(), explosions.end(), [](const Explosion& explosion) { return explosion.done(); }), explosions.end());
+    rockets.erase(std::remove_if(rockets.begin(), rockets.end(), [](const Rocket* rocket) { return !rocket->active; }), rockets.end());
 
     delete this->blue_tree;
     delete this->red_tree;
@@ -261,7 +208,7 @@ std::vector<Tank*> Game::merge_sort_tanks_health(std::vector<Tank*> unsorted, bo
         }
     }
 
-    if(std::thread::hardware_concurrency() > 1){
+    if(std::thread::hardware_concurrency() > 100){
         left = merge_sort_tanks_health(left, depth, sort);
 
         std::thread t([&]{
@@ -341,10 +288,10 @@ void Game::draw()
             background.get_buffer()[(int)tPos.x + (int)tPos.y * SCRWIDTH] = sub_blend(background.get_buffer()[(int)tPos.x + (int)tPos.y * SCRWIDTH], 0x808080);
     }
 
-    for (Rocket* rocket : rockets)
-    {
-        rocket->draw(screen);
-    }
+    // for (Rocket* rocket : rockets)
+    // {
+    //     rocket->draw(screen);
+    // }
 
     for (Smoke& smoke : smokes)
     {
@@ -361,29 +308,29 @@ void Game::draw()
         explosion.draw(screen);
     }
 
-    // //Draw sorted health bars
-    for (int t = 0; t < 2; t++){
-        const int NUM_TANKS = ((t < 1) ? NUM_TANKS_BLUE : NUM_TANKS_RED);
+    // // //Draw sorted health bars
+    // for (int t = 0; t < 2; t++){
+    //     const int NUM_TANKS = ((t < 1) ? NUM_TANKS_BLUE : NUM_TANKS_RED);
 
-        const std::vector<Tank*>::const_iterator begin = ((t < 1) ? this->tanks.begin() : this->tanks.begin() + NUM_TANKS_BLUE);
-        const std::vector<Tank*>::const_iterator end = ((t < 1 ? this->tanks.begin() + NUM_TANKS_BLUE : this->tanks.end()));
+    //     const std::vector<Tank*>::const_iterator begin = ((t < 1) ? this->tanks.begin() : this->tanks.begin() + NUM_TANKS_BLUE);
+    //     const std::vector<Tank*>::const_iterator end = ((t < 1 ? this->tanks.begin() + NUM_TANKS_BLUE : this->tanks.end()));
 
-        std::vector<Tank*> sorted_tanks;
-        std::vector<Tank*> unsorted_tanks(begin, end);
+    //     std::vector<Tank*> sorted_tanks;
+    //     std::vector<Tank*> unsorted_tanks(begin, end);
 
-        std::vector<Tank*> sorted = this->merge_sort_tanks_health(unsorted_tanks, false);
+    //     std::vector<Tank*> sorted = this->merge_sort_tanks_health(unsorted_tanks, false);
 
-        for (int i = 0; i < NUM_TANKS; i++)
-        {
-            int health_bar_start_x = i * (HEALTH_BAR_WIDTH + HEALTH_BAR_SPACING) + HEALTH_BARS_OFFSET_X;
-            int health_bar_start_y = (t < 1) ? 0 : (SCRHEIGHT - HEALTH_BAR_HEIGHT) - 1;
-            int health_bar_end_x = health_bar_start_x + HEALTH_BAR_WIDTH;
-            int health_bar_end_y = (t < 1) ? HEALTH_BAR_HEIGHT : SCRHEIGHT - 1;
+    //     for (int i = 0; i < NUM_TANKS; i++)
+    //     {
+    //         int health_bar_start_x = i * (HEALTH_BAR_WIDTH + HEALTH_BAR_SPACING) + HEALTH_BARS_OFFSET_X;
+    //         int health_bar_start_y = (t < 1) ? 0 : (SCRHEIGHT - HEALTH_BAR_HEIGHT) - 1;
+    //         int health_bar_end_x = health_bar_start_x + HEALTH_BAR_WIDTH;
+    //         int health_bar_end_y = (t < 1) ? HEALTH_BAR_HEIGHT : SCRHEIGHT - 1;
 
-            screen->bar(health_bar_start_x, health_bar_start_y, health_bar_end_x, health_bar_end_y, REDMASK);
-            screen->bar(health_bar_start_x, health_bar_start_y + (int)((double)HEALTH_BAR_HEIGHT * (1 - ((double)sorted.at(i)->health / (double)TANK_MAX_HEALTH))), health_bar_end_x, health_bar_end_y, GREENMASK);
-        }
-    }
+    //         screen->bar(health_bar_start_x, health_bar_start_y, health_bar_end_x, health_bar_end_y, REDMASK);
+    //         screen->bar(health_bar_start_x, health_bar_start_y + (int)((double)HEALTH_BAR_HEIGHT * (1 - ((double)sorted.at(i)->health / (double)TANK_MAX_HEALTH))), health_bar_end_x, health_bar_end_y, GREENMASK);
+    //     }
+    // }
 }
 
 // -----------------------------------------------------------
