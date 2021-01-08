@@ -14,7 +14,7 @@
 #define HEALTH_BAR_WIDTH 1
 #define HEALTH_BAR_SPACING 0
 
-#define MAX_FRAMES 2000
+#define MAX_FRAMES 200
 
 //Global performance timer
 #define REF_PERFORMANCE 159176 //UPDATE THIS WITH YOUR REFERENCE PERFORMANCE (see console after 2k frames)

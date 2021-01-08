@@ -22,7 +22,7 @@ namespace Tmpl8 {
 
             void handleAction(Tank* tank);
             void handleCell(Tank* tank, int x, int y);
-            bool handleUnit(Tank* tank, Tank* other);
+            void handleUnit(Tank* tank, Tank* other);
 
             static const int NUM_CELLS = 30;
             static const int CELL_SIZE = 50;

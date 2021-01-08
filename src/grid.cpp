@@ -40,15 +40,18 @@ namespace Tmpl8 {
     void Grid::move(Tank* tank){
         int oldCellX = (int)(tank->get_position().x / Grid::CELL_SIZE);
         int oldCellY = (int)(tank->get_position().y / Grid::CELL_SIZE);
-        
-        vec2 direction = (tank->target - tank->position).normalized();
 
         if(isnan(tank->force.x)) tank->force = vec2(0.f, 0.f);
         if(isnan(tank->force.y)) tank->force = vec2(0.f, 0.f);
 
+        //std::cout << tank->force.x << " " << tank->force.y << std::endl;
+                std::cout << std::endl;
+                        std::cout << std::endl;
+
+        vec2 direction = (tank->target - tank->position).normalized();
         tank->speed = direction + tank->force;
-        tank->force = vec2(0.f, 0.f);
         tank->position += tank->speed * tank->max_speed * 0.5f;
+        tank->force = vec2(0.f, 0.f);
 
         int cellX = (int)(tank->get_position().x / Grid::CELL_SIZE);
         int cellY = (int)(tank->get_position().y / Grid::CELL_SIZE);
@@ -151,9 +154,16 @@ namespace Tmpl8 {
     void Grid::handleAction(Tank* tank){
         for(int x = 0; x < Grid::NUM_CELLS; x++){ 
             for(int y = 0; y < Grid::NUM_CELLS; y++){ 
-                if(this->cells[x][y] != NULL){
-                    this->handleCell(tank, x, y);
-                }
+                // int cellX = (int)(tank->get_position().x / Grid::CELL_SIZE);
+                // int cellY = (int)(tank->get_position().y / Grid::CELL_SIZE);
+
+               // if(cellX == x && cellY == y){
+                    if(this->cells[x][y] != NULL){
+                      //  if(tank->allignment == this->cells[x][y]->allignment){
+                           this->handleCell(tank, x, y);
+                        }
+                   // }
+                //}
             }
         }
     }
@@ -162,28 +172,24 @@ namespace Tmpl8 {
         Tank* other = this->cells[x][y];
         while(other != NULL){
             this->handleUnit(tank, other);
-            if(x > 0 && y > 0) if(this->handleUnit(tank, this->cells[x - 1][y - 1])) break;
-            if(x > 0) if(this->handleUnit(tank, this->cells[x - 1][y])) break;
-            if(y > 0) if(this->handleUnit(tank, this->cells[x][y - 1])) break;
-            if(x > 0 && y < this->NUM_CELLS - 1) if(this->handleUnit(tank, this->cells[x - 1][y + 1])) break;
+            // if(x > 0 && y > 0) this->handleUnit(tank, this->cells[x - 1][y - 1]);
+            // if(x > 0) this->handleUnit(tank, this->cells[x - 1][y]);
+            // if(y > 0) this->handleUnit(tank, this->cells[x][y - 1]);
+            // if(x > 0 && y < this->NUM_CELLS - 1) this->handleUnit(tank, this->cells[x - 1][y + 1]);
 
             other = other->next;
         }
     }
 
-    bool Grid::handleUnit(Tank* tank, Tank* other) {
-        if (tank != NULL && other != NULL) {
-                
-            vec2 dir = tank->get_position() - other->get_position();
-            float dirSquaredLen = dir.sqr_length();
+    void Grid::handleUnit(Tank* tank, Tank* other) {       
+        vec2 dir = tank->get_position() - other->get_position();
+        float dirSquaredLen = dir.sqr_length();
 
-            float colSquaredLen = (tank->get_collision_radius() + other->get_collision_radius());
-            colSquaredLen *= colSquaredLen;
+        float colSquaredLen = (tank->get_collision_radius() + other->get_collision_radius());
+        colSquaredLen *= colSquaredLen;
 
-            if (dirSquaredLen < colSquaredLen) {
-                tank->push(dir.normalized(), 1.f);
-            }
-        }
+        if (dirSquaredLen < colSquaredLen) {
+            tank->push(dir.normalized(), 1.f);
+        } 
     }
-
 }
