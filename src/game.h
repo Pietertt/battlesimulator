@@ -23,8 +23,8 @@ class Game
     void draw();
     void tick(float deltaTime);
     
-    static std::vector<Tank*> merge_sort_tanks_health(std::vector<Tank*> unsorted, bool sort, int depth = 0);
-    static std::vector<Tank*> merge_tanks_health(std::vector<Tank*> a, std::vector<Tank*> b, bool sort, int depth = 0);
+    static std::vector<Tank*> merge_sort_tanks_health(std::vector<Tank*> unsorted);
+    static std::vector<Tank*> merge_tanks_health(std::vector<Tank*> a, std::vector<Tank*> b);
     
     void measure_performance();
 

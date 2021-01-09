@@ -184,7 +184,7 @@ void Game::update(float deltaTime) {
     }
 }
 
-std::vector<Tank*> Game::merge_sort_tanks_health(std::vector<Tank*> unsorted, bool sort, int depth){
+std::vector<Tank*> Game::merge_sort_tanks_health(std::vector<Tank*> unsorted){
 
     if(unsorted.size() == 1){
         return unsorted;
@@ -201,23 +201,13 @@ std::vector<Tank*> Game::merge_sort_tanks_health(std::vector<Tank*> unsorted, bo
         }
     }
 
-    if(std::thread::hardware_concurrency() > 100){
-        left = merge_sort_tanks_health(left, depth, sort);
+    left = merge_sort_tanks_health(left);
+    right = merge_sort_tanks_health(right);
 
-        std::thread t([&]{
-            right = merge_sort_tanks_health(right, depth, sort);
-        });
-
-        t.join();
-    } else {
-        left = merge_sort_tanks_health(left, depth, sort);
-        right = merge_sort_tanks_health(right, depth, sort);
-    }
-
-    return merge_tanks_health(left, right, depth, sort);
+    return merge_tanks_health(left, right);
 }
 
-std::vector<Tank*> Game::merge_tanks_health(std::vector<Tank*> a, std::vector<Tank*> b, bool sort, int depth){
+std::vector<Tank*> Game::merge_tanks_health(std::vector<Tank*> a, std::vector<Tank*> b){
 
     std::vector<Tank*> sorted;
 
@@ -235,25 +225,15 @@ std::vector<Tank*> Game::merge_tanks_health(std::vector<Tank*> a, std::vector<Ta
         return sorted;
     }
 
-    if(sort){
-        if(a.at(0)->compare_position(b.at(0), depth) <= 0){
-            sorted.push_back(a.at(0));
-            a.erase(a.begin());
-        } else {
-            sorted.push_back(b.at(0));
-            b.erase(b.begin());
-        }
+    if(a.at(0)->compare_health(b.at(0)) <= 0){
+        sorted.push_back(a.at(0));
+        a.erase(a.begin());
     } else {
-        if(a.at(0)->compare_health(b.at(0)) <= 0){
-            sorted.push_back(a.at(0));
-            a.erase(a.begin());
-        } else {
-            sorted.push_back(b.at(0));
-            b.erase(b.begin());
-        }
+        sorted.push_back(b.at(0));
+        b.erase(b.begin());
     }
 
-    std::vector<Tank*> merged = merge_tanks_health(a, b, depth, sort);
+    std::vector<Tank*> merged = merge_tanks_health(a, b);
 
     for(Tank* tank : merged){
         sorted.push_back(tank);
@@ -311,7 +291,7 @@ void Game::draw()
     //     std::vector<Tank*> sorted_tanks;
     //     std::vector<Tank*> unsorted_tanks(begin, end);
 
-    //     std::vector<Tank*> sorted = this->merge_sort_tanks_health(unsorted_tanks, false);
+    //     std::vector<Tank*> sorted = this->merge_sort_tanks_health(unsorted_tanks);
 
     //     for (int i = 0; i < NUM_TANKS; i++)
     //     {
@@ -323,7 +303,7 @@ void Game::draw()
     //         screen->bar(health_bar_start_x, health_bar_start_y, health_bar_end_x, health_bar_end_y, REDMASK);
     //         screen->bar(health_bar_start_x, health_bar_start_y + (int)((double)HEALTH_BAR_HEIGHT * (1 - ((double)sorted.at(i)->health / (double)TANK_MAX_HEALTH))), health_bar_end_x, health_bar_end_y, GREENMASK);
     //     }
-    // }
+    //}
 }
 
 // -----------------------------------------------------------

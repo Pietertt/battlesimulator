@@ -38,23 +38,11 @@ namespace Tmpl8 {
     }
 
     void Grid::move(Tank* tank){
-        bool test = true;
         int oldCellX = (int)(tank->get_position().x / Grid::CELL_SIZE);
         int oldCellY = (int)(tank->get_position().y / Grid::CELL_SIZE);
 
-        if(isnan(tank->force.x)) {
-            tank->force = vec2(0.f, 0.f);
-            test = false;
-        }
-
-        if(isnan(tank->force.y)) {
-            tank->force = vec2(0.f, 0.f);
-            test = false;
-        }
-
-        if(test){
-            std::cout << "Force is applied" << std::endl;
-        }
+        if(isnan(tank->force.x)) tank->force = vec2(0.f, 0.f);
+        if(isnan(tank->force.y)) tank->force = vec2(0.f, 0.f);
 
         vec2 direction = (tank->target - tank->position).normalized();
         tank->speed = direction + tank->force;
