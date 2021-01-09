@@ -1,7 +1,7 @@
 #include "precomp.h" // include (only) this in every .cpp file
 
-#define NUM_TANKS_BLUE 200
-#define NUM_TANKS_RED 200
+#define NUM_TANKS_BLUE 2000
+#define NUM_TANKS_RED 2000
 
 #define TANK_MAX_HEALTH 1000
 #define ROCKET_HIT_VALUE 60
@@ -14,7 +14,7 @@
 #define HEALTH_BAR_WIDTH 1
 #define HEALTH_BAR_SPACING 0
 
-#define MAX_FRAMES 200
+#define MAX_FRAMES 2000
 
 //Global performance timer
 #define REF_PERFORMANCE 159176 //UPDATE THIS WITH YOUR REFERENCE PERFORMANCE (see console after 2k frames)
@@ -122,7 +122,7 @@ void Game::update(float deltaTime) {
     for (Tank* tank : tanks){
         if (tank->active) {
             tank->tick();
-            // this->grid->handleAction(tank);
+            this->grid->handleAction(tank);
 
             this->grid->move(tank);
 

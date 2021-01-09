@@ -44,7 +44,7 @@ class Tank
     int health;
 
     float collision_radius;
-    vec2 force;
+    vec2 force = vec2(0.f, 0.f);
 
     float max_speed;
     float reload_time;

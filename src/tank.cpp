@@ -99,9 +99,7 @@ namespace Tmpl8 {
         return sqrt(dx * dx + dy * dy);
     }
 
-   void Tank::push(vec2 direction, float magnitude)
-{
-    force += direction * magnitude;
-}
-
+    void Tank::push(vec2 direction, float magnitude) {
+        this->force += direction * magnitude;
+    }
 } 

@@ -38,15 +38,23 @@ namespace Tmpl8 {
     }
 
     void Grid::move(Tank* tank){
+        bool test = true;
         int oldCellX = (int)(tank->get_position().x / Grid::CELL_SIZE);
         int oldCellY = (int)(tank->get_position().y / Grid::CELL_SIZE);
 
-        if(isnan(tank->force.x)) tank->force = vec2(0.f, 0.f);
-        if(isnan(tank->force.y)) tank->force = vec2(0.f, 0.f);
+        if(isnan(tank->force.x)) {
+            tank->force = vec2(0.f, 0.f);
+            test = false;
+        }
 
-        //std::cout << tank->force.x << " " << tank->force.y << std::endl;
-                std::cout << std::endl;
-                        std::cout << std::endl;
+        if(isnan(tank->force.y)) {
+            tank->force = vec2(0.f, 0.f);
+            test = false;
+        }
+
+        if(test){
+            std::cout << "Force is applied" << std::endl;
+        }
 
         vec2 direction = (tank->target - tank->position).normalized();
         tank->speed = direction + tank->force;
@@ -152,18 +160,18 @@ namespace Tmpl8 {
     }
 
     void Grid::handleAction(Tank* tank){
+        int counter = 0;
         for(int x = 0; x < Grid::NUM_CELLS; x++){ 
             for(int y = 0; y < Grid::NUM_CELLS; y++){ 
-                // int cellX = (int)(tank->get_position().x / Grid::CELL_SIZE);
-                // int cellY = (int)(tank->get_position().y / Grid::CELL_SIZE);
-
-               // if(cellX == x && cellY == y){
-                    if(this->cells[x][y] != NULL){
-                      //  if(tank->allignment == this->cells[x][y]->allignment){
-                           this->handleCell(tank, x, y);
+            int cellX = (int)(tank->get_position().x / Grid::CELL_SIZE);
+            int cellY = (int)(tank->get_position().y / Grid::CELL_SIZE);
+                if(this->cells[x][y] != NULL){
+                    if (this->cells[x][y]->allignment == tank->allignment) {
+                        if(x == cellX && y == cellY){
+                            this->handleCell(tank, x, y);
                         }
-                   // }
-                //}
+                    }
+                }
             }
         }
     }
@@ -171,18 +179,16 @@ namespace Tmpl8 {
     void Grid::handleCell(Tank* tank, int x, int y){ 
         Tank* other = this->cells[x][y];
         while(other != NULL){
-            this->handleUnit(tank, other);
-            // if(x > 0 && y > 0) this->handleUnit(tank, this->cells[x - 1][y - 1]);
-            // if(x > 0) this->handleUnit(tank, this->cells[x - 1][y]);
-            // if(y > 0) this->handleUnit(tank, this->cells[x][y - 1]);
-            // if(x > 0 && y < this->NUM_CELLS - 1) this->handleUnit(tank, this->cells[x - 1][y + 1]);
-
+            if(tank != other) {
+                this->handleUnit(tank, other);
+            }
             other = other->next;
         }
     }
 
-    void Grid::handleUnit(Tank* tank, Tank* other) {       
+    void Grid::handleUnit(Tank* tank, Tank* other) {         
         vec2 dir = tank->get_position() - other->get_position();
+        
         float dirSquaredLen = dir.sqr_length();
 
         float colSquaredLen = (tank->get_collision_radius() + other->get_collision_radius());
@@ -191,5 +197,5 @@ namespace Tmpl8 {
         if (dirSquaredLen < colSquaredLen) {
             tank->push(dir.normalized(), 1.f);
         } 
-    }
+    }   
 }
