@@ -84,6 +84,7 @@ void Game::init()
 
     this->blue_tree = new KDTree();
     this->red_tree = new KDTree();
+    this->pool = new ThreadPool();
     this->grid = new Grid(this);
 
     for(Tank* tank : this->tanks){

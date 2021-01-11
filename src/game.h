@@ -7,7 +7,7 @@ class Tank;
 class Rocket;
 class Smoke;
 class Particle_beam;
-
+class ThreadPool;
 class Grid;
 class KDTree;
 
@@ -67,7 +67,7 @@ class Game
 
     KDTree* red_tree;
     KDTree* blue_tree;
-
+    ThreadPool* pool;
     Grid* grid;
 
 

@@ -76,7 +76,7 @@ using namespace std;
 
 using namespace Tmpl8;
 
-#include "thread_pool.h"
+#include "threadpool.h"
 
 #include "tank.h"
 #include "rocket.h"
