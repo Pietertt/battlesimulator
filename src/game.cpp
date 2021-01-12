@@ -50,6 +50,9 @@ Game::Game(){
 
 }
 
+void test() {
+    std::cout << "hi" << std::endl;
+}
 // -----------------------------------------------------------
 // Initialize the application
 // -----------------------------------------------------------
@@ -84,7 +87,6 @@ void Game::init()
 
     this->blue_tree = new KDTree();
     this->red_tree = new KDTree();
-    this->pool = new ThreadPool();
     this->grid = new Grid(this);
     this->pool = new threading::ThreadPool(std::thread::hardware_concurrency());
 
@@ -95,6 +97,10 @@ void Game::init()
         } else {
             this->red_tree->add(tank);
         }
+    }
+
+    for(long i = 0; i < 100000; i++) {
+        this->pool->submit(test);
     }
 
 
