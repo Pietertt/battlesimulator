@@ -84,6 +84,7 @@ void Game::init()
 
     this->blue_tree = new KDTree();
     this->red_tree = new KDTree();
+    this->pool = new ThreadPool();
     this->grid = new Grid(this);
     this->pool = new threading::ThreadPool(std::thread::hardware_concurrency());
 
