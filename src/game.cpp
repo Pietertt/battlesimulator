@@ -85,6 +85,7 @@ void Game::init()
     this->blue_tree = new KDTree();
     this->red_tree = new KDTree();
     this->grid = new Grid(this);
+    this->pool = new threading::ThreadPool(std::thread::hardware_concurrency());
 
     for(Tank* tank : this->tanks){
         this->grid->add(tank);

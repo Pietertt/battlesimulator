@@ -1,10 +1,5 @@
 #include "precomp.h"
 
-static Surface* smoke_img = new Surface("/Users/pieterboersma/Desktop/battlesimulator/assets/Smoke.png");
-static Sprite smoke(smoke_img, 4);
-
-
-
 namespace Tmpl8 {
     Grid::Grid(Game* game){
         for(int x = 0; x < Grid::NUM_CELLS; x++){
