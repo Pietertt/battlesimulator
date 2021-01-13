@@ -23,7 +23,7 @@ namespace threading {
                 this->work_queue.pop_back();
             }
 
-            bool try_pop(T& value) {
+            bool try_pop(T value) {
                 std::lock_guard<std::mutex> lock(this->mutex);
                 if (this->work_queue.empty()) return false;
                 value = std::move(this->work_queue.front());

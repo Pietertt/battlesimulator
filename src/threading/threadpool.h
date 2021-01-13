@@ -1,9 +1,10 @@
 #pragma once 
 
+#include "object.h"
+
 namespace threading {
 
     class Worker;
-    //typedef Queue<int> intQueue ;
 
     class ThreadPool {
         public:
@@ -14,12 +15,19 @@ namespace threading {
 
             template<typename FunctionType>
             void submit(FunctionType f) {
-                this->work->push(std::function<void()>(f));
+                object s;
+                s.f = f;
+                s.parameter = 1;
+                //std::cout << s.parameter << std::endl;
+                this->work->push(s);
             }
 
         private:
+
             std::vector<std::thread> threads;
-            ThreadsafeQueue<std::function<void()>>* work;
+            ThreadsafeQueue<object>* work;
+
+
             bool done = false;
         
         protected:

@@ -50,8 +50,8 @@ Game::Game(){
 
 }
 
-void test() {
-    std::cout << "hi" << std::endl;
+void test(int value) {
+    std::cout << "Hi" << std::endl;
 }
 // -----------------------------------------------------------
 // Initialize the application
@@ -99,7 +99,7 @@ void Game::init()
         }
     }
 
-    for(long i = 0; i < 100000; i++) {
+    for(long i = 0; i < 1000; i++) {
         this->pool->submit(test);
     }
 
