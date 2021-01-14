@@ -7,7 +7,7 @@ namespace threading {
             this->threads.push_back(std::thread(&ThreadPool::worker_thread, this));
         }
 
-        this->work = new ThreadsafeQueue<std::function<void()>>();
+        this->work = new ThreadsafeQueue<object>();
     }
 
     ThreadPool::~ThreadPool() {
@@ -28,6 +28,14 @@ namespace threading {
             }  else {
                 std::this_thread::yield();
             }
+
+            // std::function<void()> task;
+
+            // if(this->work->try_pop(task)) {
+            //     task();
+            // } else {
+            //     std::this_thread::yield();
+            // }
         }
         // while(!this->done) {
         //     std::function<void()> task;
