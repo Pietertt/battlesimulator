@@ -23,11 +23,19 @@ namespace threading {
     void ThreadPool::worker_thread() {
         while(!this->done) {
             std::function<void()> task;
-            if(this->work->try_pop(task)) {
+            if(this->work->pop(task)) {
                 task();
-            } else {
+            }  else {
                 std::this_thread::yield();
             }
         }
+        // while(!this->done) {
+        //     std::function<void()> task;
+        //     if(this->work->try_pop(task)) {
+        //         task();
+        //     } else {
+        //         std::this_thread::yield();
+        //     }
+        // }
     }
 }

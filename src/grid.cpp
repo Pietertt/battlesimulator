@@ -81,6 +81,12 @@ namespace Tmpl8 {
         rocket->tick(); 
     }
 
+    void Grid::handleAction(std::vector<Rocket*> rockets) {
+        for(Rocket* rocket : rockets) {
+            std::cout << rocket << std::endl;
+        }
+    }
+
     void Grid::handleCell(Rocket* rocket, int x, int y){ 
         Tank* tank = this->cells[x][y];
         while(tank != NULL){

@@ -70,5 +70,7 @@ namespace Tmpl8 {
 
         Grid* grid;
         threading::ThreadPool* pool;
+
+        std::vector<std::thread> threads;
     };
 }

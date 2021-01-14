@@ -11,9 +11,10 @@ namespace threading {
             }
 
             void push(T block) {
-                std::lock_guard<std::mutex> lock(this->mutex);
-                this->work_queue.push_back(std::move(block));
-                this->condition_variable.notify_one();
+                //std::lock_guard<std::mutex> lock(this->mutex);
+                // this->work_queue.push_back(std::move(block));
+                //this->condition_variable.notify_one();
+                this->work_queue.push_back(block);
             }
 
             void wait_and_pop(T& value) {
@@ -27,6 +28,13 @@ namespace threading {
                 std::lock_guard<std::mutex> lock(this->mutex);
                 if (this->work_queue.empty()) return false;
                 value = std::move(this->work_queue.front());
+                this->work_queue.pop_back();
+                return true;
+            }
+
+            bool pop(T& value) {
+                if (this->work_queue.empty()) return false;
+                value = this->work_queue.front();
                 this->work_queue.pop_back();
                 return true;
             }

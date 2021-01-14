@@ -51,7 +51,7 @@ Game::Game(){
 }
 
 void test() {
-    std::cout << "hi" << std::endl;
+    std::cout << "Hi" << std::endl;
 }
 // -----------------------------------------------------------
 // Initialize the application
@@ -88,7 +88,7 @@ void Game::init()
     this->blue_tree = new KDTree();
     this->red_tree = new KDTree();
     this->grid = new Grid(this);
-    this->pool = new threading::ThreadPool(std::thread::hardware_concurrency());
+    //this->pool = new threading::ThreadPool(std::thread::hardware_concurrency());
 
     for(Tank* tank : this->tanks){
         this->grid->add(tank);
@@ -99,10 +99,9 @@ void Game::init()
         }
     }
 
-    for(long i = 0; i < 100000; i++) {
-        this->pool->submit(test);
-    }
-
+    // for(int i = 0; i < std::thread::hardware_concurrency(); i++) {
+    //     this->threads.push_back(std::thread());
+    // }
 
     Particle_beam* beam1 = new Particle_beam(vec2(SCRWIDTH / 2, SCRHEIGHT / 2), vec2(100, 50), &particle_beam_sprite, PARTICLE_BEAM_HIT_VALUE);
     Particle_beam* beam2 = new Particle_beam(vec2(80, 80), vec2(100, 50), &particle_beam_sprite, PARTICLE_BEAM_HIT_VALUE);
@@ -154,9 +153,26 @@ void Game::update(float deltaTime) {
         }
     }
 
-    for (Rocket* rocket : rockets) {
-        this->grid->handleAction(rocket);        
-    }
+    float cores = std::thread::hardware_concurrency();
+    float part = this->rockets.size() / cores;
+
+    std::vector<Rocket*> one(this->rockets.begin(), this->rockets.begin() + this->rockets.size() / 2);
+    std::vector<Rocket*> two(this->rockets.end() - this->rockets.size() / 2, this->rockets.end());
+
+    std:thread t1([&]{
+        for(Rocket* rocket : one) {
+            this->grid->handleAction(rocket);
+        }
+    });
+
+    std::thread t2([&]{
+        for(Rocket* rocket : two) {
+            this->grid->handleAction(rocket);
+        }
+    });
+
+    t1.join();
+    t2.join();
 
     for(Particle_beam* beam : this->particle_beams) {
         this->grid->handleAction(beam);
