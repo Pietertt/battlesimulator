@@ -14,10 +14,10 @@
 #define HEALTH_BAR_WIDTH 1
 #define HEALTH_BAR_SPACING 0
 
-#define MAX_FRAMES 2000
+#define MAX_FRAMES 200
 
 //Global performance timer
-#define REF_PERFORMANCE 159176 //UPDATE THIS WITH YOUR REFERENCE PERFORMANCE (see console after 2k frames)
+#define REF_PERFORMANCE 169257 //UPDATE THIS WITH YOUR REFERENCE PERFORMANCE (see console after 2k frames)
 static timer perf_timer;
 static float duration;
 
@@ -153,164 +153,46 @@ void Game::update(float deltaTime) {
         }
     }
 
-    float cores = std::thread::hardware_concurrency() * 4;
+    int cores = std::thread::hardware_concurrency();
+    int max_threads = cores * 8;
     
-    for (int i = 0; i < cores; i++) {
-        int part = this->rockets.size() / cores;
-
-        if ((this->rockets.size() % 2 == 0) || ((this->rockets.size() % 2 != 0) && (i != cores - 1))) {
-            this->threads.push_back(std::thread([=]{
-                std::vector<Rocket*> t = {
-                    this->rockets.begin() + part * i,
-                    this->rockets.begin() + part * i + part
-                };
-                for(Rocket* rocket : t){
-                    this->grid->handleAction(rocket);
-                }                
-            }));
-        } else {
-            this->threads.push_back(std::thread([=]{
-                std::vector<Rocket*> t = {
-                    this->rockets.begin() + part * i,
-                    this->rockets.end()
-                };
-                for(Rocket* rocket : t){
-                    this->grid->handleAction(rocket);
-                }
-            }));
+    if (cores == 0) {
+        for (Rocket* rocket : this->rockets) {
+            this->grid->handleAction(rocket);
         }
-    }
+    } else {
+        for (int i = 0; i < cores; i++) {
+            int part = this->rockets.size() / cores;
+
+            if ((this->rockets.size() % 2 == 0) || ((this->rockets.size() % 2 != 0) && (i != cores - 1))) {
+                this->threads.push_back(std::thread([=]{
+                    std::vector<Rocket*> t = {
+                        this->rockets.begin() + part * i,
+                        this->rockets.begin() + part * i + part
+                    };
+                    for(Rocket* rocket : t){
+                        this->grid->handleAction(rocket);
+                    }                
+                }));
+            } else {
+                this->threads.push_back(std::thread([=]{
+                    std::vector<Rocket*> t = {
+                        this->rockets.begin() + part * i,
+                        this->rockets.end()
+                    };
+                    for(Rocket* rocket : t){
+                        this->grid->handleAction(rocket);
+                    }
+                }));
+            }
+        }
 
         for (std::thread& t : this->threads) {
             t.join();
         }
-
         threads.clear();
-
-
-    // std::vector<Rocket*> one(this->rockets.begin(), this->rockets.begin() + this->rockets.size() / 4);
-    // std::vector<Rocket*> two(this->rockets.end() - this->rockets.size() / 4, this->rockets.end());
-    // std::vector<Rocket*> three(this->rockets.begin() + this->rockets.size() / 4, this->rockets.begin() + this->rockets.size() / 2);
-    // std::vector<Rocket*> four(this->rockets.end() - this->rockets.size() / 2, this->rockets.end() - this->rockets.size() / 4);
-
-    // std::thread t1([&]{
-    //     std::cout << one.size() << std::endl;
-    //     this->grid->handleAction(one);
-    // });
-
-    // std::thread t2([&]{
-    //     std::cout << two.size() << std::endl;
-    //     this->grid->handleAction(two);
-    // });
-
-    // std::thread t3([&]{
-    //     std::cout << three.size() << std::endl;
-    //     this->grid->handleAction(three);
-    // });
-
-    // std::thread t4([&]{
-    //     std::cout << four.size() << std::endl;
-    //     this->grid->handleAction(four);
-    // });
-
-    // t1.join();
-    // t2.join();
-    // t3.join();
-    // t4.join();
-
-    // std::vector<Rocket*> vec[size];
-
-    // for(int i = 0; i < size; i++){
-    //     auto start = std::next(this->rockets.cbegin(), i * cores);
-    //     auto end = std::next(this->rockets.cbegin(), i * cores + cores);
-
-    //     vec[i].resize(cores);
-
-    //     if (i * cores + cores > this->rockets.size()) {
-    //         end = this->rockets.end();
-    //         vec[i].resize(this->rockets.size() - i * cores);
-    //     }
-
-    //     std::copy(start, end, vec[i].begin());
- 
-    //     // copy elements from the input range to the sub-vector
-    //     //std::copy(start_itr, end_itr, vec[k].begin());       
-    // }
-
-    // std::vector<std::thread> t;
-
-    // for(std::vector<Rocket*> v : vec) {
-    //     t.push_back(std::thread([=]{
-    //         for(Rocket* rocket : v) {
-    //             this->grid->handleAction(rocket);
-    //         }
-    //     }));
-    // }
-
-    // for(std::thread& thread : t) {
-    //     thread.join();
-    // }
-
-    // std::cout << "End" << std::endl;
-    //     std::cout << std::endl;
-
-    // std::cout << std::endl;
-
-
-    //this->threads.clear();
-
-
-    //if(this->rockets.size() % 2 == 0) {
-        // for(int i = 0; i < this->rockets.size(); i += part) {
-        //     auto last = std::min(this->rockets.size(), i + part);
-        //std::vector<Rocket*> roc(this->rockets.begin() + (part * i), this->rockets.begin() + (part * i) + part);
-
-        // std::cout << roc.size() << std::endl;
-
-        // this->threads.push_back(std::thread([&]{
-        //     // for(Rocket* rocket : roc) {
-        //     //     //std::cout << rocket << std::endl;
-        //     // }
-        // }));
-    //}
-
-    // std::cout << this->threads.size() << std::endl;
-
-    // for(int i = 0; i < cores; i++) {
-    //     this->threads.at(i).join();
-    // }
-    // this->threads.clear();
-
-    // std::cout << this->threads.size() << std::endl;
-    // }
-
-    // for(int i = 0; i < this->threads.size(); i++) {
-    //     this->threads.at(i).join();
-    // }
-
-    // for(std::thread* t : this->threads) {
-    //     t.
-    // }
-
-    // std::vector<Rocket*> one(this->rockets.begin(), this->rockets.begin() + this->rockets.size() / 2);
-    // std::vector<Rocket*> two(this->rockets.end() - this->rockets.size() / 2, this->rockets.end());
-
-    // std:thread t1([&]{
-    //     for(Rocket* rocket : one) {
-    //         this->grid->handleAction(rocket);
-    //     }
-    // });
-
-    // std::thread t2([&]{
-    //     for(Rocket* rocket : two) {
-    //         this->grid->handleAction(rocket);
-    //     }
-    // });
-
-    // t1.join();
-    // t2.join();
-
-
+    }
+    
 
     for(Particle_beam* beam : this->particle_beams) {
         this->grid->handleAction(beam);
