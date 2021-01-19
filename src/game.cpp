@@ -187,62 +187,64 @@ void Game::update(float deltaTime) {
     }
 }
 
-std::vector<Tank*> Game::merge_sort_tanks_health(std::vector<Tank*> unsorted){
+void Game::merge_sort_tanks_health(std::vector<Tank*>& unsorted, std::vector<Tank*>& sorted){
 
     if(unsorted.size() == 1){
-        return unsorted;
+        return;
     }
+    
+    // std::vector<Tank*> left;
+    // std::vector<Tank*> right;
 
-    std::vector<Tank*> left;
-    std::vector<Tank*> right;
+    // for(int i = 0; i < unsorted.size(); i++){
+    //     if(i < (unsorted.size() / 2)){
+    //         left.push_back(unsorted.at(i));
+    //     } else {
+    //         right.push_back(unsorted.at(i));
+    //     }
+    // }
+    std::vector<Tank*> left(unsorted.begin(), unsorted.begin() + unsorted.size() / 2);
+    std::vector<Tank*> right(unsorted.begin() + unsorted.size() / 2, unsorted.end());
+    merge_sort_tanks_health(left, sorted);
+    merge_sort_tanks_health(right, sorted);
+    // merge_sort_tanks_health(right);
 
-    for(int i = 0; i < unsorted.size(); i++){
-        if(i < (unsorted.size() / 2)){
-            left.push_back(unsorted.at(i));
-        } else {
-            right.push_back(unsorted.at(i));
-        }
-    }
-
-    left = merge_sort_tanks_health(left);
-    right = merge_sort_tanks_health(right);
-
-    return merge_tanks_health(left, right);
+    //return merge_tanks_health(left, right);
 }
 
-std::vector<Tank*> Game::merge_tanks_health(std::vector<Tank*> a, std::vector<Tank*> b){
+void Game::merge_tanks_health(std::vector<Tank*>& a, std::vector<Tank*>& b, std::vector<Tank*>& sorted){
 
-    std::vector<Tank*> sorted;
+    // std::vector<Tank*> sorted;
 
-    if(a.size() == 0){
-        for(Tank* tank : b){
-            sorted.push_back(tank);
-        }
-        return sorted;
-    }
+    // if(a.size() == 0){
+    //     for(Tank* tank : b){
+    //         sorted.push_back(tank);
+    //     }
+    //     return sorted;
+    // }
 
-    if(b.size() == 0){
-        for(Tank* tank : a){
-            sorted.push_back(tank);
-        }
-        return sorted;
-    }
+    // if(b.size() == 0){
+    //     for(Tank* tank : a){
+    //         sorted.push_back(tank);
+    //     }
+    //     return sorted;
+    // }
 
-    if(a.at(0)->compare_health(b.at(0)) <= 0){
-        sorted.push_back(a.at(0));
-        a.erase(a.begin());
-    } else {
-        sorted.push_back(b.at(0));
-        b.erase(b.begin());
-    }
+    // if(a.at(0)->compare_health(b.at(0)) <= 0){
+    //     sorted.push_back(a.at(0));
+    //     a.erase(a.begin());
+    // } else {
+    //     sorted.push_back(b.at(0));
+    //     b.erase(b.begin());
+    // }
 
-    std::vector<Tank*> merged = merge_tanks_health(a, b);
+    // std::vector<Tank*> merged = merge_tanks_health(a, b, sorted);
 
-    for(Tank* tank : merged){
-        sorted.push_back(tank);
-    }
+    // for(Tank* tank : merged){
+    //     sorted.push_back(tank);
+    // }
 
-    return sorted;
+    // return sorted;
 }
 
 void Game::draw()
@@ -269,29 +271,29 @@ void Game::draw()
     this->draw_parallel(this->smokes);
     this->draw_parallel(this->explosions);
 
-    // // //Draw sorted health bars
-    // for (int t = 0; t < 2; t++){
-    //     const int NUM_TANKS = ((t < 1) ? NUM_TANKS_BLUE : NUM_TANKS_RED);
+    // //Draw sorted health bars
+    for (int t = 0; t < 2; t++){
+        const int NUM_TANKS = ((t < 1) ? NUM_TANKS_BLUE : NUM_TANKS_RED);
 
-    //     const std::vector<Tank*>::const_iterator begin = ((t < 1) ? this->tanks.begin() : this->tanks.begin() + NUM_TANKS_BLUE);
-    //     const std::vector<Tank*>::const_iterator end = ((t < 1 ? this->tanks.begin() + NUM_TANKS_BLUE : this->tanks.end()));
+        const std::vector<Tank*>::const_iterator begin = ((t < 1) ? this->tanks.begin() : this->tanks.begin() + NUM_TANKS_BLUE);
+        const std::vector<Tank*>::const_iterator end = ((t < 1 ? this->tanks.begin() + NUM_TANKS_BLUE : this->tanks.end()));
 
-    //     std::vector<Tank*> sorted_tanks;
-    //     std::vector<Tank*> unsorted_tanks(begin, end);
+        std::vector<Tank*> sorted_tanks;
+        std::vector<Tank*> unsorted_tanks(begin, end);
 
-    //     std::vector<Tank*> sorted = this->merge_sort_tanks_health(unsorted_tanks);
+        this->merge_sort_tanks_health(unsorted_tanks, sorted_tanks);
 
-    //     for (int i = 0; i < NUM_TANKS; i++)
-    //     {
-    //         int health_bar_start_x = i * (HEALTH_BAR_WIDTH + HEALTH_BAR_SPACING) + HEALTH_BARS_OFFSET_X;
-    //         int health_bar_start_y = (t < 1) ? 0 : (SCRHEIGHT - HEALTH_BAR_HEIGHT) - 1;
-    //         int health_bar_end_x = health_bar_start_x + HEALTH_BAR_WIDTH;
-    //         int health_bar_end_y = (t < 1) ? HEALTH_BAR_HEIGHT : SCRHEIGHT - 1;
+        for (int i = 0; i < NUM_TANKS; i++)
+        {
+            int health_bar_start_x = i * (HEALTH_BAR_WIDTH + HEALTH_BAR_SPACING) + HEALTH_BARS_OFFSET_X;
+            int health_bar_start_y = (t < 1) ? 0 : (SCRHEIGHT - HEALTH_BAR_HEIGHT) - 1;
+            int health_bar_end_x = health_bar_start_x + HEALTH_BAR_WIDTH;
+            int health_bar_end_y = (t < 1) ? HEALTH_BAR_HEIGHT : SCRHEIGHT - 1;
 
-    //         screen->bar(health_bar_start_x, health_bar_start_y, health_bar_end_x, health_bar_end_y, REDMASK);
-    //         screen->bar(health_bar_start_x, health_bar_start_y + (int)((double)HEALTH_BAR_HEIGHT * (1 - ((double)sorted.at(i)->health / (double)TANK_MAX_HEALTH))), health_bar_end_x, health_bar_end_y, GREENMASK);
-    //     }
-    //}
+            screen->bar(health_bar_start_x, health_bar_start_y, health_bar_end_x, health_bar_end_y, REDMASK);
+            screen->bar(health_bar_start_x, health_bar_start_y + (int)((double)HEALTH_BAR_HEIGHT * (1 - ((double)unsorted_tanks.at(i)->health / (double)TANK_MAX_HEALTH))), health_bar_end_x, health_bar_end_y, GREENMASK);
+        }
+    }
 }
 
 // -----------------------------------------------------------

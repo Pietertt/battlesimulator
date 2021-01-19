@@ -23,8 +23,8 @@ namespace Tmpl8 {
         void draw();
         void tick(float deltaTime);
         
-        static std::vector<Tank*> merge_sort_tanks_health(std::vector<Tank*> unsorted);
-        static std::vector<Tank*> merge_tanks_health(std::vector<Tank*> a, std::vector<Tank*> b);
+        static void merge_sort_tanks_health(std::vector<Tank*>& unsorted, std::vector<Tank*>& sorted);
+        static void merge_tanks_health(std::vector<Tank*>& a, std::vector<Tank*>& b, std::vector<Tank*>& sorted);
         
         void measure_performance();
 
@@ -69,7 +69,7 @@ namespace Tmpl8 {
         KDTree* blue_tree;
 
         int cores = std::thread::hardware_concurrency();
-        int max_threads = this->cores * 8;
+        int max_threads = this->cores;
 
         Grid* grid;
         threading::ThreadPool* pool;
@@ -114,8 +114,6 @@ namespace Tmpl8 {
                 threads.clear();
             }
         }
-
-
 
         template <typename T> void draw_parallel(std::vector<T*> elements) {
             if (this->cores == 0) {
