@@ -126,6 +126,7 @@ void Game::shutdown()
 // Targeting etc..
 // -----------------------------------------------------------
 void Game::update(float deltaTime) {
+
     for (Tank* tank : tanks){
         if (tank->active) {
             tank->tick();
@@ -153,60 +154,18 @@ void Game::update(float deltaTime) {
         }
     }
 
-    int cores = std::thread::hardware_concurrency();
-    int max_threads = cores * 8;
+    this->execute_parallel(this->rockets);
+    this->execute_parallel(this->particle_beams);    
     
-    if (cores == 0) {
-        for (Rocket* rocket : this->rockets) {
-            this->grid->handleAction(rocket);
-        }
-    } else {
-        for (int i = 0; i < cores; i++) {
-            int part = this->rockets.size() / cores;
-
-            if ((this->rockets.size() % 2 == 0) || ((this->rockets.size() % 2 != 0) && (i != cores - 1))) {
-                this->threads.push_back(std::thread([=]{
-                    std::vector<Rocket*> t = {
-                        this->rockets.begin() + part * i,
-                        this->rockets.begin() + part * i + part
-                    };
-                    for(Rocket* rocket : t){
-                        this->grid->handleAction(rocket);
-                    }                
-                }));
-            } else {
-                this->threads.push_back(std::thread([=]{
-                    std::vector<Rocket*> t = {
-                        this->rockets.begin() + part * i,
-                        this->rockets.end()
-                    };
-                    for(Rocket* rocket : t){
-                        this->grid->handleAction(rocket);
-                    }
-                }));
-            }
-        }
-
-        for (std::thread& t : this->threads) {
-            t.join();
-        }
-        threads.clear();
-    }
-    
-
-    for(Particle_beam* beam : this->particle_beams) {
-        this->grid->handleAction(beam);
+    for (Explosion* explosion : explosions) {
+        explosion->tick();
     }
 
-    for (Explosion& explosion : explosions) {
-        explosion.tick();
+    for (Smoke* smoke : smokes) {
+        smoke->tick();
     }
 
-    for (Smoke& smoke : smokes) {
-        smoke.tick();
-    }
-
-    explosions.erase(std::remove_if(explosions.begin(), explosions.end(), [](const Explosion& explosion) { return explosion.done(); }), explosions.end());
+    explosions.erase(std::remove_if(explosions.begin(), explosions.end(), [](const Explosion* explosion) { return explosion->done(); }), explosions.end());
     rockets.erase(std::remove_if(rockets.begin(), rockets.end(), [](const Rocket* rocket) { return !rocket->active; }), rockets.end());
 
     delete this->blue_tree;
@@ -305,25 +264,10 @@ void Game::draw()
             background.get_buffer()[(int)tPos.x + (int)tPos.y * SCRWIDTH] = sub_blend(background.get_buffer()[(int)tPos.x + (int)tPos.y * SCRWIDTH], 0x808080);
     }
 
-    for (Rocket* rocket : rockets)
-    {
-        rocket->draw(screen);
-    }
-
-    for (Smoke& smoke : smokes)
-    {
-        smoke.draw(screen);
-    }
-
-    for (Particle_beam* particle_beam : particle_beams)
-    {
-        particle_beam->draw(screen);
-    }
-
-    for (Explosion& explosion : explosions)
-    {
-        explosion.draw(screen);
-    }
+    this->draw_parallel(this->rockets);
+    this->draw_parallel(this->particle_beams);
+    this->draw_parallel(this->smokes);
+    this->draw_parallel(this->explosions);
 
     // // //Draw sorted health bars
     // for (int t = 0; t < 2; t++){
@@ -406,9 +350,9 @@ void Game::tick(float deltaTime)
     frame_count_font->print(screen, frame_count_string.c_str(), 350, 580);
 }
 void Game::add_smoke(vec2 position) {
-    this->smokes.push_back(Smoke(smoke, position - vec2(0, 48)));
+    this->smokes.push_back(new Smoke(smoke, position - vec2(0, 48)));
 }
 
 void Game::add_explosion(vec2 position) {
-    this->explosions.push_back(Explosion(&explosion, position));
+    this->explosions.push_back(new Explosion(&explosion, position));
 }
