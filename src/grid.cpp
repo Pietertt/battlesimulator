@@ -83,7 +83,7 @@ namespace Tmpl8 {
 
     void Grid::handleAction(std::vector<Rocket*> rockets) {
         for(Rocket* rocket : rockets) {
-            std::cout << rocket << std::endl;
+            this->handleAction(rocket);
         }
     }
 
