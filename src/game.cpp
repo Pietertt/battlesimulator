@@ -1,7 +1,7 @@
 #include "precomp.h" // include (only) this in every .cpp file
 
-#define NUM_TANKS_BLUE 500
-#define NUM_TANKS_RED 500
+#define NUM_TANKS_BLUE 2000
+#define NUM_TANKS_RED 2000
 
 #define TANK_MAX_HEALTH 1000
 #define ROCKET_HIT_VALUE 60
@@ -153,44 +153,70 @@ void Game::update(float deltaTime) {
         }
     }
 
-    float cores = std::thread::hardware_concurrency();
-    float part = this->rockets.size() / cores;
-    int size = (this->rockets.size() - 1) / cores + 1;
+    float cores = std::thread::hardware_concurrency() * 4;
+    
+    for (int i = 0; i < cores; i++) {
+        int part = this->rockets.size() / cores;
 
-    std::vector<Rocket*> one(this->rockets.begin(), this->rockets.begin() + this->rockets.size() / 4);
-    std::vector<Rocket*> two(this->rockets.end() - this->rockets.size() / 4, this->rockets.end());
+        if ((this->rockets.size() % 2 == 0) || ((this->rockets.size() % 2 != 0) && (i != cores - 1))) {
+            this->threads.push_back(std::thread([=]{
+                std::vector<Rocket*> t = {
+                    this->rockets.begin() + part * i,
+                    this->rockets.begin() + part * i + part
+                };
+                for(Rocket* rocket : t){
+                    this->grid->handleAction(rocket);
+                }                
+            }));
+        } else {
+            this->threads.push_back(std::thread([=]{
+                std::vector<Rocket*> t = {
+                    this->rockets.begin() + part * i,
+                    this->rockets.end()
+                };
+                for(Rocket* rocket : t){
+                    this->grid->handleAction(rocket);
+                }
+            }));
+        }
+    }
 
-    std::vector<Rocket*> three(this->rockets.begin() + this->rockets.size() / 4, this->rockets.begin() + this->rockets.size() / 2);
-    std::vector<Rocket*> four(this->rockets.end() - this->rockets.size() / 2, this->rockets.end() - this->rockets.size() / 4);
+        for (std::thread& t : this->threads) {
+            t.join();
+        }
 
-    // for(Rocket* rocket : rockets) {
-    //     this->grid->handleAction(rocket);
-    // }
+        threads.clear();
 
-    std::thread t1([&]{
-        std::cout << one.size() << std::endl;
-        this->grid->handleAction(one);
-    });
 
-    std::thread t2([&]{
-        std::cout << two.size() << std::endl;
-        this->grid->handleAction(two);
-    });
+    // std::vector<Rocket*> one(this->rockets.begin(), this->rockets.begin() + this->rockets.size() / 4);
+    // std::vector<Rocket*> two(this->rockets.end() - this->rockets.size() / 4, this->rockets.end());
+    // std::vector<Rocket*> three(this->rockets.begin() + this->rockets.size() / 4, this->rockets.begin() + this->rockets.size() / 2);
+    // std::vector<Rocket*> four(this->rockets.end() - this->rockets.size() / 2, this->rockets.end() - this->rockets.size() / 4);
 
-    std::thread t3([&]{
-        std::cout << three.size() << std::endl;
-        this->grid->handleAction(three);
-    });
+    // std::thread t1([&]{
+    //     std::cout << one.size() << std::endl;
+    //     this->grid->handleAction(one);
+    // });
 
-    std::thread t4([&]{
-        std::cout << four.size() << std::endl;
-        this->grid->handleAction(four);
-    });
+    // std::thread t2([&]{
+    //     std::cout << two.size() << std::endl;
+    //     this->grid->handleAction(two);
+    // });
 
-    t1.join();
-    t2.join();
-    t3.join();
-    t4.join();
+    // std::thread t3([&]{
+    //     std::cout << three.size() << std::endl;
+    //     this->grid->handleAction(three);
+    // });
+
+    // std::thread t4([&]{
+    //     std::cout << four.size() << std::endl;
+    //     this->grid->handleAction(four);
+    // });
+
+    // t1.join();
+    // t2.join();
+    // t3.join();
+    // t4.join();
 
     // std::vector<Rocket*> vec[size];
 
