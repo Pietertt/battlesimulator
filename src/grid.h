@@ -13,6 +13,7 @@ namespace Tmpl8 {
             void move(Tank* tank);
 
             void handleAction(Rocket* rocket);
+            void handleAction(std::vector<Rocket*> rockets);
             void handleCell(Rocket* rocket, int x, int y);
             bool handleUnit(Rocket* rocket, Tank* tank);
 
