@@ -5,11 +5,7 @@ namespace threading {
     ThreadPool::ThreadPool(int num_threads) {
         for(int i = 0; i < num_threads; i++) {
             this->threads.push_back(std::thread(&ThreadPool::worker_thread, this));
-        }
-
-        this->accept_functions = true;
-
-        
+        }        
     }
 
     ThreadPool::~ThreadPool() {
