@@ -23,8 +23,8 @@ namespace Tmpl8 {
         void draw();
         void tick(float deltaTime);
         
-        static void merge_sort_tanks_health(std::vector<Tank*>& unsorted, std::vector<Tank*>& sorted);
-        static void merge_tanks_health(std::vector<Tank*>& a, std::vector<Tank*>& b, std::vector<Tank*>& sorted);
+        static std::vector<Tank*> merge_sort_tanks_health(std::vector<Tank*> unsorted);
+        static std::vector<Tank*> merge_tanks_health(std::vector<Tank*>& a, std::vector<Tank*>& b);
         
         void measure_performance();
 
@@ -76,7 +76,8 @@ namespace Tmpl8 {
 
         std::vector<std::thread> threads;
 
-        template <typename T> void execute_parallel(std::vector<T*> elements) {
+        template <typename T> 
+        void execute_parallel(std::vector<T*> elements) {
             if (this->cores == 0) {
                 for (T* element : elements) {
                     this->grid->handleAction(element);
@@ -86,7 +87,7 @@ namespace Tmpl8 {
                     int part = elements.size() / this->max_threads;
 
                     if ((elements.size() % 2 == 0) || ((elements.size() % 2 != 0) && (i != max_threads - 1))) {
-                        this->threads.push_back(std::thread([=]{
+                       this->pool->push(std::function<void()>([=]{
                             std::vector<T*> part_of_elements = {
                                 elements.begin() + part * i,
                                 elements.begin() + part * i + part
@@ -96,7 +97,7 @@ namespace Tmpl8 {
                             }                
                         }));
                     } else {
-                        this->threads.push_back(std::thread([=]{
+                        this->pool->push(std::function<void()>([=]{
                             std::vector<T*> part_of_elements = {
                                 elements.begin() + part * i,
                                 elements.end()
@@ -107,15 +108,11 @@ namespace Tmpl8 {
                         }));
                     }
                 }
-
-                 for (std::thread& t : this->threads) {
-                    t.join();
-                }
-                threads.clear();
             }
         }
 
-        template <typename T> void draw_parallel(std::vector<T*> elements) {
+        template <typename T> 
+        void draw_parallel(std::vector<T*> elements) {
             if (this->cores == 0) {
                 for (T* element : elements) {
                     element->draw(this->screen);
@@ -125,7 +122,7 @@ namespace Tmpl8 {
                     int part = elements.size() / this->max_threads;
 
                     if ((elements.size() % 2 == 0) || ((elements.size() % 2 != 0) && (i != max_threads - 1))) {
-                        this->threads.push_back(std::thread([=]{
+                        this->pool->push(std::function<void()>([=]{
                             std::vector<T*> part_of_elements = {
                                 elements.begin() + part * i,
                                 elements.begin() + part * i + part
@@ -135,7 +132,7 @@ namespace Tmpl8 {
                             }                
                         }));
                     } else {
-                        this->threads.push_back(std::thread([=]{
+                        this->pool->push(std::function<void()>([=]{
                             std::vector<T*> part_of_elements = {
                                 elements.begin() + part * i,
                                 elements.end()

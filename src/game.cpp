@@ -1,7 +1,7 @@
 #include "precomp.h" // include (only) this in every .cpp file
 
-#define NUM_TANKS_BLUE 200
-#define NUM_TANKS_RED 200
+#define NUM_TANKS_BLUE 2000
+#define NUM_TANKS_RED 2000
 
 #define TANK_MAX_HEALTH 1000
 #define ROCKET_HIT_VALUE 60
@@ -14,7 +14,7 @@
 #define HEALTH_BAR_WIDTH 1
 #define HEALTH_BAR_SPACING 0
 
-#define MAX_FRAMES 2000
+#define MAX_FRAMES 200
 
 //Global performance timer
 #define REF_PERFORMANCE 169257 //UPDATE THIS WITH YOUR REFERENCE PERFORMANCE (see console after 2k frames)
@@ -88,7 +88,7 @@ void Game::init()
     this->blue_tree = new KDTree();
     this->red_tree = new KDTree();
     this->grid = new Grid(this);
-    //this->pool = new threading::ThreadPool(std::thread::hardware_concurrency());
+    this->pool = new threading::ThreadPool(std::thread::hardware_concurrency());
 
     for(Tank* tank : this->tanks){
         this->grid->add(tank);
@@ -98,10 +98,6 @@ void Game::init()
             this->red_tree->add(tank);
         }
     }
-
-    // for(int i = 0; i < std::thread::hardware_concurrency(); i++) {
-    //     this->threads.push_back(std::thread());
-    // }
 
     Particle_beam* beam1 = new Particle_beam(vec2(SCRWIDTH / 2, SCRHEIGHT / 2), vec2(100, 50), &particle_beam_sprite, PARTICLE_BEAM_HIT_VALUE);
     Particle_beam* beam2 = new Particle_beam(vec2(80, 80), vec2(100, 50), &particle_beam_sprite, PARTICLE_BEAM_HIT_VALUE);
@@ -154,6 +150,9 @@ void Game::update(float deltaTime) {
         }
     }
 
+    std::vector<Rocket*> one(this->rockets.begin(), this->rockets.begin() + this->rockets.size() / 2);
+    std::vector<Rocket*> two(this->rockets.end() - this->rockets.size() / 2, this->rockets.end());
+
     this->execute_parallel(this->rockets);
     this->execute_parallel(this->particle_beams);    
     
@@ -187,10 +186,10 @@ void Game::update(float deltaTime) {
     }
 }
 
-void Game::merge_sort_tanks_health(std::vector<Tank*>& unsorted, std::vector<Tank*>& sorted){
+std::vector<Tank*> Game::merge_sort_tanks_health(std::vector<Tank*> unsorted){
 
     if(unsorted.size() == 1){
-        return;
+        return unsorted;
     }
     
     //std::cout << unsorted.size() << std::endl;
@@ -207,29 +206,28 @@ void Game::merge_sort_tanks_health(std::vector<Tank*>& unsorted, std::vector<Tan
     // }
     std::vector<Tank*> left(unsorted.begin(), unsorted.begin() + unsorted.size() / 2);
     std::vector<Tank*> right(unsorted.begin() + unsorted.size() / 2, unsorted.end());
-    merge_sort_tanks_health(left, sorted);
-    merge_sort_tanks_health(right, sorted);
-    // merge_sort_tanks_health(right);
+    left = merge_sort_tanks_health(left);
+    right = merge_sort_tanks_health(right);
 
-    merge_tanks_health(left, right, sorted);
+    return merge_tanks_health(left, right);
 }
 
-void Game::merge_tanks_health(std::vector<Tank*>& a, std::vector<Tank*>& b, std::vector<Tank*>& sorted){
+std::vector<Tank*> Game::merge_tanks_health(std::vector<Tank*>& a, std::vector<Tank*>& b){
 
-    std::cout << a.size() << " " << b.size() << std::endl;
+    std::vector<Tank*> sorted;
 
     if(a.size() == 0){
         for(Tank* tank : b){
             sorted.push_back(tank);
         }
-        return;
+        return sorted;
     }
 
     if(b.size() == 0){
         for(Tank* tank : a){
             sorted.push_back(tank);
         }
-        return;
+        return sorted;
     }
 
     if(a.at(0)->compare_health(b.at(0)) <= 0){
@@ -241,9 +239,13 @@ void Game::merge_tanks_health(std::vector<Tank*>& a, std::vector<Tank*>& b, std:
     }
 
     // std::vector<Tank*> merged = 
-    merge_tanks_health(a, b, sorted);
+    std::vector<Tank*> merged = merge_tanks_health(a, b);
 
-    return;
+    for(Tank* tank : merged){
+        sorted.push_back(tank);
+    }
+
+    return sorted;
 
     // for(Tank* tank : merged){
     //     sorted.push_back(tank);
@@ -271,34 +273,50 @@ void Game::draw()
             background.get_buffer()[(int)tPos.x + (int)tPos.y * SCRWIDTH] = sub_blend(background.get_buffer()[(int)tPos.x + (int)tPos.y * SCRWIDTH], 0x808080);
     }
 
-    this->draw_parallel(this->rockets);
-    this->draw_parallel(this->particle_beams);
-    this->draw_parallel(this->smokes);
-    this->draw_parallel(this->explosions);
-
-    // //Draw sorted health bars
-    for (int t = 0; t < 2; t++){
-        const int NUM_TANKS = ((t < 1) ? NUM_TANKS_BLUE : NUM_TANKS_RED);
-
-        const std::vector<Tank*>::const_iterator begin = ((t < 1) ? this->tanks.begin() : this->tanks.begin() + NUM_TANKS_BLUE);
-        const std::vector<Tank*>::const_iterator end = ((t < 1 ? this->tanks.begin() + NUM_TANKS_BLUE : this->tanks.end()));
-
-        std::vector<Tank*> sorted_tanks;
-        std::vector<Tank*> unsorted_tanks(begin, end);
-
-        this->merge_sort_tanks_health(unsorted_tanks, sorted_tanks);
-
-        for (int i = 0; i < NUM_TANKS; i++)
-        {
-            int health_bar_start_x = i * (HEALTH_BAR_WIDTH + HEALTH_BAR_SPACING) + HEALTH_BARS_OFFSET_X;
-            int health_bar_start_y = (t < 1) ? 0 : (SCRHEIGHT - HEALTH_BAR_HEIGHT) - 1;
-            int health_bar_end_x = health_bar_start_x + HEALTH_BAR_WIDTH;
-            int health_bar_end_y = (t < 1) ? HEALTH_BAR_HEIGHT : SCRHEIGHT - 1;
-
-            screen->bar(health_bar_start_x, health_bar_start_y, health_bar_end_x, health_bar_end_y, REDMASK);
-            screen->bar(health_bar_start_x, health_bar_start_y + (int)((double)HEALTH_BAR_HEIGHT * (1 - ((double)sorted_tanks.at(i)->health / (double)TANK_MAX_HEALTH))), health_bar_end_x, health_bar_end_y, GREENMASK);
-        }
+    for(Rocket* rocket : this->rockets) {
+        rocket->draw(this->screen);
     }
+
+    for(Particle_beam* rocket : this->particle_beams) {
+        rocket->draw(this->screen);
+    }
+
+    for(Smoke* rocket : this->smokes) {
+        rocket->draw(this->screen);
+    }
+
+    for(Explosion* rocket : this->explosions) {
+        rocket->draw(this->screen);
+    }
+
+    // this->draw_parallel(this->rockets);
+    // this->draw_parallel(this->particle_beams);
+    // this->draw_parallel(this->smokes);
+    // this->draw_parallel(this->explosions);
+
+    // // //Draw sorted health bars
+    // for (int t = 0; t < 2; t++){
+    //     const int NUM_TANKS = ((t < 1) ? NUM_TANKS_BLUE : NUM_TANKS_RED);
+
+    //     const std::vector<Tank*>::const_iterator begin = ((t < 1) ? this->tanks.begin() : this->tanks.begin() + NUM_TANKS_BLUE);
+    //     const std::vector<Tank*>::const_iterator end = ((t < 1 ? this->tanks.begin() + NUM_TANKS_BLUE : this->tanks.end()));
+
+        
+    //     std::vector<Tank*> unsorted_tanks(begin, end);
+
+    //     std::vector<Tank*> sorted_tanks = this->merge_sort_tanks_health(unsorted_tanks);
+
+    //     for (int i = 0; i < NUM_TANKS; i++)
+    //     {
+    //         int health_bar_start_x = i * (HEALTH_BAR_WIDTH + HEALTH_BAR_SPACING) + HEALTH_BARS_OFFSET_X;
+    //         int health_bar_start_y = (t < 1) ? 0 : (SCRHEIGHT - HEALTH_BAR_HEIGHT) - 1;
+    //         int health_bar_end_x = health_bar_start_x + HEALTH_BAR_WIDTH;
+    //         int health_bar_end_y = (t < 1) ? HEALTH_BAR_HEIGHT : SCRHEIGHT - 1;
+
+    //         screen->bar(health_bar_start_x, health_bar_start_y, health_bar_end_x, health_bar_end_y, REDMASK);
+    //         screen->bar(health_bar_start_x, health_bar_start_y + (int)((double)HEALTH_BAR_HEIGHT * (1 - ((double)sorted_tanks.at(i)->health / (double)TANK_MAX_HEALTH))), health_bar_end_x, health_bar_end_y, GREENMASK);
+    //     }
+    // }
 }
 
 // -----------------------------------------------------------

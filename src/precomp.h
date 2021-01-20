@@ -51,6 +51,7 @@
 #include <thread>
 #include <mutex>
 #include <deque>
+#include <queue>
 #include <future>
 
 // Namespaced C headers:

@@ -7,43 +7,43 @@ namespace threading {
             this->threads.push_back(std::thread(&ThreadPool::worker_thread, this));
         }
 
-        this->work = new ThreadsafeQueue<object>();
+        this->accept_functions = true;
+
+        
     }
 
     ThreadPool::~ThreadPool() {
-       delete this->work;
+        this->done = false;
 
-     
+        for(std::thread& thread : this->threads) {
+            thread.join();
+        }
+    }
 
-        // for(std::thread thread : this->threads) {
-        //     thread.join();
-        // }
+    void ThreadPool::push(std::function<void()> func) {
+        std::unique_lock<std::mutex> lock(this->mutex);
+        this->queue.push(func);
+        lock.unlock();
+        this->cond.notify_one();
     }
 
     void ThreadPool::worker_thread() {
+        std::function<void()> func;
+
         while(!this->done) {
-            std::function<void()> task;
-            if(this->work->pop(task)) {
-                task();
-            }  else {
-                std::this_thread::yield();
+            {
+                std::unique_lock<std::mutex> lock(this->mutex);
+                this->cond.wait(lock, [this](){
+                    return !this->queue.empty();
+                });
+                if (this->queue.empty()) {
+                    return;
+                }
+
+                func = this->queue.front();
+                this->queue.pop();
             }
-
-            // std::function<void()> task;
-
-            // if(this->work->try_pop(task)) {
-            //     task();
-            // } else {
-            //     std::this_thread::yield();
-            // }
+            func();
         }
-        // while(!this->done) {
-        //     std::function<void()> task;
-        //     if(this->work->try_pop(task)) {
-        //         task();
-        //     } else {
-        //         std::this_thread::yield();
-        //     }
-        // }
     }
 }

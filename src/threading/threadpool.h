@@ -10,23 +10,18 @@ namespace threading {
         public:
             ThreadPool(int num_threads);
             ~ThreadPool();
+            void push(std::function<void()> func);
 
             void worker_thread();
-
-            template<typename FunctionType>
-            void submit(FunctionType f) {
-                object s;
-                s.f = f;
-                s.parameter = 1;
-                //std::cout << s.parameter << std::endl;
-                this->work->push(s);
-            }
 
         private:
 
             std::vector<std::thread> threads;
-            ThreadsafeQueue<object>* work;
+            std::queue<std::function<void()>> queue;
+            std::atomic<bool> accept_functions;
 
+            std::mutex mutex;
+            std::condition_variable cond;
 
             bool done = false;
         
