@@ -1,10 +1,10 @@
 #include "precomp.h" // include (only) this in every .cpp file
 
-#define NUM_TANKS_BLUE 2000
-#define NUM_TANKS_RED 2000
+#define NUM_TANKS_BLUE 500
+#define NUM_TANKS_RED 500
 
 #define TANK_MAX_HEALTH 1000
-#define ROCKET_HIT_VALUE 60
+#define ROCKET_HIT_VALUE 6000
 #define PARTICLE_BEAM_HIT_VALUE 50
 
 #define TANK_MAX_SPEED 1.5
@@ -17,7 +17,7 @@
 #define MAX_FRAMES 2000
 
 //Global performance timer
-#define REF_PERFORMANCE 159176 //UPDATE THIS WITH YOUR REFERENCE PERFORMANCE (see console after 2k frames)
+#define REF_PERFORMANCE 169257 //UPDATE THIS WITH YOUR REFERENCE PERFORMANCE (see console after 2k frames)
 static timer perf_timer;
 static float duration;
 
@@ -50,6 +50,9 @@ Game::Game(){
 
 }
 
+void test() {
+    std::cout << "Hi" << std::endl;
+}
 // -----------------------------------------------------------
 // Initialize the application
 // -----------------------------------------------------------
@@ -85,6 +88,7 @@ void Game::init()
     this->blue_tree = new KDTree();
     this->red_tree = new KDTree();
     this->grid = new Grid(this);
+    this->pool = new threading::ThreadPool(std::thread::hardware_concurrency());
 
     for(Tank* tank : this->tanks){
         this->grid->add(tank);
@@ -94,7 +98,6 @@ void Game::init()
             this->red_tree->add(tank);
         }
     }
-
 
     Particle_beam* beam1 = new Particle_beam(vec2(SCRWIDTH / 2, SCRHEIGHT / 2), vec2(100, 50), &particle_beam_sprite, PARTICLE_BEAM_HIT_VALUE);
     Particle_beam* beam2 = new Particle_beam(vec2(80, 80), vec2(100, 50), &particle_beam_sprite, PARTICLE_BEAM_HIT_VALUE);
@@ -119,6 +122,7 @@ void Game::shutdown()
 // Targeting etc..
 // -----------------------------------------------------------
 void Game::update(float deltaTime) {
+
     for (Tank* tank : tanks){
         if (tank->active) {
             tank->tick();
@@ -146,23 +150,21 @@ void Game::update(float deltaTime) {
         }
     }
 
-    for (Rocket* rocket : rockets) {
-        this->grid->handleAction(rocket);        
+    std::vector<Rocket*> one(this->rockets.begin(), this->rockets.begin() + this->rockets.size() / 2);
+    std::vector<Rocket*> two(this->rockets.end() - this->rockets.size() / 2, this->rockets.end());
+
+    this->execute_parallel(this->rockets);
+    this->execute_parallel(this->particle_beams);    
+    
+    for (Explosion* explosion : explosions) {
+        explosion->tick();
     }
 
-    for(Particle_beam* beam : this->particle_beams) {
-        this->grid->handleAction(beam);
+    for (Smoke* smoke : smokes) {
+        smoke->tick();
     }
 
-    for (Explosion& explosion : explosions) {
-        explosion.tick();
-    }
-
-    for (Smoke& smoke : smokes) {
-        smoke.tick();
-    }
-
-    explosions.erase(std::remove_if(explosions.begin(), explosions.end(), [](const Explosion& explosion) { return explosion.done(); }), explosions.end());
+    explosions.erase(std::remove_if(explosions.begin(), explosions.end(), [](const Explosion* explosion) { return explosion->done(); }), explosions.end());
     rockets.erase(std::remove_if(rockets.begin(), rockets.end(), [](const Rocket* rocket) { return !rocket->active; }), rockets.end());
 
     delete this->blue_tree;
@@ -186,7 +188,7 @@ void Game::update(float deltaTime) {
 
 std::vector<Tank*> Game::merge_sort_tanks_health(std::vector<Tank*> unsorted){
 
-    if(unsorted.size() == 1){
+     if(unsorted.size() == 1){
         return unsorted;
     }
 
@@ -209,37 +211,29 @@ std::vector<Tank*> Game::merge_sort_tanks_health(std::vector<Tank*> unsorted){
 
 std::vector<Tank*> Game::merge_tanks_health(std::vector<Tank*> a, std::vector<Tank*> b){
 
-    std::vector<Tank*> sorted;
+    std::vector<Tank*> result;
 
-    if(a.size() == 0){
-        for(Tank* tank : b){
-            sorted.push_back(tank);
+    while (a.size() != 0 && b.size() != 0) {
+        if(a.at(0)->compare_health(b.at(0)) <= 0){
+            result.push_back(a.at(0));
+            a.erase(a.begin());
+        } else {
+            result.push_back(b.at(0));
+            b.erase(b.begin());
         }
-        return sorted;
     }
 
-    if(b.size() == 0){
-        for(Tank* tank : a){
-            sorted.push_back(tank);
-        }
-        return sorted;
-    }
-
-    if(a.at(0)->compare_health(b.at(0)) <= 0){
-        sorted.push_back(a.at(0));
+    while (a.size() != 0) {
+        result.push_back(a.at(0));
         a.erase(a.begin());
-    } else {
-        sorted.push_back(b.at(0));
+    }
+
+    while (b.size() != 0) {
+        result.push_back(b.at(0));
         b.erase(b.begin());
     }
 
-    std::vector<Tank*> merged = merge_tanks_health(a, b);
-
-    for(Tank* tank : merged){
-        sorted.push_back(tank);
-    }
-
-    return sorted;
+    return result;
 }
 
 void Game::draw()
@@ -261,49 +255,49 @@ void Game::draw()
             background.get_buffer()[(int)tPos.x + (int)tPos.y * SCRWIDTH] = sub_blend(background.get_buffer()[(int)tPos.x + (int)tPos.y * SCRWIDTH], 0x808080);
     }
 
-    for (Rocket* rocket : rockets)
-    {
-        rocket->draw(screen);
+    for(Rocket* rocket : this->rockets) {
+        rocket->draw(this->screen);
     }
 
-    for (Smoke& smoke : smokes)
-    {
-        smoke.draw(screen);
+    for(Particle_beam* rocket : this->particle_beams) {
+        rocket->draw(this->screen);
     }
 
-    for (Particle_beam* particle_beam : particle_beams)
-    {
-        particle_beam->draw(screen);
+    for(Smoke* rocket : this->smokes) {
+        rocket->draw(this->screen);
     }
 
-    for (Explosion& explosion : explosions)
-    {
-        explosion.draw(screen);
+    for(Explosion* rocket : this->explosions) {
+        rocket->draw(this->screen);
     }
+
+    // this->draw_parallel(this->rockets);
+    // this->draw_parallel(this->particle_beams);
+    // this->draw_parallel(this->smokes);
+    // this->draw_parallel(this->explosions);
 
     // // //Draw sorted health bars
-    // for (int t = 0; t < 2; t++){
-    //     const int NUM_TANKS = ((t < 1) ? NUM_TANKS_BLUE : NUM_TANKS_RED);
+    for (int t = 0; t < 2; t++){
+        const int NUM_TANKS = ((t < 1) ? NUM_TANKS_BLUE : NUM_TANKS_RED);
 
-    //     const std::vector<Tank*>::const_iterator begin = ((t < 1) ? this->tanks.begin() : this->tanks.begin() + NUM_TANKS_BLUE);
-    //     const std::vector<Tank*>::const_iterator end = ((t < 1 ? this->tanks.begin() + NUM_TANKS_BLUE : this->tanks.end()));
+        const std::vector<Tank*>::const_iterator begin = ((t < 1) ? this->tanks.begin() : this->tanks.begin() + NUM_TANKS_BLUE);
+        const std::vector<Tank*>::const_iterator end = ((t < 1 ? this->tanks.begin() + NUM_TANKS_BLUE : this->tanks.end()));
 
-    //     std::vector<Tank*> sorted_tanks;
-    //     std::vector<Tank*> unsorted_tanks(begin, end);
+        std::vector<Tank*> unsorted_tanks(begin, end);
 
-    //     std::vector<Tank*> sorted = this->merge_sort_tanks_health(unsorted_tanks);
+        std::vector<Tank*> sorted_tanks = this->merge_sort_tanks_health(unsorted_tanks);
 
-    //     for (int i = 0; i < NUM_TANKS; i++)
-    //     {
-    //         int health_bar_start_x = i * (HEALTH_BAR_WIDTH + HEALTH_BAR_SPACING) + HEALTH_BARS_OFFSET_X;
-    //         int health_bar_start_y = (t < 1) ? 0 : (SCRHEIGHT - HEALTH_BAR_HEIGHT) - 1;
-    //         int health_bar_end_x = health_bar_start_x + HEALTH_BAR_WIDTH;
-    //         int health_bar_end_y = (t < 1) ? HEALTH_BAR_HEIGHT : SCRHEIGHT - 1;
+        for (int i = 0; i < NUM_TANKS; i++)
+        {
+            int health_bar_start_x = i * (HEALTH_BAR_WIDTH + HEALTH_BAR_SPACING) + HEALTH_BARS_OFFSET_X;
+            int health_bar_start_y = (t < 1) ? 0 : (SCRHEIGHT - HEALTH_BAR_HEIGHT) - 1;
+            int health_bar_end_x = health_bar_start_x + HEALTH_BAR_WIDTH;
+            int health_bar_end_y = (t < 1) ? HEALTH_BAR_HEIGHT : SCRHEIGHT - 1;
 
-    //         screen->bar(health_bar_start_x, health_bar_start_y, health_bar_end_x, health_bar_end_y, REDMASK);
-    //         screen->bar(health_bar_start_x, health_bar_start_y + (int)((double)HEALTH_BAR_HEIGHT * (1 - ((double)sorted.at(i)->health / (double)TANK_MAX_HEALTH))), health_bar_end_x, health_bar_end_y, GREENMASK);
-    //     }
-    //}
+            screen->bar(health_bar_start_x, health_bar_start_y, health_bar_end_x, health_bar_end_y, REDMASK);
+            screen->bar(health_bar_start_x, health_bar_start_y + (int)((double)HEALTH_BAR_HEIGHT * (1 - ((double)sorted_tanks.at(i)->health / (double)TANK_MAX_HEALTH))), health_bar_end_x, health_bar_end_y, GREENMASK);
+        }
+    }
 }
 
 // -----------------------------------------------------------
@@ -362,9 +356,9 @@ void Game::tick(float deltaTime)
     frame_count_font->print(screen, frame_count_string.c_str(), 350, 580);
 }
 void Game::add_smoke(vec2 position) {
-    this->smokes.push_back(Smoke(smoke, position - vec2(0, 48)));
+    this->smokes.push_back(new Smoke(smoke, position - vec2(0, 48)));
 }
 
 void Game::add_explosion(vec2 position) {
-    this->explosions.push_back(Explosion(&explosion, position));
+    this->explosions.push_back(new Explosion(&explosion, position));
 }

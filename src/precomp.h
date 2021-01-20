@@ -51,6 +51,7 @@
 #include <thread>
 #include <mutex>
 #include <deque>
+#include <queue>
 #include <future>
 
 // Namespaced C headers:
@@ -76,7 +77,10 @@ using namespace std;
 
 using namespace Tmpl8;
 
-#include "thread_pool.h"
+#include "threading/threadsafequeue.h"
+#include "threading/threadpool.h"
+#include "threading/worker.h"
+//#include "threading/object.h"
 
 #include "tank.h"
 #include "rocket.h"
@@ -85,7 +89,6 @@ using namespace Tmpl8;
 #include "particle_beam.h"
 #include "grid.h"
 #include "kdtree.h"
-
 #include "game.h"
 
 // clang-format on
