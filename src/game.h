@@ -24,7 +24,7 @@ namespace Tmpl8 {
         void tick(float deltaTime);
         
         static std::vector<Tank*> merge_sort_tanks_health(std::vector<Tank*> unsorted);
-        static std::vector<Tank*> merge_tanks_health(std::vector<Tank*>& a, std::vector<Tank*>& b);
+        static std::vector<Tank*> merge_tanks_health(std::vector<Tank*> a, std::vector<Tank*> b);
         
         void measure_performance();
 
