@@ -30,6 +30,7 @@ namespace Tmpl8 {
 
         void add_smoke(vec2 position);
         void add_explosion(vec2 position);
+        void add_rocket(Tank* tank, vec2 position);
 
         void mouse_up(int button)
         { /* implement if you want to detect mouse button presses */
@@ -51,6 +52,9 @@ namespace Tmpl8 {
         { /* implement if you want to handle keys */
         }
 
+                KDTree* red_tree;
+        KDTree* blue_tree;
+
     private:
         Surface* screen;
 
@@ -64,9 +68,6 @@ namespace Tmpl8 {
         long long frame_count = 0;
 
         bool lock_update = false;
-
-        KDTree* red_tree;
-        KDTree* blue_tree;
 
         int cores = std::thread::hardware_concurrency();
 
