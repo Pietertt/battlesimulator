@@ -79,7 +79,6 @@ using namespace Tmpl8;
 
 #include "threading/threadsafequeue.h"
 #include "threading/threadpool.h"
-#include "threading/worker.h"
 //#include "threading/object.h"
 
 #include "tank.h"

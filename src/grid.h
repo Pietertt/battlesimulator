@@ -13,7 +13,6 @@ namespace Tmpl8 {
             void move(Tank* tank);
 
             void handleAction(Rocket* rocket);
-            void handleAction(std::vector<Rocket*> rockets);
             void handleCell(Rocket* rocket, int x, int y);
             bool handleUnit(Rocket* rocket, Tank* tank);
 
@@ -29,7 +28,7 @@ namespace Tmpl8 {
             static const int CELL_SIZE = 50;
 
             Tank* cells[NUM_CELLS][NUM_CELLS];
-        
+
         private:
             Game* game;
     };

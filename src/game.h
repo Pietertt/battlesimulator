@@ -23,8 +23,8 @@ namespace Tmpl8 {
         void draw();
         void tick(float deltaTime);
         
-        static std::vector<Tank*> merge_sort_tanks_health(std::vector<Tank*> unsorted);
-        static std::vector<Tank*> merge_tanks_health(std::vector<Tank*> a, std::vector<Tank*> b);
+        std::vector<Tank*> merge_sort_tanks_health(std::vector<Tank*> unsorted, int depth = 0);
+        std::vector<Tank*> merge_tanks_health(std::vector<Tank*> a, std::vector<Tank*> b);
         
         void measure_performance();
 
@@ -69,86 +69,10 @@ namespace Tmpl8 {
         KDTree* blue_tree;
 
         int cores = std::thread::hardware_concurrency();
-        int max_threads = this->cores;
 
         Grid* grid;
         threading::ThreadPool* pool;
 
         std::vector<std::thread> threads;
-
-        template <typename T> 
-        void execute_parallel(std::vector<T*> elements) {
-            if (this->cores == 0) {
-                for (T* element : elements) {
-                    this->grid->handleAction(element);
-                }
-            } else {
-                for (int i = 0; i < this->max_threads; i++) {
-                    int part = elements.size() / this->max_threads;
-
-                    if ((elements.size() % 2 == 0) || ((elements.size() % 2 != 0) && (i != max_threads - 1))) {
-                       this->pool->push(std::function<void()>([=]{
-                            std::vector<T*> part_of_elements = {
-                                elements.begin() + part * i,
-                                elements.begin() + part * i + part
-                            };
-                            for(T* element : part_of_elements){
-                                this->grid->handleAction(element);
-                            }                
-                        }));
-                    } else {
-                        this->pool->push(std::function<void()>([=]{
-                            std::vector<T*> part_of_elements = {
-                                elements.begin() + part * i,
-                                elements.end()
-                            };
-                            for(T* element : part_of_elements){
-                                this->grid->handleAction(element);
-                            }
-                        }));
-                    }
-                }
-            }
-        }
-
-        template <typename T> 
-        void draw_parallel(std::vector<T*> elements) {
-            if (this->cores == 0) {
-                for (T* element : elements) {
-                    element->draw(this->screen);
-                }
-            } else {
-                for (int i = 0; i < this->max_threads; i++) {
-                    int part = elements.size() / this->max_threads;
-
-                    if ((elements.size() % 2 == 0) || ((elements.size() % 2 != 0) && (i != max_threads - 1))) {
-                        this->pool->push(std::function<void()>([=]{
-                            std::vector<T*> part_of_elements = {
-                                elements.begin() + part * i,
-                                elements.begin() + part * i + part
-                            };
-                            for(T* element : part_of_elements){
-                                element->draw(this->screen);
-                            }                
-                        }));
-                    } else {
-                        this->pool->push(std::function<void()>([=]{
-                            std::vector<T*> part_of_elements = {
-                                elements.begin() + part * i,
-                                elements.end()
-                            };
-                            for(T* element : part_of_elements){
-                                element->draw(this->screen);
-                            }
-                        }));
-                    }
-                }
-
-                 for (std::thread& t : this->threads) {
-                    t.join();
-                }
-                threads.clear();
-            }
-        }
     };
 }

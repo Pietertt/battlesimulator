@@ -63,6 +63,49 @@ namespace Tmpl8 {
         this->add(tank);
     }
 
+    void Grid::handleAction(Particle_beam* beam){
+        for(int x = 0; x < Grid::NUM_CELLS; x++){ 
+            for(int y = 0; y < Grid::NUM_CELLS; y++){ 
+                if(this->cells[x][y] != NULL){
+                    Tank* tank = this->cells[x][y];
+                    while(tank != NULL){
+                        this->handleUnit(beam, tank);
+                        if(x > 0 && y > 0) this->handleUnit(beam, this->cells[x - 1][y - 1]);
+                        if(x > 0) this->handleUnit(beam, this->cells[x - 1][y]);
+                        if(y > 0) this->handleUnit(beam, this->cells[x][y - 1]);
+                        if(x > 0 && y < this->NUM_CELLS - 1) this->handleUnit(beam, this->cells[x - 1][y + 1]);
+
+                        tank = tank->next;
+                    }
+                }
+            }
+        }
+        beam->tick(); 
+    }
+
+    void Grid::handleAction(Tank* tank){
+        int counter = 0;
+        for(int x = 0; x < Grid::NUM_CELLS; x++){ 
+            for(int y = 0; y < Grid::NUM_CELLS; y++){ 
+            int cellX = (int)(tank->get_position().x / Grid::CELL_SIZE);
+            int cellY = (int)(tank->get_position().y / Grid::CELL_SIZE);
+                if(this->cells[x][y] != NULL){
+                    if (this->cells[x][y]->allignment == tank->allignment) {
+                        if(x == cellX && y == cellY){
+                            Tank* other = this->cells[x][y];
+                            while(other != NULL){
+                                if(tank != other) {
+                                    this->handleUnit(tank, other);
+                                }
+                                other = other->next;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     void Grid::handleAction(Rocket* rocket){
         for(int x = 0; x < Grid::NUM_CELLS; x++){ 
             for(int y = 0; y < Grid::NUM_CELLS; y++){ 
@@ -72,70 +115,17 @@ namespace Tmpl8 {
                 if(cellX == x && cellY == y){
                     if(this->cells[x][y] != NULL){
                         if(rocket->allignment != this->cells[x][y]->allignment){
-                            this->handleCell(rocket, x, y);
+                            Tank* tank = this->cells[x][y];
+                            while(tank != NULL){
+                                if (this->handleUnit(rocket, tank)) return; 
+                                tank = tank->next;
+                            }
                         }
                     }
                 }
             }
         }
         rocket->tick(); 
-    }
-
-    void Grid::handleAction(std::vector<Rocket*> rockets) {
-        for(Rocket* rocket : rockets) {
-            this->handleAction(rocket);
-        }
-    }
-
-    void Grid::handleCell(Rocket* rocket, int x, int y){ 
-        Tank* tank = this->cells[x][y];
-        while(tank != NULL){
-            this->handleUnit(rocket, tank);
-            // if(x > 0 && y > 0) if(this->handleUnit(rocket, this->cells[x - 1][y - 1])) break;
-            // if(x > 0) if(this->handleUnit(rocket, this->cells[x - 1][y])) break;
-            // if(y > 0) if(this->handleUnit(rocket, this->cells[x][y - 1])) break;
-            // if(x > 0 && y < this->NUM_CELLS - 1) if(this->handleUnit(rocket, this->cells[x - 1][y + 1])) break;
-
-            tank = tank->next;
-        }
-    }
-
-    bool Grid::handleUnit(Rocket* rocket, Tank* tank){
-            if (tank->active && (tank->allignment != rocket->allignment) && rocket->intersects(tank->position, tank->collision_radius)){            
-                this->game->add_explosion(tank->position);
-                if (tank->hit(60)) {
-                    this->game->add_smoke(tank->position);
-                }
-
-                rocket->active = false;
-                return true;
-            }  
-        
-        return true;
-    }
-
-    void Grid::handleAction(Particle_beam* beam){
-        for(int x = 0; x < Grid::NUM_CELLS; x++){ 
-            for(int y = 0; y < Grid::NUM_CELLS; y++){ 
-                if(this->cells[x][y] != NULL){
-                    this->handleCell(beam, x, y);
-                }
-            }
-        }
-        beam->tick(); 
-    }
-
-    void Grid::handleCell(Particle_beam* beam, int x, int y){
-        Tank* tank = this->cells[x][y];
-        while(tank != NULL){
-            this->handleUnit(beam, tank);
-            if(x > 0 && y > 0) this->handleUnit(beam, this->cells[x - 1][y - 1]);
-            if(x > 0) this->handleUnit(beam, this->cells[x - 1][y]);
-            if(y > 0) this->handleUnit(beam, this->cells[x][y - 1]);
-            if(x > 0 && y < this->NUM_CELLS - 1) this->handleUnit(beam, this->cells[x - 1][y + 1]);
-
-            tank = tank->next;
-        }
     }
 
     void Grid::handleUnit(Particle_beam* beam, Tank* tank){
@@ -148,43 +138,27 @@ namespace Tmpl8 {
         }
     }
 
-    void Grid::handleAction(Tank* tank){
-        int counter = 0;
-        for(int x = 0; x < Grid::NUM_CELLS; x++){ 
-            for(int y = 0; y < Grid::NUM_CELLS; y++){ 
-            int cellX = (int)(tank->get_position().x / Grid::CELL_SIZE);
-            int cellY = (int)(tank->get_position().y / Grid::CELL_SIZE);
-                if(this->cells[x][y] != NULL){
-                    if (this->cells[x][y]->allignment == tank->allignment) {
-                        if(x == cellX && y == cellY){
-                            this->handleCell(tank, x, y);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    void Grid::handleCell(Tank* tank, int x, int y){ 
-        Tank* other = this->cells[x][y];
-        while(other != NULL){
-            if(tank != other) {
-                this->handleUnit(tank, other);
-            }
-            other = other->next;
-        }
-    }
-
     void Grid::handleUnit(Tank* tank, Tank* other) {         
         vec2 dir = tank->get_position() - other->get_position();
-        
         float dirSquaredLen = dir.sqr_length();
-
         float colSquaredLen = (tank->get_collision_radius() + other->get_collision_radius());
         colSquaredLen *= colSquaredLen;
-
         if (dirSquaredLen < colSquaredLen) {
             tank->push(dir.normalized(), 1.f);
         } 
     }   
+
+    bool Grid::handleUnit(Rocket* rocket, Tank* tank){
+        if (tank->active && (tank->allignment != rocket->allignment) && rocket->intersects(tank->position, tank->collision_radius)){            
+            this->game->add_explosion(tank->position);
+            if (tank->hit(6000)) {
+                this->game->add_smoke(tank->position);
+            }
+
+            rocket->active = false;
+            return true;
+        }  
+    
+        return false;
+    }
 }

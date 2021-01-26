@@ -1,7 +1,7 @@
 #include "precomp.h" // include (only) this in every .cpp file
 
-#define NUM_TANKS_BLUE 500
-#define NUM_TANKS_RED 500
+#define NUM_TANKS_BLUE 2000
+#define NUM_TANKS_RED 2000
 
 #define TANK_MAX_HEALTH 1000
 #define ROCKET_HIT_VALUE 6000
@@ -150,11 +150,47 @@ void Game::update(float deltaTime) {
         }
     }
 
-    std::vector<Rocket*> one(this->rockets.begin(), this->rockets.begin() + this->rockets.size() / 2);
-    std::vector<Rocket*> two(this->rockets.end() - this->rockets.size() / 2, this->rockets.end());
+     if (this->cores == 0) {
+        for (Rocket* rocket : this->rockets) {
+            this->grid->handleAction(rocket);
+        }
+    } else {
+        std::vector<Rocket*> one(this->rockets.begin(), this->rockets.begin() + this->rockets.size() / 2);
+        std::vector<Rocket*> two(this->rockets.end() - this->rockets.size() / 2, this->rockets.end());
+        
+        for (int i = 0; i < this->cores; i++) {
+            int part = this->rockets.size() / this->cores;
 
-    this->execute_parallel(this->rockets);
-    this->execute_parallel(this->particle_beams);    
+            if ((this->rockets.size() % 2 == 0) || ((this->rockets.size() % 2 != 0) && (i != cores - 1))) {
+                this->pool->push(std::function<void()>([=]{
+                    std::vector<Rocket*> rockets = {
+                        this->rockets.begin() + part * i,
+                        this->rockets.begin() + part * i + part
+                    };
+                    for(Rocket* rocket : rockets){
+                        this->grid->handleAction(rocket);
+                    }                
+                }));
+            } else {
+                this->pool->push(std::function<void()>([=]{
+                    std::vector<Rocket*> rockets = {
+                        this->rockets.begin() + part * i,
+                        this->rockets.end()
+                    };
+                    for(Rocket* rocket : rockets){
+                        this->grid->handleAction(rocket);
+                    }
+                }));
+            }
+        }
+    }
+
+    // this->execute_parallel(this->rockets);
+    // this->execute_parallel(this->particle_beams);    
+    
+    for (Particle_beam* beam : this->particle_beams) {
+        this->grid->handleAction(beam);
+    }
     
     for (Explosion* explosion : explosions) {
         explosion->tick();
@@ -184,9 +220,11 @@ void Game::update(float deltaTime) {
             }
         }
     }
+
+    this->pool->wait_finished();
 }
 
-std::vector<Tank*> Game::merge_sort_tanks_health(std::vector<Tank*> unsorted){
+std::vector<Tank*> Game::merge_sort_tanks_health(std::vector<Tank*> unsorted, int depth){
 
      if(unsorted.size() == 1){
         return unsorted;
@@ -203,8 +241,34 @@ std::vector<Tank*> Game::merge_sort_tanks_health(std::vector<Tank*> unsorted){
         }
     }
 
-    left = merge_sort_tanks_health(left);
-    right = merge_sort_tanks_health(right);
+
+    if (this->cores > 0) {
+        if (depth < this->cores) {
+                std::packaged_task<std::vector<Tank*>()> task([=]{ return merge_sort_tanks_health(left, depth + 1); }); // wrap the function
+                std::future<std::vector<Tank*>> f1 = task.get_future();  // get a future
+                std::thread t(std::move(task)); // launch on a thread
+
+            right = merge_sort_tanks_health(right, depth + 1);
+
+
+            
+              
+
+
+                f1.wait();
+
+                left =  f1.get();
+
+                t.join();
+
+        } else {
+            left = merge_sort_tanks_health(left, depth + 1);
+            right = merge_sort_tanks_health(right, depth + 1);
+        }
+    } else {
+        left = merge_sort_tanks_health(left);
+        right = merge_sort_tanks_health(right);
+    }    
 
     return merge_tanks_health(left, right);
 }
