@@ -23,13 +23,14 @@ namespace Tmpl8 {
         void draw();
         void tick(float deltaTime);
         
-        static std::vector<Tank*> merge_sort_tanks_health(std::vector<Tank*> unsorted);
-        static std::vector<Tank*> merge_tanks_health(std::vector<Tank*> a, std::vector<Tank*> b);
+        std::vector<Tank*> merge_sort_tanks_health(std::vector<Tank*> unsorted, int depth = 0);
+        std::vector<Tank*> merge_tanks_health(std::vector<Tank*> a, std::vector<Tank*> b);
         
         void measure_performance();
 
         void add_smoke(vec2 position);
         void add_explosion(vec2 position);
+        void add_rocket(Tank* tank, vec2 position);
 
         void mouse_up(int button)
         { /* implement if you want to detect mouse button presses */
@@ -51,6 +52,9 @@ namespace Tmpl8 {
         { /* implement if you want to handle keys */
         }
 
+                KDTree* red_tree;
+        KDTree* blue_tree;
+
     private:
         Surface* screen;
 
@@ -65,90 +69,11 @@ namespace Tmpl8 {
 
         bool lock_update = false;
 
-        KDTree* red_tree;
-        KDTree* blue_tree;
-
         int cores = std::thread::hardware_concurrency();
-        int max_threads = this->cores;
 
         Grid* grid;
         threading::ThreadPool* pool;
 
         std::vector<std::thread> threads;
-
-        template <typename T> 
-        void execute_parallel(std::vector<T*> elements) {
-            if (this->cores == 0) {
-                for (T* element : elements) {
-                    this->grid->handleAction(element);
-                }
-            } else {
-                for (int i = 0; i < this->max_threads; i++) {
-                    int part = elements.size() / this->max_threads;
-
-                    if ((elements.size() % 2 == 0) || ((elements.size() % 2 != 0) && (i != max_threads - 1))) {
-                       this->pool->push(std::function<void()>([=]{
-                            std::vector<T*> part_of_elements = {
-                                elements.begin() + part * i,
-                                elements.begin() + part * i + part
-                            };
-                            for(T* element : part_of_elements){
-                                this->grid->handleAction(element);
-                            }                
-                        }));
-                    } else {
-                        this->pool->push(std::function<void()>([=]{
-                            std::vector<T*> part_of_elements = {
-                                elements.begin() + part * i,
-                                elements.end()
-                            };
-                            for(T* element : part_of_elements){
-                                this->grid->handleAction(element);
-                            }
-                        }));
-                    }
-                }
-            }
-        }
-
-        template <typename T> 
-        void draw_parallel(std::vector<T*> elements) {
-            if (this->cores == 0) {
-                for (T* element : elements) {
-                    element->draw(this->screen);
-                }
-            } else {
-                for (int i = 0; i < this->max_threads; i++) {
-                    int part = elements.size() / this->max_threads;
-
-                    if ((elements.size() % 2 == 0) || ((elements.size() % 2 != 0) && (i != max_threads - 1))) {
-                        this->pool->push(std::function<void()>([=]{
-                            std::vector<T*> part_of_elements = {
-                                elements.begin() + part * i,
-                                elements.begin() + part * i + part
-                            };
-                            for(T* element : part_of_elements){
-                                element->draw(this->screen);
-                            }                
-                        }));
-                    } else {
-                        this->pool->push(std::function<void()>([=]{
-                            std::vector<T*> part_of_elements = {
-                                elements.begin() + part * i,
-                                elements.end()
-                            };
-                            for(T* element : part_of_elements){
-                                element->draw(this->screen);
-                            }
-                        }));
-                    }
-                }
-
-                 for (std::thread& t : this->threads) {
-                    t.join();
-                }
-                threads.clear();
-            }
-        }
     };
 }

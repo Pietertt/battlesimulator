@@ -1,18 +1,14 @@
 #pragma once 
 
-#include "object.h"
-
 namespace threading {
-
-    class Worker;
 
     class ThreadPool {
         public:
             ThreadPool(int num_threads);
             ~ThreadPool();
             void push(std::function<void()> func);
-
             void worker_thread();
+            void wait_finished();
 
         private:
 
@@ -21,7 +17,8 @@ namespace threading {
             std::atomic<bool> accept_functions;
 
             std::mutex mutex;
-            std::condition_variable cond;
+            std::condition_variable condition_work;
+            std::condition_variable condition_finished;
 
             bool done = false;
         

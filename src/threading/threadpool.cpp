@@ -20,26 +20,28 @@ namespace threading {
         std::unique_lock<std::mutex> lock(this->mutex);
         this->queue.push(func);
         lock.unlock();
-        this->cond.notify_one();
+        this->condition_work.notify_one();
     }
 
     void ThreadPool::worker_thread() {
-        std::function<void()> func;
 
         while(!this->done) {
             {
                 std::unique_lock<std::mutex> lock(this->mutex);
-                this->cond.wait(lock, [this](){
-                    return !this->queue.empty();
-                });
-                if (this->queue.empty()) {
-                    return;
+                this->condition_work.wait(lock, [this](){ return !this->queue.empty(); });
+                if (!this->queue.empty()) {
+                    std::function<void()> func = this->queue.front();
+                    this->queue.pop();
+                    func();
                 }
-
-                func = this->queue.front();
-                this->queue.pop();
             }
-            func();
         }
+    }
+
+    void ThreadPool::wait_finished() {
+        std::unique_lock<std::mutex> lock(this->mutex);
+        this->condition_finished.wait(lock, [=]() {
+            return this->queue.empty();
+        });
     }
 }

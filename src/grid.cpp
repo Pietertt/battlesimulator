@@ -81,12 +81,6 @@ namespace Tmpl8 {
         rocket->tick(); 
     }
 
-    void Grid::handleAction(std::vector<Rocket*> rockets) {
-        for(Rocket* rocket : rockets) {
-            this->handleAction(rocket);
-        }
-    }
-
     void Grid::handleCell(Rocket* rocket, int x, int y){ 
         Tank* tank = this->cells[x][y];
         while(tank != NULL){
@@ -161,6 +155,24 @@ namespace Tmpl8 {
                         }
                     }
                 }
+            }
+        }
+        tank->tick();
+        this->move(tank);
+
+        if (tank->rocket_reloaded()) {
+            Tank* current_best = NULL;
+            float best_distance = 10000;
+
+            if(tank->allignment == BLUE){
+                this->game->red_tree->nearest_neighbour_search(this->game->red_tree, tank, current_best, best_distance, 0);
+            } else {
+                this->game->blue_tree->nearest_neighbour_search(this->game->blue_tree, tank, current_best, best_distance, 0);
+            }
+        
+            if(current_best != NULL){
+                this->game->add_rocket(tank, (current_best->get_position() - tank->position).normalized() * 3);
+                tank->reload_rocket();
             }
         }
     }
