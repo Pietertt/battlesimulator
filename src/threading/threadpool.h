@@ -8,22 +8,21 @@ namespace threading {
             ~ThreadPool();
 
 
-            void thread_task();
+            void worker();
 
-            template<class F, class R=std::result_of_t<F&()>>
+            template<class F, class R = std::result_of_t<F&()>>
             std::future<R> push(F&& f) {
-        
                 std::packaged_task<R()> p(std::forward<F>(f));
 
-                auto r = p.get_future();
-                {
-                    std::unique_lock<std::mutex> l(this->mutex);
-                    this->queue.emplace_back(std::move(p));
-                }
+                auto result = p.get_future();
+                
+                std::unique_lock<std::mutex> lock(this->mutex);
+                this->queue.push(std::move(p));
+                lock.unlock();
                 
                 this->conditional_variable.notify_one(); 
 
-                return r; 
+                return result; 
             }
 
         private:            
@@ -31,9 +30,11 @@ namespace threading {
             std::mutex mutex;
             std::condition_variable conditional_variable;
             
-            std::deque<std::packaged_task<void()>> queue;
+            std::queue<std::packaged_task<void()>> queue;
 
             std::vector<std::future<void>> threads;
+
+            bool done = false;
         
         protected:
 
