@@ -1,7 +1,7 @@
 #include "precomp.h" // include (only) this in every .cpp file
 
-#define NUM_TANKS_BLUE 2000
-#define NUM_TANKS_RED 2000
+#define NUM_TANKS_BLUE 500
+#define NUM_TANKS_RED 500
 
 #define TANK_MAX_HEALTH 1000
 #define ROCKET_HIT_VALUE 6000
@@ -14,7 +14,7 @@
 #define HEALTH_BAR_WIDTH 1
 #define HEALTH_BAR_SPACING 0
 
-#define MAX_FRAMES 200
+#define MAX_FRAMES 2000
 
 //Global performance timer
 #define REF_PERFORMANCE 169257 //UPDATE THIS WITH YOUR REFERENCE PERFORMANCE (see console after 2k frames)
@@ -50,8 +50,8 @@ Game::Game(){
 
 }
 
-void test() {
-    std::cout << "Hi" << std::endl;
+int test() {
+    return 5;
 }
 // -----------------------------------------------------------
 // Initialize the application
@@ -123,64 +123,27 @@ void Game::shutdown()
 // -----------------------------------------------------------
 void Game::update(float deltaTime) {
 
-    if (this->cores == 0) {
-        for (Tank* tank : tanks){
-            if (tank->active) {
-                tank->tick();
-                this->grid->handleAction(tank);
-
-                this->grid->move(tank);
-
-                if (tank->rocket_reloaded())
-                {
-                    Tank* current_best = NULL;
-                    float best_distance = 10000;
-
-                    if(tank->allignment == BLUE){
-                        this->red_tree->nearest_neighbour_search(this->red_tree, tank, current_best, best_distance, 0);
-                    } else {
-                        this->blue_tree->nearest_neighbour_search(this->blue_tree, tank, current_best, best_distance, 0);
-                    }
+    for (Tank* tank : tanks){
+        if (tank->active) {
             
-                    if(current_best != NULL){
-                        Rocket* rocket = new Rocket(tank->position, (current_best->get_position() - tank->position).normalized() * 3, 10.0f, tank->allignment, ((tank->allignment == RED) ? &rocket_red : &rocket_blue));
-                        rockets.push_back(rocket);
-                        tank->reload_rocket();
-                    }
+            this->grid->handleAction(tank);
+
+            if (tank->rocket_reloaded())
+            {
+                Tank* current_best = NULL;
+                float best_distance = 10000;
+
+                if(tank->allignment == BLUE){
+                    this->red_tree->nearest_neighbour_search(this->red_tree, tank, current_best, best_distance, 0);
+                } else {
+                    this->blue_tree->nearest_neighbour_search(this->blue_tree, tank, current_best, best_distance, 0);
                 }
-            }
-        }
-    } else {
-        std::vector<Tank*> one(this->tanks.begin(), this->tanks.begin() + this->tanks.size() / 2);
-        std::vector<Tank*> two(this->tanks.end() - this->tanks.size() / 2, this->tanks.end());
-
-        for (int i = 0; i < this->cores; i++) {
-            int part = this->tanks.size() / this->cores;
-
-            if ((this->tanks.size() % 2 == 0) || ((this->tanks.size() % 2 != 0) && (i != cores - 1))) {
-                this->pool->push(std::function<void()>([=]{
-                    std::vector<Tank*> tanks = {
-                        this->tanks.begin() + part * i,
-                        this->tanks.begin() + part * i + part
-                    };
-                    for(Tank* tank : tanks){
-                        if (tank->active) {
-                            this->grid->handleAction(tank);
-                        }
-                    }                
-                }));
-            } else {
-                this->pool->push(std::function<void()>([=]{
-                    std::vector<Tank*> tanks = {
-                        this->tanks.begin() + part * i,
-                        this->tanks.end()
-                    };
-                    for(Tank* tank : tanks){
-                        if (tank->active) {
-                            this->grid->handleAction(tank);
-                        }
-                    }
-                }));
+        
+                if(current_best != NULL){
+                    Rocket* rocket = new Rocket(tank->position, (current_best->get_position() - tank->position).normalized() * 3, 10.0f, tank->allignment, ((tank->allignment == RED) ? &rocket_red : &rocket_blue));
+                    rockets.push_back(rocket);
+                    tank->reload_rocket();
+                }
             }
         }
     }
@@ -190,36 +153,33 @@ void Game::update(float deltaTime) {
             this->grid->handleAction(rocket);
         }
     } else {
-        std::vector<Rocket*> one(this->rockets.begin(), this->rockets.begin() + this->rockets.size() / 2);
-        std::vector<Rocket*> two(this->rockets.end() - this->rockets.size() / 2, this->rockets.end());
-        
         for (int i = 0; i < this->cores; i++) {
             int part = this->rockets.size() / this->cores;
 
             if ((this->rockets.size() % 2 == 0) || ((this->rockets.size() % 2 != 0) && (i != cores - 1))) {
                 this->pool->push(std::function<void()>([=]{
-                    std::vector<Rocket*> rockets = {
+                    std::vector<Rocket*> part_of_elements = {
                         this->rockets.begin() + part * i,
                         this->rockets.begin() + part * i + part
                     };
-                    for(Rocket* rocket : rockets){
+                    for(Rocket* rocket : part_of_elements){
                         this->grid->handleAction(rocket);
                     }                
                 }));
             } else {
                 this->pool->push(std::function<void()>([=]{
-                    std::vector<Rocket*> rockets = {
+                    std::vector<Rocket*> part_of_elements = {
                         this->rockets.begin() + part * i,
                         this->rockets.end()
                     };
-                    for(Rocket* rocket : rockets){
-                        this->grid->handleAction(rocket);
+                    for(Rocket* element : part_of_elements){
+                        this->grid->handleAction(element);
                     }
                 }));
             }
         }
     }
-    
+
     for (Particle_beam* beam : this->particle_beams) {
         this->grid->handleAction(beam);
     }
@@ -252,8 +212,6 @@ void Game::update(float deltaTime) {
             }
         }
     }
-
-    this->pool->wait_finished();
 }
 
 std::vector<Tank*> Game::merge_sort_tanks_health(std::vector<Tank*> unsorted, int depth){

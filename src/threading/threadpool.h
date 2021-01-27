@@ -1,28 +1,43 @@
 #pragma once 
 
 namespace threading {
-
+ 
     class ThreadPool {
         public:
             ThreadPool(int num_threads);
             ~ThreadPool();
-            void push(std::function<void()> func);
-            void worker_thread();
-            void wait_finished();
 
-        private:
 
-            std::vector<std::thread> threads;
-            std::queue<std::function<void()>> queue;
-            std::atomic<bool> accept_functions;
+            void worker();
+
+            template<class F, class R = std::result_of_t<F&()>>
+            std::future<R> push(F&& f) {
+                std::packaged_task<R()> p(std::forward<F>(f));
+
+                auto result = p.get_future();
+                
+                std::unique_lock<std::mutex> lock(this->mutex);
+                this->queue.push(std::move(p));
+                lock.unlock();
+                
+                this->conditional_variable.notify_one(); 
+
+                return result; 
+            }
+
+        private:            
 
             std::mutex mutex;
-            std::condition_variable condition_work;
-            std::condition_variable condition_finished;
+            std::condition_variable conditional_variable;
+            
+            std::queue<std::packaged_task<void()>> queue;
+
+            std::vector<std::future<void>> threads;
 
             bool done = false;
         
         protected:
+
     };
 
 }

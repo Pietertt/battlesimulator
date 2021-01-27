@@ -58,10 +58,10 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /Applications/CMake.app/Contents/bin/cmake
+CMAKE_COMMAND = /usr/local/Cellar/cmake/3.18.4/bin/cmake
 
 # The command to remove a file.
-RM = /Applications/CMake.app/Contents/bin/cmake -E rm -f
+RM = /usr/local/Cellar/cmake/3.18.4/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
@@ -78,7 +78,7 @@ CMAKE_BINARY_DIR = /Users/pieterboersma/Desktop/battlesimulator
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/Applications/CMake.app/Contents/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/usr/local/Cellar/cmake/3.18.4/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -222,6 +222,33 @@ src/grid.s: src/grid.cpp.s
 src/grid.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/grid.cpp.s
 .PHONY : src/grid.cpp.s
+
+src/kdtree.o: src/kdtree.cpp.o
+
+.PHONY : src/kdtree.o
+
+# target to build an object file
+src/kdtree.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/kdtree.cpp.o
+.PHONY : src/kdtree.cpp.o
+
+src/kdtree.i: src/kdtree.cpp.i
+
+.PHONY : src/kdtree.i
+
+# target to preprocess a source file
+src/kdtree.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/kdtree.cpp.i
+.PHONY : src/kdtree.cpp.i
+
+src/kdtree.s: src/kdtree.cpp.s
+
+.PHONY : src/kdtree.s
+
+# target to generate assembly for a file
+src/kdtree.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/kdtree.cpp.s
+.PHONY : src/kdtree.cpp.s
 
 src/particle_beam.o: src/particle_beam.cpp.o
 
@@ -385,6 +412,33 @@ src/template.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/template.cpp.s
 .PHONY : src/template.cpp.s
 
+src/threading/threadpool.o: src/threading/threadpool.cpp.o
+
+.PHONY : src/threading/threadpool.o
+
+# target to build an object file
+src/threading/threadpool.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/threading/threadpool.cpp.o
+.PHONY : src/threading/threadpool.cpp.o
+
+src/threading/threadpool.i: src/threading/threadpool.cpp.i
+
+.PHONY : src/threading/threadpool.i
+
+# target to preprocess a source file
+src/threading/threadpool.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/threading/threadpool.cpp.i
+.PHONY : src/threading/threadpool.cpp.i
+
+src/threading/threadpool.s: src/threading/threadpool.cpp.s
+
+.PHONY : src/threading/threadpool.s
+
+# target to generate assembly for a file
+src/threading/threadpool.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/battlesimulator.dir/build.make CMakeFiles/battlesimulator.dir/src/threading/threadpool.cpp.s
+.PHONY : src/threading/threadpool.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -403,6 +457,9 @@ help:
 	@echo "... src/grid.o"
 	@echo "... src/grid.i"
 	@echo "... src/grid.s"
+	@echo "... src/kdtree.o"
+	@echo "... src/kdtree.i"
+	@echo "... src/kdtree.s"
 	@echo "... src/particle_beam.o"
 	@echo "... src/particle_beam.i"
 	@echo "... src/particle_beam.s"
@@ -421,6 +478,9 @@ help:
 	@echo "... src/template.o"
 	@echo "... src/template.i"
 	@echo "... src/template.s"
+	@echo "... src/threading/threadpool.o"
+	@echo "... src/threading/threadpool.i"
+	@echo "... src/threading/threadpool.s"
 .PHONY : help
 
 
