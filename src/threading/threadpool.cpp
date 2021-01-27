@@ -3,45 +3,35 @@
 namespace threading {
 
     ThreadPool::ThreadPool(int num_threads) {
-        for(int i = 0; i < num_threads; i++) {
-            this->threads.push_back(std::thread(&ThreadPool::worker_thread, this));
-        }        
-    }
+        for (std::size_t i = 0; i < num_threads; ++i) {
+            this->threads.push_back(
+                std::async(
+                std::launch::async,
+                [this]{ thread_task(); }
+                )
+            );
+        }
+    }   
 
     ThreadPool::~ThreadPool() {
-        this->done = false;
 
-        for(std::thread& thread : this->threads) {
-            thread.join();
-        }
-    }
+    }   
 
-    void ThreadPool::push(std::function<void()> func) {
-        std::unique_lock<std::mutex> lock(this->mutex);
-        this->queue.push(func);
-        lock.unlock();
-        this->condition_work.notify_one();
-    }
-
-    void ThreadPool::worker_thread() {
-
-        while(!this->done) {
+    void ThreadPool::thread_task() {
+        while(true){
+            std::packaged_task<void()> task;
             {
                 std::unique_lock<std::mutex> lock(this->mutex);
-                this->condition_work.wait(lock, [this](){ return !this->queue.empty(); });
-                if (!this->queue.empty()) {
-                    std::function<void()> func = this->queue.front();
-                    this->queue.pop();
-                    func();
+                if (this->queue.empty()){
+                    conditional_variable.wait(lock, [&] {return !this->queue.empty();});
                 }
+                
+                task = std::move(this->queue.front());
+                this->queue.pop_front();
             }
+            
+            if (!task.valid()) return;
+            task();
         }
-    }
-
-    void ThreadPool::wait_finished() {
-        std::unique_lock<std::mutex> lock(this->mutex);
-        this->condition_finished.wait(lock, [=]() {
-            return this->queue.empty();
-        });
     }
 }
