@@ -225,8 +225,8 @@ std::vector<Tank*> Game::merge_sort_tanks_health(std::vector<Tank*> unsorted, in
 
     if (this->cores > 0) {
         if (depth < this->cores) {
-            std::future<std::vector<Tank*>> test = this->pool->push( [=]{ return this->merge_sort_tanks_health(left, depth + 1); } );
-            left = test.get();
+            std::future<std::vector<Tank*>> future = this->pool->push( [=]{ return this->merge_sort_tanks_health(left, depth + 1); } );
+            left = future.get();
             right = merge_sort_tanks_health(right, depth + 1);
         } else {
             left = merge_sort_tanks_health(left, depth + 1);
