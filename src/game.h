@@ -22,6 +22,8 @@ namespace Tmpl8 {
         void update(float deltaTime);
         void draw();
         void tick(float deltaTime);
+
+        int test();
         
         std::vector<Tank*> merge_sort_tanks_health(std::vector<Tank*> unsorted, int depth = 0);
         std::vector<Tank*> merge_tanks_health(std::vector<Tank*> a, std::vector<Tank*> b);
