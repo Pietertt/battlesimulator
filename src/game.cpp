@@ -157,7 +157,7 @@ void Game::update(float deltaTime) {
             int part = this->rockets.size() / this->cores;
 
             if ((this->rockets.size() % 2 == 0) || ((this->rockets.size() % 2 != 0) && (i != cores - 1))) {
-                this->pool->queue(std::function<void()>([=]{
+                this->pool->push(std::function<void()>([=]{
                     std::vector<Rocket*> part_of_elements = {
                         this->rockets.begin() + part * i,
                         this->rockets.begin() + part * i + part
@@ -167,7 +167,7 @@ void Game::update(float deltaTime) {
                     }                
                 }));
             } else {
-                this->pool->queue(std::function<void()>([=]{
+                this->pool->push(std::function<void()>([=]{
                     std::vector<Rocket*> part_of_elements = {
                         this->rockets.begin() + part * i,
                         this->rockets.end()
@@ -225,7 +225,7 @@ std::vector<Tank*> Game::merge_sort_tanks_health(std::vector<Tank*> unsorted, in
 
     if (this->cores > 0) {
         if (depth < this->cores) {
-            std::future<std::vector<Tank*>> test = this->pool->queue( [=]{ return this->merge_sort_tanks_health(left, depth + 1); } );
+            std::future<std::vector<Tank*>> test = this->pool->push( [=]{ return this->merge_sort_tanks_health(left, depth + 1); } );
             left = test.get();
             right = merge_sort_tanks_health(right, depth + 1);
         } else {
