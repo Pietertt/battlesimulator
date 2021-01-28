@@ -13,10 +13,11 @@ namespace threading {
             std::packaged_task<R()> packet(std::forward<F>(function));
 
             auto future = packet.get_future(); 
-            {
-                std::unique_lock<std::mutex> lock(mutex);
-                this->queue.emplace_back(std::move(packet)); 
-            }
+            
+            std::unique_lock<std::mutex> lock(mutex);
+            this->queue.emplace_back(std::move(packet)); 
+            lock.unlock();
+            
             
             this->condition_work.notify_one(); 
 
@@ -27,7 +28,8 @@ namespace threading {
             std::mutex mutex;
             std::condition_variable condition_work;
             std::deque<std::packaged_task<void()>> queue;
-            std::vector<std::future<void>> finished;
+            std::vector<std::future<void>> futures;
+            bool done = false;
         
         protected:
 
