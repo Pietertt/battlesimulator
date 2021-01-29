@@ -71,7 +71,7 @@ namespace Tmpl8 {
                 int cellY = (int)(rocket->position.y / Grid::CELL_SIZE);
                 if (cellX == x && cellY == y) {
                     if (this->cells[x][y] != NULL) {
-                        this->handleCell(rocket, x, y); 
+                        if (this->handleCell(rocket, x, y)) return; 
                     }
                 }
             }
@@ -79,16 +79,17 @@ namespace Tmpl8 {
         rocket->tick(); 
     }
 
-    void Grid::handleCell(Rocket* rocket, int x, int y) { 
+    bool Grid::handleCell(Rocket* rocket, int x, int y) { 
         Tank* tank = this->cells[x][y];
         while (tank != NULL) {
-            if (this->handleUnit(rocket, tank)) break;
-            if ((x > 0 && y > 0) && (this->cells[x - 1][y - 1] != NULL)) if (this->handleUnit(rocket, this->cells[x - 1][y - 1])) break;
-            if ((x > 0) && (this->cells[x - 1][y] != NULL)) if (this->handleUnit(rocket, this->cells[x - 1][y])) break;
-            if ((y > 0) && (this->cells[x][y - 1] != NULL)) if (this->handleUnit(rocket, this->cells[x][y - 1])) break;
-            if ((x > 0 && y < this->NUM_CELLS - 1) && (this->cells[x - 1][y + 1] != NULL)) if (this->handleUnit(rocket, this->cells[x - 1][y + 1])) break;
+            if (this->handleUnit(rocket, tank)) return true;
+            if ((x > 0 && y > 0) && (this->cells[x - 1][y - 1] != NULL)) if (this->handleUnit(rocket, this->cells[x - 1][y - 1])) return true;
+            if ((x > 0) && (this->cells[x - 1][y] != NULL)) if (this->handleUnit(rocket, this->cells[x - 1][y])) return true;
+            if ((y > 0) && (this->cells[x][y - 1] != NULL)) if (this->handleUnit(rocket, this->cells[x][y - 1])) return true;
+            if ((x > 0 && y < this->NUM_CELLS - 1) && (this->cells[x - 1][y + 1] != NULL)) if (this->handleUnit(rocket, this->cells[x - 1][y + 1])) return true;
             tank = tank->next;
         }
+        return false;
     }
 
     bool Grid::handleUnit(Rocket* rocket, Tank* tank) {
