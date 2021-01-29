@@ -10,7 +10,7 @@ namespace threading {
 
     ThreadPool::~ThreadPool() {
         this->done = true;
-
+        this->condition_work.notify_all();
     }   
 
     void ThreadPool::worker() {

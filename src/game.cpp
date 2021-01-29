@@ -125,26 +125,7 @@ void Game::update(float deltaTime) {
 
     for (Tank* tank : tanks){
         if (tank->active) {
-            
             this->grid->handleAction(tank);
-
-            if (tank->rocket_reloaded())
-            {
-                Tank* current_best = NULL;
-                float best_distance = 10000;
-
-                if(tank->allignment == BLUE){
-                    this->red_tree->nearest_neighbour_search(this->red_tree, tank, current_best, best_distance, 0);
-                } else {
-                    this->blue_tree->nearest_neighbour_search(this->blue_tree, tank, current_best, best_distance, 0);
-                }
-        
-                if(current_best != NULL){
-                    Rocket* rocket = new Rocket(tank->position, (current_best->get_position() - tank->position).normalized() * 3, 10.0f, tank->allignment, ((tank->allignment == RED) ? &rocket_red : &rocket_blue));
-                    rockets.push_back(rocket);
-                    tank->reload_rocket();
-                }
-            }
         }
     }
 
@@ -237,8 +218,6 @@ std::vector<Tank*> Game::merge_sort_tanks_health(std::vector<Tank*> unsorted, in
         right = merge_sort_tanks_health(right, depth + 1);
     }
 
-    
-     
     return merge_tanks_health(left, right);
 }
 
