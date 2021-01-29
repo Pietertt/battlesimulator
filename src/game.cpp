@@ -46,18 +46,14 @@ const static vec2 rocket_size(25, 24);
 const static float tank_radius = 8.5f;
 const static float rocket_radius = 10.f;
 
-Game::Game(){
+Game::Game() {
 
 }
 
-int Game::test() {
-    return 5;
-}
 // -----------------------------------------------------------
 // Initialize the application
 // -----------------------------------------------------------
-void Game::init()
-{
+void Game::init() {
     frame_count_font = new Font("/Users/pieterboersma/Desktop/battlesimulator/assets/digital_small.png", "ABCDEFGHIJKLMNOPQRSTUVWXYZ:?!=-0123456789.");
 
     tanks.reserve(NUM_TANKS_BLUE + NUM_TANKS_RED);
@@ -90,9 +86,9 @@ void Game::init()
     this->grid = new Grid(this);
     this->pool = new threading::ThreadPool(std::thread::hardware_concurrency());
 
-    for(Tank* tank : this->tanks){
+    for (Tank* tank : this->tanks) {
         this->grid->add(tank);
-        if(tank->allignment == BLUE){
+        if (tank->allignment == BLUE) {
             this->blue_tree->add(tank);
         } else {
             this->red_tree->add(tank);
@@ -110,8 +106,7 @@ void Game::init()
 // -----------------------------------------------------------
 // Close down application
 // -----------------------------------------------------------
-void Game::shutdown()
-{
+void Game::shutdown() {
 }
 
 // -----------------------------------------------------------
@@ -143,7 +138,7 @@ void Game::update(float deltaTime) {
                         this->rockets.begin() + part * i,
                         this->rockets.begin() + part * i + part
                     };
-                    for(Rocket* rocket : part_of_elements){
+                    for (Rocket* rocket : part_of_elements) {
                         this->grid->handleAction(rocket);
                     }                
                 }));
@@ -153,7 +148,7 @@ void Game::update(float deltaTime) {
                         this->rockets.begin() + part * i,
                         this->rockets.end()
                     };
-                    for(Rocket* element : part_of_elements){
+                    for (Rocket* element : part_of_elements) {
                         this->grid->handleAction(element);
                     }
                 }));
@@ -182,22 +177,22 @@ void Game::update(float deltaTime) {
     this->blue_tree = new KDTree();
     this->red_tree = new KDTree();
 
-    for(Tank* tank : this->tanks){
-        if(tank->allignment == BLUE){
-            if(tank->active){
+    for (Tank* tank : this->tanks) {
+        if (tank->allignment == BLUE) {
+            if (tank->active) {
                 this->blue_tree->add(tank);
             }
         } else {
-            if(tank->active){
+            if (tank->active) {
                 this->red_tree->add(tank);
             }
         }
     }
 }
 
-std::vector<Tank*> Game::merge_sort_tanks_health(std::vector<Tank*> unsorted, int depth){
+std::vector<Tank*> Game::merge_sort_tanks_health(std::vector<Tank*> unsorted, int depth) {
 
-     if(unsorted.size() == 1){
+     if (unsorted.size() == 1) {
         return unsorted;
     }
 
@@ -257,8 +252,7 @@ void Game::draw()
     background.draw(screen, 0, 0);
 
     //Draw sprites
-    for (int i = 0; i < NUM_TANKS_BLUE + NUM_TANKS_RED; i++)
-    {
+    for (int i = 0; i < NUM_TANKS_BLUE + NUM_TANKS_RED; i++) {
         tanks.at(i)->draw(screen);
 
         vec2 tPos = tanks.at(i)->get_position();
@@ -275,11 +269,11 @@ void Game::draw()
         rocket->draw(this->screen);
     }
 
-    for(Smoke* rocket : this->smokes) {
+    for (Smoke* rocket : this->smokes) {
         rocket->draw(this->screen);
     }
 
-    for(Explosion* rocket : this->explosions) {
+    for (Explosion* rocket : this->explosions) {
         rocket->draw(this->screen);
     }
 
@@ -294,8 +288,7 @@ void Game::draw()
 
         std::vector<Tank*> sorted_tanks = this->merge_sort_tanks_health(unsorted_tanks);
 
-        for (int i = 0; i < NUM_TANKS; i++)
-        {
+        for (int i = 0; i < NUM_TANKS; i++) {
             int health_bar_start_x = i * (HEALTH_BAR_WIDTH + HEALTH_BAR_SPACING) + HEALTH_BARS_OFFSET_X;
             int health_bar_start_y = (t < 1) ? 0 : (SCRHEIGHT - HEALTH_BAR_HEIGHT) - 1;
             int health_bar_end_x = health_bar_start_x + HEALTH_BAR_WIDTH;
@@ -312,11 +305,9 @@ void Game::draw()
 // Updating REF_PERFORMANCE at the top of this file with the value
 // on your machine gives you an idea of the speedup your optimizations give
 // -----------------------------------------------------------
-void Tmpl8::Game::measure_performance()
-{
+void Tmpl8::Game::measure_performance() {
     char buffer[128];
-    if (frame_count >= MAX_FRAMES)
-    {
+    if (frame_count >= MAX_FRAMES) {
         if (!lock_update)
         {
             duration = perf_timer.elapsed();
@@ -327,8 +318,7 @@ void Tmpl8::Game::measure_performance()
         frame_count--;
     }
 
-    if (lock_update)
-    {
+    if (lock_update) {
         screen->bar(420, 170, 870, 430, 0x030000);
         int ms = (int)duration % 1000, sec = ((int)duration / 1000) % 60, min = ((int)duration / 60000);
         sprintf(buffer, "%02i:%02i:%03i", min, sec, ms);
@@ -341,10 +331,8 @@ void Tmpl8::Game::measure_performance()
 // -----------------------------------------------------------
 // Main application tick function
 // -----------------------------------------------------------
-void Game::tick(float deltaTime)
-{
-    if (!lock_update)
-    {
+void Game::tick(float deltaTime) {
+    if (!lock_update) {
         update(deltaTime);
     }
     draw();
@@ -362,6 +350,7 @@ void Game::tick(float deltaTime)
     string frame_count_string = "FRAME: " + std::to_string(frame_count);
     frame_count_font->print(screen, frame_count_string.c_str(), 350, 580);
 }
+
 void Game::add_smoke(vec2 position) {
     this->smokes.push_back(new Smoke(smoke, position - vec2(0, 48)));
 }
